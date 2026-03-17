@@ -1,0 +1,136 @@
+.customModal {
+  max-width: 400px;
+  margin: auto;
+}
+
+.modalBody {
+  padding: 0;
+  background: transparent;
+}
+
+/* CARD */
+.card {
+  background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+  border-radius: 22px;
+  padding: 36px 28px;
+  text-align: center;
+  color: #fff;
+}
+
+/* ICON */
+.iconBox {
+  width: 56px;
+  height: 56px;
+  background: #ff3b30;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+  font-size: 22px;
+}
+
+/* TITLE */
+.title {
+  font-size: 22px;
+
+  margin-bottom: 6px;
+}
+
+/* SUBTITLE */
+.subtitle {
+  font-size: 14px;
+  color: #94a3b8;
+  margin-bottom: 22px;
+  line-height: 1.5;
+}
+
+/* LABEL */
+.label {
+  text-align: left;
+  font-size: 13px;
+  color: #94a3b8;
+  margin-bottom: 8px;
+}
+
+/* INPUT */
+.phoneBox {
+  display: flex;
+  align-items: center;
+  background: #020617;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  padding: 6px;
+}
+
+.phoneBox span {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #1e293b;
+  font-size: 13px;
+  color: #fff;
+}
+
+.phoneBox input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+/* BUTTON */
+.primaryBtn {
+  width: 100%;
+  margin-top: 22px;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: #ff3b30;
+  color: #fff;
+  font-size: 14px;
+}
+
+/* OTP */
+.otpLabel {
+  margin-top: 18px;
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.otpContainer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+
+  input {
+    width: 45px;
+    height: 50px;
+    text-align: center;
+    font-size: 20px;
+    border-radius: 10px;
+    border: 1px solid #334155;
+    background: #020617;
+    color: #fff;
+
+    &:focus {
+      border-color: #ff3b30;
+      outline: none;
+    }
+  }
+}
+
+/* FOOTER */
+.footerText {
+  margin-top: 18px;
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.footerText span {
+  color: #ff3b30;
+  cursor: pointer;
+}

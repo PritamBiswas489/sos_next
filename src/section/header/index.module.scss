@@ -1,0 +1,48 @@
+@use "../../assets/front/styles/variable" as *;
+
+.header {
+  background: linear-gradient(180deg, #07122b, #040a18);
+  border-bottom: 1px solid rgba($white, 0.05);
+  padding: 18px 0;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: 35px;
+
+  a {
+    color: $gray;
+    font-size: 15px;
+    text-decoration: none;
+    transition: 0.3s;
+
+    &:hover {
+      color: $white;
+    }
+  }
+}
+
+.signin {
+  background: $primary;
+  color: $white;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: 0.3s;
+
+  &:hover {
+    background: $secondary;
+  }
+}

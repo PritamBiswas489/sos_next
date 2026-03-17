@@ -1,0 +1,124 @@
+.sidebar {
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(180deg, #0b1220 0%, #020617 100%);
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid #1e293b;
+}
+.logoMenu {
+}
+/* LOGO */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-bottom: 30px;
+  border-bottom: #252a3d 1px solid;
+  padding-bottom: 1.25rem;
+
+  span {
+    font-size: 18px;
+  }
+}
+
+.logoIcon {
+  width: 36px;
+  height: 36px;
+  background: #ff3b30;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* MENU */
+.menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  border-radius: 12px;
+  cursor: pointer;
+  color: #94a3b8;
+  transition: all 0.2s ease;
+}
+
+/* ICON */
+.icon {
+  font-size: 16px;
+  display: flex;
+  width: 34px;
+  height: 34px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+}
+
+/* LABEL */
+.label {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* ACTIVE ITEM */
+.active {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 59, 48, 0.2),
+    rgba(255, 59, 48, 0.05)
+  );
+  color: #ff3b30;
+}
+
+/* HOVER */
+.menuItem:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* USER CARD */
+.userCard {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #020617;
+  padding: 10px 12px;
+  border-radius: 14px;
+  margin-top: 20px;
+}
+
+/* AVATAR */
+.avatar {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #ff7a18, #ff3b30);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 13px;
+}
+
+/* NAME */
+.name {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* PLAN */
+.plan {
+  font-size: 11px;
+  color: #94a3b8;
+}
