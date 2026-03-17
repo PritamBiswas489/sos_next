@@ -4,7 +4,7 @@ import styles from "./index.module.scss";
 
 const TopCards = () => {
   return (
-    <Row className="mb-4">
+    <Row className="mb-4 g-4">
       <Col md={4}>
         <div className={styles.card}>
           <p>Family Members</p>

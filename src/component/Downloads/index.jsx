@@ -53,6 +53,24 @@ const DownloadsComponent = () => {
         </div>
       </div>
 
+      {/* INFO */}
+      <Row className="mt-2 g-lg-4 g-4">
+        <Col md={6}>
+          <div className={styles.infoCard}>
+            <p className={styles.label}>📦 APK Version</p>
+            <h4>v4.2.1</h4>
+            <span>Android 8.0+ • 48 MB</span>
+          </div>
+        </Col>
+
+        <Col md={6}>
+          <div className={styles.infoCard}>
+            <p className={styles.label}>🔑 License Type</p>
+            <h4>Premium Annual</h4>
+            <span>Valid for 1 Year</span>
+          </div>
+        </Col>
+      </Row>
       {/* FORM MODAL */}
       <Modal
         show={show}
@@ -183,25 +201,6 @@ const DownloadsComponent = () => {
           </small>
         </Modal.Body>
       </Modal>
-
-      {/* INFO */}
-      <Row className="mt-4">
-        <Col md={6}>
-          <div className={styles.infoCard}>
-            <p className={styles.label}>📦 APK Version</p>
-            <h4>v4.2.1</h4>
-            <span>Android 8.0+ • 48 MB</span>
-          </div>
-        </Col>
-
-        <Col md={6}>
-          <div className={styles.infoCard}>
-            <p className={styles.label}>🔑 License Type</p>
-            <h4>Premium Annual</h4>
-            <span>Valid for 1 Year</span>
-          </div>
-        </Col>
-      </Row>
     </Container>
   );
 };

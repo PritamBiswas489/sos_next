@@ -122,3 +122,32 @@
   font-size: 11px;
   color: #94a3b8;
 }
+
+.overlay {
+  display: none;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -260px;
+    height: 100%;
+    z-index: 30;
+    transition: 0.3s ease;
+    width: 260px;
+  }
+
+  .showSidebar {
+    left: 0;
+  }
+
+  .overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 20;
+  }
+}

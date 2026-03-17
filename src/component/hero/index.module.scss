@@ -89,6 +89,7 @@
   width: 100%;
   position: absolute;
   bottom: 0;
+  text-align: center;
 }
 .heroContent {
   flex: 1;
@@ -135,4 +136,39 @@
   color: $secondary;
   margin-bottom: 12px;
   transition: all 0.3s ease;
+}
+
+@media screen and (max-width: 767px) {
+  .featuresSection {
+    .heroContent {
+      width: 100%;
+      max-width: 100%;
+    }
+    p {
+      display: none;
+    }
+  }
+  .card {
+    padding: 6px 5px;
+    .icon {
+      margin-bottom: 4px;
+      font-size: 19px;
+    }
+  }
+
+  .title {
+    font-size: 32px;
+
+    span {
+      color: $primary;
+    }
+  }
+
+  .primaryBtn {
+    font-size: 14px;
+  }
+
+  .secondaryBtn {
+    font-size: 14px;
+  }
 }

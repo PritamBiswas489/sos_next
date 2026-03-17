@@ -71,17 +71,9 @@ const Hero = () => {
         <Container className={styles.heroContent}>
           <Row className="g-0 justify-content-center">
             {features.map((item, index) => (
-              <Col md={2} key={index} className={styles.col}>
+              <Col md={2} col xs={2} key={index} className={styles.col}>
                 <div
                   className={styles.card}
-                  // onClick={() => router.push(item.link)}
-                  // onClick={() => {
-                  //   if (item.title === "Family Circle") {
-                  //     setShowOtpModal(true);
-                  //   } else {
-                  //     router.push(item.link);
-                  //   }
-                  // }}
                   onClick={() => {
                     if (item.title === "Family Circle") {
                       setShowOtpModal(true);
