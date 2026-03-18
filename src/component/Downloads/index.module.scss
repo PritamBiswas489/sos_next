@@ -1,6 +1,8 @@
+@use "../../assets/front/styles/variable" as *;
+
 .page {
   padding: 20px;
-  color: #fff;
+  color: $white;
 }
 
 /* TITLE */
@@ -9,19 +11,19 @@
 }
 
 .subtitle {
-  color: #94a3b8;
+  color: $gray;
   margin-bottom: 20px;
 }
 
 /* HERO CARD */
 .heroCard {
-  background: linear-gradient(135deg, #1e293b, #0f172a);
+  background: linear-gradient(135deg, $dark-2, $dark);
   border-radius: 18px;
   padding: 30px;
   text-align: center;
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(255, 59, 48, 0.2);
+  border: 1px solid rgba($primary, 0.2);
 }
 
 .heroCard h3 {
@@ -29,7 +31,7 @@
 }
 
 .heroCard p {
-  color: #94a3b8;
+  color: $gray;
   font-size: 14px;
 }
 
@@ -43,16 +45,17 @@
 }
 
 .androidBtn {
-  background: #22c55e;
+  background: $bg-green;
   border: none;
   padding: 12px 18px;
   border-radius: 12px;
   font-weight: 500;
   display: flex;
   align-items: center;
+  color: $white;
 
   .btnIcon {
-    background: #161f32;
+    background: $dark-2;
     width: 34px;
     height: 34px;
     border-radius: 17px;
@@ -60,72 +63,69 @@
     margin-right: 15px;
   }
 
-  span {
-    small {
-      display: block;
-      font-weight: 400;
-      font-size: 12px;
-    }
+  span small {
+    display: block;
+    font-weight: 400;
+    font-size: 12px;
   }
 }
 
 .licenseBtn {
   background: transparent;
-  border: 1px solid #334155;
+  border: 1px solid $dark-2;
   padding: 12px 18px;
   border-radius: 12px;
-  color: #fff;
+  color: $white;
   display: flex;
   align-items: center;
 
   .btnIcon {
-    background: #22c55e;
+    background: $bg-green;
     width: 34px;
     height: 34px;
     border-radius: 17px;
     line-height: 34px;
     margin-right: 15px;
   }
-  span {
-    small {
-      display: block;
-      font-weight: 400;
-      font-size: 12px;
-    }
+
+  span small {
+    display: block;
+    font-weight: 400;
+    font-size: 12px;
   }
 }
 
 /* INFO CARDS */
 .infoCard {
-  background: #0f172a;
+  background: $dark;
   border-radius: 14px;
   padding: 20px;
-  border: 1px solid #1e293b;
+  border: 1px solid $dark-2;
 }
 
 .label {
-  color: #94a3b8;
+  color: $gray;
   font-size: 13px;
-}
-
-.infoCard h4 {
-  margin: 5px 0;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
 .infoCard span {
   font-size: 13px;
-  color: #64748b;
+  color: $secondary;
+  font-weight: bold;
 }
 
+/* MODAL */
 .customModal {
   max-width: 600px;
 }
 
 .modalBody {
-  background: linear-gradient(180deg, #0f172a, #020617);
+  background: linear-gradient(180deg, $dark, $dark);
   border-radius: 20px;
   padding: 50px;
-  color: #fff;
+  color: $white;
 }
 
 /* HEADER */
@@ -142,50 +142,49 @@
 }
 
 .headerIcon {
-  color: #facc15;
+  color: $secondary;
 }
 
 .closeBtn {
-  background: #020617;
-  border: 1px solid #1e293b;
+  background: $dark;
+  border: 1px solid $dark-2;
   border-radius: 50%;
   width: 32px;
   height: 32px;
-  color: #aaa;
+  color: $gray;
 }
 
 /* TEXT */
 .modalSubtitle {
-  color: #94a3b8;
+  color: $gray;
   font-size: 14px;
   margin: 15px 0 20px;
 }
 
-/* INPUT WITH ICON */
+/* INPUT */
 .inputGroup {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: #020617;
-  border: 1px solid #1e293b;
+  background: $dark;
+  border: 1px solid $dark-2;
   border-radius: 10px;
   padding: 12px;
   margin-bottom: 12px;
 
   svg {
-    color: #94a3b8;
+    color: $gray;
   }
 
   input {
     background: transparent;
     border: none;
     outline: none;
-    color: #fff;
+    color: $white;
     width: 100%;
   }
 }
 
-/* DOCUMENTS */
 .documents p {
   margin-top: 10px;
   margin-bottom: 10px;
@@ -204,8 +203,8 @@
   gap: 6px;
   padding: 14px;
   border-radius: 12px;
-  border: 1px dashed #334155;
-  background: #020617;
+  border: 1px dashed $dark-2;
+  background: $dark;
   cursor: pointer;
   transition: 0.3s;
 
@@ -215,8 +214,8 @@
 }
 
 .active {
-  border: 1px dashed #ef4444;
-  background: rgba(239, 68, 68, 0.08);
+  border: 1px dashed $primary;
+  background: rgba($primary, 0.08);
 }
 
 /* UPLOAD BOX */
@@ -224,24 +223,24 @@
   margin-top: 18px;
   padding: 20px;
   border-radius: 12px;
-  border: 1px dashed #334155;
+  border: 1px dashed $dark-2;
   text-align: center;
-  background: #020617;
+  background: $dark;
 
   svg {
     font-size: 22px;
     margin-bottom: 8px;
-    color: #94a3b8;
+    color: $gray;
   }
 
   span {
-    color: #ef4444;
+    color: $primary;
   }
 
   small {
     display: block;
     margin-top: 5px;
-    color: #64748b;
+    color: $gray;
   }
 }
 
@@ -249,146 +248,119 @@
 .submitBtn {
   width: 100%;
   margin-top: 20px;
-  background: #ef4444;
+  background: $primary;
   border: none;
   padding: 12px;
   border-radius: 10px;
-
-  color: #fff;
+  color: $white;
 }
+
 .successModal {
   max-width: 420px;
 }
 
 .successBody {
-  background: linear-gradient(180deg, #111827, #020617);
+  background: linear-gradient(180deg, $dark-2, $dark);
   border-radius: 20px;
   padding: 30px;
   text-align: center;
-  color: #fff;
+  color: $white;
 }
 
 .successIcon {
   width: 70px;
   height: 70px;
   border-radius: 50%;
-  background: rgba(34, 197, 94, 0.1);
-  border: 2px solid #22c55e;
+  background: rgba($bg-green, 0.1);
+  border: 2px solid $bg-green;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 28px;
-  color: #22c55e;
+  color: $bg-green;
   margin: 0 auto 15px;
 }
 
-.successTitle {
-  margin-bottom: 5px;
-}
-
 .successSubtitle {
-  color: #94a3b8;
+  color: $gray;
   font-size: 14px;
   margin-bottom: 20px;
 }
 
 .licenseBox {
-  background: #020617;
-  border: 1px solid #1e293b;
+  background: $dark;
+  border: 1px solid $dark-2;
   border-radius: 14px;
   padding: 20px;
   margin: 1rem 0;
+
   h6 {
     position: relative;
     z-index: 1;
     text-align: center;
+
     &::after {
       content: "";
       position: absolute;
       top: 50%;
       left: 0;
       height: 1px;
-      background-color: #1e293b;
+      background-color: $dark-2;
       width: 100%;
       z-index: -1;
     }
+
     span {
-      background-color: #0f172a;
+      background-color: $dark;
       padding: 0 10px;
     }
   }
 }
 
 .licenseLabel {
-  font-size: 11px;
-  color: #64748b;
-  letter-spacing: 1px;
+  color: $gray;
 }
 
 .licenseKey {
-  color: #22c55e;
-  margin: 15px 0;
-  font-weight: 700;
-  letter-spacing: 3px;
+  color: $bg-green;
 }
 
 .licenseDetails {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  margin-top: 10px;
-
-  small {
-    color: #64748b;
-    font-size: 11px;
-  }
-
-  p {
-    font-size: 13px;
-    margin: 0;
-  }
 }
+
+.licenseDetails small {
+  color: $gray;
+}
+
 .copyBtn {
   width: 100%;
   padding: 10px;
   border-radius: 10px;
-  background: #020617;
-  border: 1px solid #1e293b;
+  background: $dark;
+  border: 1px solid $dark-2;
   margin-bottom: 1rem;
 }
+
 .successFooter {
   display: block;
   margin-top: 12px;
-  color: #64748b;
+  color: $gray;
   font-size: 12px;
+
   span {
-    color: #ef4444;
+    color: $primary;
   }
 }
 
+/* keep duplicate androidBtn */
 .androidBtn {
-  background: #22c55e;
-  border: none;
-  padding: 12px 18px;
-  border-radius: 12px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
+  background: $bg-green;
 
   .btnIcon {
-    background: #161f32;
-    width: 34px;
-    height: 34px;
-    border-radius: 17px;
-    line-height: 34px;
-    margin-right: 15px;
-  }
-
-  span {
-    small {
-      display: block;
-      font-weight: 400;
-      font-size: 12px;
-    }
+    background: $dark-2;
   }
 }
 
@@ -397,21 +369,5 @@
   .androidBtn {
     flex: 0 0 100%;
     max-width: 100%;
-
-    // .btnIcon {
-    //   background: #22c55e;
-    //   width: 34px;
-    //   height: 34px;
-    //   border-radius: 17px;
-    //   line-height: 34px;
-    //   margin-right: 15px;
-    // }
-    // span {
-    //   small {
-    //     display: block;
-    //     font-weight: 400;
-    //     font-size: 12px;
-    //   }
-    // }
   }
 }

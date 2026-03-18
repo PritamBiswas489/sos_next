@@ -1,7 +1,9 @@
+@use "../../assets/front/styles/variable" as *;
+
 .dashboard {
-  background: #020617;
+  background: $dark;
   min-height: 100vh;
-  color: #fff;
+  color: $white;
 }
 
 .main {
@@ -13,7 +15,7 @@
 }
 
 .subtitle {
-  color: #94a3b8;
+  color: $gray;
   margin-bottom: 20px;
 }
 
@@ -29,18 +31,12 @@
 .mobileMenuBtn {
   display: none;
 }
+
 .overlay {
   display: none;
 }
+
 @media (max-width: 768px) {
-  // .mobileMenuBtn {
-  //   display: block;
-  //   position: fixed;
-  //   right: 20px;
-  //   top: 10px;
-  //   background-color: #fff;
-  //   z-index: 99;
-  // }
   .mobileMenuBtn {
     display: flex;
     position: fixed;
@@ -50,27 +46,29 @@
     width: 45px;
     height: 45px;
     border-radius: 12px;
-    background: #0f172a;
-    border: 1px solid #1e293b;
-    color: #fff;
+    background: $dark;
+    border: 1px solid $dark-2;
+    color: $white;
     align-items: center;
     justify-content: center;
     font-size: 18px;
   }
+
   .sidebar {
     position: fixed;
     top: 0;
-    left: -280px; /* 👈 match your sidebar width */
+    left: -280px; /* match sidebar width */
     width: 280px;
     height: 100%;
     z-index: 30;
     transition: 0.3s ease;
   }
+
   .overlay {
     display: block;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba($dark, 0.6);
     z-index: 20;
   }
 

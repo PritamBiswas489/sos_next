@@ -1,3 +1,5 @@
+@use "../../assets/front/styles/variable" as *;
+
 .customModal {
   max-width: 400px;
   margin: auto;
@@ -10,18 +12,18 @@
 
 /* CARD */
 .card {
-  background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+  background: linear-gradient(180deg, $dark, $dark-2);
   border-radius: 22px;
   padding: 36px 28px;
   text-align: center;
-  color: #fff;
+  color: $white;
 }
 
 /* ICON */
 .iconBox {
   width: 56px;
   height: 56px;
-  background: #ff3b30;
+  background: $primary;
   border-radius: 14px;
   display: flex;
   align-items: center;
@@ -33,14 +35,13 @@
 /* TITLE */
 .title {
   font-size: 22px;
-
   margin-bottom: 6px;
 }
 
 /* SUBTITLE */
 .subtitle {
   font-size: 14px;
-  color: #94a3b8;
+  color: $gray;
   margin-bottom: 22px;
   line-height: 1.5;
 }
@@ -49,7 +50,7 @@
 .label {
   text-align: left;
   font-size: 13px;
-  color: #94a3b8;
+  color: $gray;
   margin-bottom: 8px;
 }
 
@@ -57,28 +58,28 @@
 .phoneBox {
   display: flex;
   align-items: center;
-  background: #020617;
-  border: 1px solid #1e293b;
+  background: $dark;
+  border: 1px solid $dark-2;
   border-radius: 12px;
   padding: 6px;
-}
 
-.phoneBox span {
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid #1e293b;
-  font-size: 13px;
-  color: #fff;
-}
+  span {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid $dark-2;
+    font-size: 13px;
+    color: $white;
+  }
 
-.phoneBox input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: #fff;
-  padding: 10px 12px;
-  font-size: 14px;
+  input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: $white;
+    padding: 10px 12px;
+    font-size: 14px;
+  }
 }
 
 /* BUTTON */
@@ -88,8 +89,8 @@
   padding: 14px;
   border-radius: 12px;
   border: none;
-  background: #ff3b30;
-  color: #fff;
+  background: $primary;
+  color: $white;
   font-size: 14px;
 }
 
@@ -97,7 +98,7 @@
 .otpLabel {
   margin-top: 18px;
   font-size: 13px;
-  color: #94a3b8;
+  color: $gray;
 }
 
 .otpContainer {
@@ -112,12 +113,12 @@
     text-align: center;
     font-size: 20px;
     border-radius: 10px;
-    border: 1px solid #334155;
-    background: #020617;
-    color: #fff;
+    border: 1px solid $dark-2;
+    background: $dark;
+    color: $white;
 
     &:focus {
-      border-color: #ff3b30;
+      border-color: $primary;
       outline: none;
     }
   }
@@ -127,10 +128,10 @@
 .footerText {
   margin-top: 18px;
   font-size: 13px;
-  color: #94a3b8;
-}
+  color: $gray;
 
-.footerText span {
-  color: #ff3b30;
-  cursor: pointer;
+  span {
+    color: $primary;
+    cursor: pointer;
+  }
 }
