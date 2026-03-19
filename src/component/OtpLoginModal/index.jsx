@@ -2,13 +2,17 @@ import React, { useEffect, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
 import styles from "./index.module.scss";
 import { FaMobileAlt, FaKey } from "react-icons/fa";
-import { PhoneInput } from 'react-international-phone';
-import { useForm, Controller } from 'react-hook-form';
+import { PhoneInput } from "react-international-phone";
+import { useForm, Controller } from "react-hook-form";
 import InputErrorMsg from "../InputErrorMsg/InputErrorMsg";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import { HIDE_LOADER, SHOW_LOADER } from "@/redux/loaderSlice";
 import { useDispatch } from "react-redux";
-import { createUserAfterOtpVerification, sendOtp, verifyOtp } from "@/services/login.service";
+import {
+  createUserAfterOtpVerification,
+  sendOtp,
+  verifyOtp,
+} from "@/services/login.service";
 import { useRouter } from "next/navigation";
 
 const OtpLoginModal = ({ show, handleClose }) => {
@@ -36,7 +40,6 @@ const OtpLoginModal = ({ show, handleClose }) => {
     }
   };
 
-
   const {
     register,
     handleSubmit,
@@ -47,7 +50,6 @@ const OtpLoginModal = ({ show, handleClose }) => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    
     // setStep(2);
     // startTimer();
     // return;
@@ -58,11 +60,11 @@ const OtpLoginModal = ({ show, handleClose }) => {
       const formData = {
         phoneNumber: data.phone,
         messageType: "sms",
-        appHash: ""
+        appHash: "",
       };
       const response = await sendOtp(formData);
       const resData = response.data;
-      
+
       if (resData?.status === 200) {
         toast.success(resData?.msg || "OTP sent successfully");
         setStep(2);
@@ -74,11 +76,10 @@ const OtpLoginModal = ({ show, handleClose }) => {
           "Something went wrong";
         toast.error(errorMessage);
       }
-
     } catch (error) {
       const resData = error?.response?.data;
       const errorMessage =
-        resData?.error?.reason || 
+        resData?.error?.reason ||
         resData?.error?.message ||
         error?.message ||
         "Something went wrong";
@@ -117,7 +118,6 @@ const OtpLoginModal = ({ show, handleClose }) => {
         const resDataUser = responseUser.data;
 
         if (resDataUser?.status === 200) {
-
           const accessToken = resDataUser?.data?.accessToken;
           const refreshToken = resDataUser?.data?.refreshToken;
           localStorage.setItem("accessToken", accessToken);
@@ -125,16 +125,13 @@ const OtpLoginModal = ({ show, handleClose }) => {
           toast.success("Login successful");
           // router.push("/dashboard");
           handleClose();
-
-
-        }else {
+        } else {
           const errorMessage =
-          resDataUser?.error?.reason ||
-          resDataUser?.error?.message ||
-          "Something went wrong";
+            resDataUser?.error?.reason ||
+            resDataUser?.error?.message ||
+            "Something went wrong";
           toast.error(errorMessage);
         }
-
       } else {
         const errorMessage =
           resData?.error?.reason ||
@@ -143,7 +140,6 @@ const OtpLoginModal = ({ show, handleClose }) => {
 
         toast.error(errorMessage);
       }
-
     } catch (error) {
       const resData = error?.response?.data;
 
@@ -154,13 +150,11 @@ const OtpLoginModal = ({ show, handleClose }) => {
         "Something went wrong";
 
       toast.error(errorMessage);
-
     } finally {
       dispatch(HIDE_LOADER());
     }
   };
 
-   
   const startTimer = () => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
@@ -190,7 +184,7 @@ const OtpLoginModal = ({ show, handleClose }) => {
       const formData = {
         phoneNumber: phone,
         messageType: "sms",
-        appHash: ""
+        appHash: "",
       };
 
       await sendOtp(formData);
@@ -198,7 +192,6 @@ const OtpLoginModal = ({ show, handleClose }) => {
       toast.success("OTP resent successfully");
 
       startTimer();
-
     } catch (error) {
       const resData = error?.response?.data;
 
@@ -208,7 +201,6 @@ const OtpLoginModal = ({ show, handleClose }) => {
         "Something went wrong";
 
       toast.error(errorMessage);
-
     } finally {
       dispatch(HIDE_LOADER());
     }
@@ -248,34 +240,33 @@ const OtpLoginModal = ({ show, handleClose }) => {
               <div className={styles.label}>Mobile Number</div>
 
               <div className={styles.phoneBox}>
-                
                 <Controller
-                    name="phone"
-                    control={control}
-                    rules={{
-                      required: 'Phone number is required',
-                      validate: (value) =>
-                        value.replace(/\D/g, '').length >= 10 ||
-                        'Enter valid phone number',
-                    }}
-                    render={({ field }) => (
-                      <PhoneInput
-                        defaultCountry="us"
-                        value={field.value}
-                        onChange={field.onChange}
-                        placeholder="Enter phone number"
-                      />
-                    )}
-                  />
-                
+                  name="phone"
+                  control={control}
+                  rules={{
+                    required: "Phone number is required",
+                    validate: (value) =>
+                      value?.replace(/\D/g, "").length >= 10 ||
+                      "Enter valid phone number",
+                  }}
+                  render={({ field }) => (
+                    <PhoneInput
+                      defaultCountry="US"
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="000 000 0000"
+                      className={styles.phoneInput} // 👈 important
+                    />
+                  )}
+                />
+
                 {/* <input placeholder="000 000 0000" /> */}
               </div>
-              {errors.phone && <InputErrorMsg error={errors.phone?.message} color={`#f00`} />}
+              {errors.phone && (
+                <InputErrorMsg error={errors.phone?.message} color={`#f00`} />
+              )}
 
-              <button className={styles.primaryBtn}>
-                Send OTP →
-              </button>
-              
+              <button className={styles.primaryBtn}>Send OTP →</button>
 
               <div className={styles.footerText}>
                 New here? <span>Create account</span>
@@ -292,9 +283,7 @@ const OtpLoginModal = ({ show, handleClose }) => {
 
               <h3 className={styles.title}>Enter OTP</h3>
 
-              <p className={styles.subtitle}>
-                6-digit code sent to {phone}
-              </p>
+              <p className={styles.subtitle}>6-digit code sent to {phone}</p>
 
               <div className={styles.otpLabel}>Verification Code</div>
 
@@ -376,9 +365,7 @@ const OtpLoginModal = ({ show, handleClose }) => {
                     Resend OTP
                   </span>
                 ) : (
-                  <span>
-                    Resend (0:{timer < 10 ? `0${timer}` : timer})
-                  </span>
+                  <span>Resend (0:{timer < 10 ? `0${timer}` : timer})</span>
                 )}
               </div>
             </>

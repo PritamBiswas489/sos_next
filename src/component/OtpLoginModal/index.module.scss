@@ -55,6 +55,32 @@
 }
 
 /* INPUT */
+// .phoneBox {
+//   display: flex;
+//   align-items: center;
+//   background: $dark;
+//   border: 1px solid $dark-2;
+//   border-radius: 12px;
+//   padding: 6px;
+
+//   span {
+//     padding: 10px 12px;
+//     border-radius: 10px;
+//     border: 1px solid $dark-2;
+//     font-size: 13px;
+//     color: $white;
+//   }
+
+//   input {
+//     flex: 1;
+//     background: transparent;
+//     border: none;
+//     outline: none;
+//     color: $white;
+//     padding: 10px 12px;
+//     font-size: 14px;
+//   }
+// }
 .phoneBox {
   display: flex;
   align-items: center;
@@ -63,25 +89,53 @@
   border-radius: 12px;
   padding: 6px;
 
-  span {
-    padding: 10px 12px;
-    border-radius: 10px;
-    border: 1px solid $dark-2;
-    font-size: 13px;
-    color: $white;
-  }
-
-  input {
-    flex: 1;
+  .phoneInput {
+    display: flex;
+    align-items: center;
+    width: 100%;
     background: transparent;
-    border: none;
-    outline: none;
-    color: $white;
-    padding: 10px 12px;
-    font-size: 14px;
+
+    /* country wrapper */
+    :global(.PhoneInputCountry) {
+      background: transparent !important;
+      border: 1px solid $dark-2;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-right: 10px;
+    }
+
+    /* 🔥 HARD RESET (this is the real fix) */
+    :global(.PhoneInputCountry *) {
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+
+    /* specifically target svg flag */
+    :global(.PhoneInputCountry svg) {
+      background: transparent !important;
+    }
+
+    /* remove any default white box */
+    :global(.PhoneInputCountryIcon) {
+      background: transparent !important;
+    }
+
+    /* input */
+    :global(input) {
+      background: transparent !important;
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+      color: $white !important;
+      font-size: 14px;
+      padding: 12px;
+      width: 100%;
+    }
   }
 }
-
+:global(.PhoneInputCountryIcon) {
+  background-color: transparent !important;
+}
 /* BUTTON */
 .primaryBtn {
   width: 100%;

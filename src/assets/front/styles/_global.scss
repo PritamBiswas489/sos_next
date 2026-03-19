@@ -69,7 +69,21 @@ h5 {
 h6 {
   font-size: 1rem;
 }
-
+.react-international-phone-country-selector-button {
+  background-color: transparent !important;
+  border: $dark-2 1px solid !important;
+  border-radius: 6px !important;
+}
+.react-international-phone-country-selector-dropdown {
+  background-color: $dark-2 !important;
+  li {
+    color: $white;
+    margin-bottom: 3px;
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+}
 @media only screen and (max-width: 768px) {
   h2 {
     font-size: 1.626em;
