@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import styles from "./index.module.scss";
 import logo from "../../assets/front/images/logo.svg";
@@ -10,6 +10,18 @@ import OtpLoginModal from "@/component/OtpLoginModal";
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showOtpModal, setShowOtpModal] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
+
   return (
     <>
     <header className={styles.header}>
@@ -40,28 +52,42 @@ const Header = () => {
 
               {/* MOBILE SIGN IN */}
               <li className={styles.mobileOnly}>
-                <Link 
-                  href="#" 
-                  className={styles.mobileSignin}
-                  
-                  >
-                  Sign In
-                </Link>
+                 {isLoggedIn ? (
+                    <Link href="/dashboard" className={styles.mobileSignin}>
+                      My Account
+                    </Link>
+                  ) : (
+                    <Link 
+                      href="#" 
+                      className={styles.mobileSignin}
+                      onClick={() => {
+                        setShowOtpModal(true);
+                      }}
+                      >
+                      Sign In
+                    </Link>
+                  )}
               </li>
             </ul>
           </nav>
 
           {/* RIGHT - BUTTON */}
           <div className={styles.signinArea}>
-            <Link 
-              href="#" 
-              className={styles.signin}
-              onClick={() => {
-                setShowOtpModal(true);
-              }}
-            >
-              Sign In
-            </Link>
+            {isLoggedIn ? (
+              <Link href="/dashboard" className={styles.signin}>
+                My Account
+              </Link>
+            ) : (
+              <Link 
+                href="#" 
+                className={styles.signin}
+                onClick={() => {
+                  setShowOtpModal(true);
+                }}
+              >
+                Sign In
+              </Link>
+            )}
             <button
               className={styles.menuBtn}
               onClick={() => setMenuOpen((prev) => !prev)}

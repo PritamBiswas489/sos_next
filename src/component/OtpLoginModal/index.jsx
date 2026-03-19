@@ -123,7 +123,8 @@ const OtpLoginModal = ({ show, handleClose }) => {
           localStorage.setItem("accessToken", accessToken);
           localStorage.setItem("refreshToken", refreshToken);
           toast.success("Login successful");
-          router.push("/dashboard");
+          // router.push("/dashboard");
+          handleClose();
 
 
         }else {
