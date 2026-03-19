@@ -102,6 +102,7 @@ const Header = () => {
     <OtpLoginModal
       show={showOtpModal}
       handleClose={() => setShowOtpModal(false)}
+      setIsLoggedIn={setIsLoggedIn}
     />
     </>
   );

@@ -15,7 +15,7 @@ import {
 } from "@/services/login.service";
 import { useRouter } from "next/navigation";
 
-const OtpLoginModal = ({ show, handleClose }) => {
+const OtpLoginModal = ({ show, handleClose, setIsLoggedIn }) => {
   const [step, setStep] = useState(1);
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [phone, setPhone] = useState("");
@@ -125,6 +125,7 @@ const OtpLoginModal = ({ show, handleClose }) => {
           toast.success("Login successful");
           // router.push("/dashboard");
           handleClose();
+          setIsLoggedIn(true);
         } else {
           const errorMessage =
             resDataUser?.error?.reason ||
