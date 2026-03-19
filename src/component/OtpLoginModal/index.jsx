@@ -1,11 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
 import styles from "./index.module.scss";
 import { FaMobileAlt, FaKey } from "react-icons/fa";
+import { PhoneInput } from 'react-international-phone';
+import { useForm, Controller } from 'react-hook-form';
+import InputErrorMsg from "../InputErrorMsg/InputErrorMsg";
+import { toast } from 'react-toastify';
+import { HIDE_LOADER, SHOW_LOADER } from "@/redux/loaderSlice";
+import { useDispatch } from "react-redux";
+import { createUserAfterOtpVerification, sendOtp, verifyOtp } from "@/services/login.service";
+import { useRouter } from "next/navigation";
 
 const OtpLoginModal = ({ show, handleClose }) => {
   const [step, setStep] = useState(1);
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [phone, setPhone] = useState("");
+  const [timer, setTimer] = useState(60);
+  const [canResend, setCanResend] = useState(false);
+  const timerRef = useRef(null); // ✅ FIXED
+  const dispatch = useDispatch();
+  const router = useRouter();
 
   const handleOtpChange = (value, index) => {
     if (!/^[0-9]?$/.test(value)) return;
@@ -22,6 +36,191 @@ const OtpLoginModal = ({ show, handleClose }) => {
     }
   };
 
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+    control,
+    reset: reset,
+  } = useForm();
+
+  const onSubmit = async (data) => {
+    
+    // setStep(2);
+    // startTimer();
+    // return;
+
+    try {
+      dispatch(SHOW_LOADER());
+      setPhone(data.phone);
+      const formData = {
+        phoneNumber: data.phone,
+        messageType: "sms",
+        appHash: ""
+      };
+      const response = await sendOtp(formData);
+      const resData = response.data;
+      
+      if (resData?.status === 200) {
+        toast.success(resData?.msg || "OTP sent successfully");
+        setStep(2);
+        startTimer();
+      } else {
+        const errorMessage =
+          resData?.error?.reason ||
+          resData?.error?.message ||
+          "Something went wrong";
+        toast.error(errorMessage);
+      }
+
+    } catch (error) {
+      const resData = error?.response?.data;
+      const errorMessage =
+        resData?.error?.reason || 
+        resData?.error?.message ||
+        error?.message ||
+        "Something went wrong";
+      toast.error(errorMessage);
+    } finally {
+      dispatch(HIDE_LOADER());
+    }
+  };
+
+  const onVerifyOtp = async (data) => {
+    const otpValue = data.otp.join("");
+
+    if (otpValue.length !== 4) {
+      toast.error("Please enter complete OTP");
+      return;
+    }
+
+    try {
+      dispatch(SHOW_LOADER());
+
+      const formData = {
+        phoneNumber: phone,
+        otp: otpValue,
+      };
+
+      const response = await verifyOtp(formData);
+      const resData = response.data;
+
+      if (resData?.status === 200) {
+        toast.success(resData?.msg || "OTP verified successfully");
+
+        const formDataUser = {
+          phoneNumber: phone,
+        };
+        const responseUser = await createUserAfterOtpVerification(formDataUser);
+        const resDataUser = responseUser.data;
+
+        if (resDataUser?.status === 200) {
+
+          const accessToken = resDataUser?.data?.accessToken;
+          const refreshToken = resDataUser?.data?.refreshToken;
+          localStorage.setItem("accessToken", accessToken);
+          localStorage.setItem("refreshToken", refreshToken);
+          toast.success("Login successful");
+          router.push("/dashboard");
+
+
+        }else {
+          const errorMessage =
+          resDataUser?.error?.reason ||
+          resDataUser?.error?.message ||
+          "Something went wrong";
+          toast.error(errorMessage);
+        }
+
+      } else {
+        const errorMessage =
+          resData?.error?.reason ||
+          resData?.error?.message ||
+          "Something went wrong";
+
+        toast.error(errorMessage);
+      }
+
+    } catch (error) {
+      const resData = error?.response?.data;
+
+      const errorMessage =
+        resData?.error?.reason ||
+        resData?.error?.message ||
+        error?.message ||
+        "Something went wrong";
+
+      toast.error(errorMessage);
+
+    } finally {
+      dispatch(HIDE_LOADER());
+    }
+  };
+
+   
+  const startTimer = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+
+    setTimer(60);
+    setCanResend(false);
+
+    let count = 60;
+
+    timerRef.current = setInterval(() => {
+      count--;
+
+      setTimer(count);
+
+      if (count <= 0) {
+        clearInterval(timerRef.current);
+        setCanResend(true);
+      }
+    }, 1000);
+  };
+
+  const handleResend = async () => {
+    try {
+      dispatch(SHOW_LOADER());
+
+      const formData = {
+        phoneNumber: phone,
+        messageType: "sms",
+        appHash: ""
+      };
+
+      await sendOtp(formData);
+
+      toast.success("OTP resent successfully");
+
+      startTimer();
+
+    } catch (error) {
+      const resData = error?.response?.data;
+
+      const errorMessage =
+        resData?.error?.reason ||
+        resData?.error?.message ||
+        "Something went wrong";
+
+      toast.error(errorMessage);
+
+    } finally {
+      dispatch(HIDE_LOADER());
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, []);
+
   return (
     <Modal
       show={show}
@@ -34,7 +233,7 @@ const OtpLoginModal = ({ show, handleClose }) => {
         <div className={styles.card}>
           {/* STEP 1 */}
           {step === 1 && (
-            <>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className={styles.iconBox}>
                 <FaMobileAlt />
               </div>
@@ -48,18 +247,39 @@ const OtpLoginModal = ({ show, handleClose }) => {
               <div className={styles.label}>Mobile Number</div>
 
               <div className={styles.phoneBox}>
-                <span>US +1</span>
-                <input placeholder="000 000 0000" />
+                
+                <Controller
+                    name="phone"
+                    control={control}
+                    rules={{
+                      required: 'Phone number is required',
+                      validate: (value) =>
+                        value.replace(/\D/g, '').length >= 10 ||
+                        'Enter valid phone number',
+                    }}
+                    render={({ field }) => (
+                      <PhoneInput
+                        defaultCountry="us"
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="Enter phone number"
+                      />
+                    )}
+                  />
+                
+                {/* <input placeholder="000 000 0000" /> */}
               </div>
+              {errors.phone && <InputErrorMsg error={errors.phone?.message} color={`#f00`} />}
 
-              <button className={styles.primaryBtn} onClick={() => setStep(2)}>
+              <button className={styles.primaryBtn}>
                 Send OTP →
               </button>
+              
 
               <div className={styles.footerText}>
                 New here? <span>Create account</span>
               </div>
-            </>
+            </form>
           )}
 
           {/* STEP 2 */}
@@ -72,12 +292,12 @@ const OtpLoginModal = ({ show, handleClose }) => {
               <h3 className={styles.title}>Enter OTP</h3>
 
               <p className={styles.subtitle}>
-                6-digit code sent to +1 *** *** 8821
+                6-digit code sent to {phone}
               </p>
 
               <div className={styles.otpLabel}>Verification Code</div>
 
-              <div className={styles.otpContainer}>
+              {/* <div className={styles.otpContainer}>
                 {otp.map((val, i) => (
                   <input
                     key={i}
@@ -89,10 +309,76 @@ const OtpLoginModal = ({ show, handleClose }) => {
                 ))}
               </div>
 
-              <button className={styles.primaryBtn}>Verify & Login ✓</button>
+              <button className={styles.primaryBtn}>Verify & Login ✓</button> */}
+
+              <form onSubmit={handleSubmit(onVerifyOtp)}>
+                <div className={styles.otpContainer}>
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <Controller
+                      key={i}
+                      name={`otp.${i}`}
+                      control={control}
+                      rules={{
+                        required: "Required",
+                        pattern: {
+                          value: /^[0-9]$/,
+                          message: "Only numbers",
+                        },
+                      }}
+                      render={({ field }) => (
+                        <input
+                          {...field}
+                          id={`otp-${i}`}
+                          maxLength={1}
+                          onChange={(e) => {
+                            const value = e.target.value;
+
+                            if (!/^[0-9]?$/.test(value)) return;
+
+                            field.onChange(value);
+
+                            // auto focus next
+                            if (value && i < 3) {
+                              document.getElementById(`otp-${i + 1}`)?.focus();
+                            }
+
+                            // auto focus previous
+                            if (!value && i > 0) {
+                              document.getElementById(`otp-${i - 1}`)?.focus();
+                            }
+                          }}
+                        />
+                      )}
+                    />
+                  ))}
+                </div>
+
+                {/* OPTIONAL ERROR */}
+                {errors.otp && (
+                  <p style={{ color: "red", marginTop: "5px" }}>
+                    Please enter valid OTP
+                  </p>
+                )}
+
+                <button type="submit" className={styles.primaryBtn}>
+                  Verify & Login ✓
+                </button>
+              </form>
 
               <div className={styles.footerText}>
-                Didn’t receive? <span>Resend (0:45)</span>
+                Didn’t receive?{" "}
+                {canResend ? (
+                  <span
+                    onClick={handleResend}
+                    style={{ cursor: "pointer", color: "#11b0ca" }}
+                  >
+                    Resend OTP
+                  </span>
+                ) : (
+                  <span>
+                    Resend (0:{timer < 10 ? `0${timer}` : timer})
+                  </span>
+                )}
               </div>
             </>
           )}

@@ -45,7 +45,7 @@
 }
 
 .title {
-  font-size: 56px;
+  font-size: 50px;
   font-weight: 800;
   line-height: 1.2;
 
@@ -106,7 +106,7 @@
 }
 
 .card {
-  padding: 35px 20px;
+  padding: 15px 20px;
   text-align: center;
   cursor: pointer;
   transition: all 0.35s ease;
@@ -114,10 +114,12 @@
 
   h6 {
     color: $white;
+    margin-bottom: 5px;
   }
 
   p {
     color: $gray;
+    font-size: 13px;
   }
 }
 
@@ -134,7 +136,7 @@
 .icon {
   font-size: 26px;
   color: $secondary;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
   transition: all 0.3s ease;
 }
 

@@ -74,13 +74,13 @@ const Hero = () => {
               <Col md={2} col xs={2} key={index} className={styles.col}>
                 <div
                   className={styles.card}
-                  onClick={() => {
-                    if (item.title === "Family Circle") {
-                      setShowOtpModal(true);
-                    } else {
-                      router.push(item.link);
-                    }
-                  }}
+                  // onClick={() => {
+                  //   if (item.title === "Family Circle") {
+                  //     setShowOtpModal(true);
+                  //   } else {
+                  //     router.push(item.link);
+                  //   }
+                  // }}
                 >
                   <div className={styles.icon}>{item.icon}</div>
 

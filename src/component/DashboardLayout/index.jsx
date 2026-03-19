@@ -3,9 +3,13 @@ import { Container, Row, Col } from "react-bootstrap";
 import Sidebar from "../Sidebar";
 import styles from "./index.module.scss";
 import { FaBars } from "react-icons/fa";
+import useAuth from "@/hooks/useAuth";
 
 const DashboardLayout = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const loading = useAuth();
+  if (loading) return null;
 
   return (
     <div className={styles.dashboard}>

@@ -5,10 +5,13 @@ import { Container, Row, Col } from "react-bootstrap";
 import styles from "./index.module.scss";
 import logo from "../../assets/front/images/logo.svg";
 import { FaBars, FaTimes } from "react-icons/fa";
+import OtpLoginModal from "@/component/OtpLoginModal";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showOtpModal, setShowOtpModal] = useState(false);
   return (
+    <>
     <header className={styles.header}>
       <Container fluid="xxl">
         <Row className="align-items-center justify-content-between">
@@ -37,7 +40,11 @@ const Header = () => {
 
               {/* MOBILE SIGN IN */}
               <li className={styles.mobileOnly}>
-                <Link href="#" className={styles.mobileSignin}>
+                <Link 
+                  href="#" 
+                  className={styles.mobileSignin}
+                  
+                  >
                   Sign In
                 </Link>
               </li>
@@ -46,7 +53,13 @@ const Header = () => {
 
           {/* RIGHT - BUTTON */}
           <div className={styles.signinArea}>
-            <Link href="#" className={styles.signin}>
+            <Link 
+              href="#" 
+              className={styles.signin}
+              onClick={() => {
+                setShowOtpModal(true);
+              }}
+            >
               Sign In
             </Link>
             <button
@@ -59,6 +72,12 @@ const Header = () => {
         </Row>
       </Container>
     </header>
+
+    <OtpLoginModal
+      show={showOtpModal}
+      handleClose={() => setShowOtpModal(false)}
+    />
+    </>
   );
 };
 
