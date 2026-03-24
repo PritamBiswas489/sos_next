@@ -1,0 +1,192 @@
+@use "../../assets/front/styles/variable" as *;
+
+.customModal {
+  max-width: 400px;
+  margin: auto;
+}
+
+.modalBody {
+  padding: 0;
+  background: transparent;
+}
+
+/* CARD */
+.card {
+  background: linear-gradient(180deg, $dark, $dark-2);
+  border-radius: 22px;
+  padding: 36px 28px;
+  
+  color: $white;
+}
+
+/* ICON */
+.iconBox {
+  width: 56px;
+  height: 56px;
+  background: $primary;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+  font-size: 22px;
+}
+
+/* TITLE */
+.title {
+  font-size: 22px;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+/* SUBTITLE */
+.subtitle {
+  font-size: 14px;
+  color: $gray;
+  margin-bottom: 22px;
+  line-height: 1.5;
+}
+
+/* LABEL */
+.label {
+  text-align: left;
+  font-size: 13px;
+  color: $gray;
+  margin-bottom: 8px;
+}
+
+/* INPUT */
+// .phoneBox {
+//   display: flex;
+//   align-items: center;
+//   background: $dark;
+//   border: 1px solid $dark-2;
+//   border-radius: 12px;
+//   padding: 6px;
+
+//   span {
+//     padding: 10px 12px;
+//     border-radius: 10px;
+//     border: 1px solid $dark-2;
+//     font-size: 13px;
+//     color: $white;
+//   }
+
+//   input {
+//     flex: 1;
+//     background: transparent;
+//     border: none;
+//     outline: none;
+//     color: $white;
+//     padding: 10px 12px;
+//     font-size: 14px;
+//   }
+// }
+.phoneBox {
+  display: flex;
+  align-items: center;
+  background: $dark;
+  border: 1px solid $dark-2;
+  border-radius: 12px;
+  padding: 6px;
+
+  .phoneInput {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background: transparent;
+
+    /* country wrapper */
+    :global(.PhoneInputCountry) {
+      background: transparent !important;
+      border: 1px solid $dark-2;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-right: 10px;
+    }
+
+    /* 🔥 HARD RESET (this is the real fix) */
+    :global(.PhoneInputCountry *) {
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+
+    /* specifically target svg flag */
+    :global(.PhoneInputCountry svg) {
+      background: transparent !important;
+    }
+
+    /* remove any default white box */
+    :global(.PhoneInputCountryIcon) {
+      background: transparent !important;
+    }
+
+    /* input */
+    :global(input) {
+      background: transparent !important;
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+      color: $white !important;
+      font-size: 14px;
+      padding: 12px;
+      width: 100%;
+    }
+  }
+}
+:global(.PhoneInputCountryIcon) {
+  background-color: transparent !important;
+}
+/* BUTTON */
+.primaryBtn {
+  width: 100%;
+  margin-top: 22px;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: $primary;
+  color: $white;
+  font-size: 14px;
+}
+
+/* OTP */
+.otpLabel {
+  margin-top: 18px;
+  font-size: 13px;
+  color: $gray;
+}
+
+.otpContainer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+
+  input {
+    width: 45px;
+    height: 50px;
+    text-align: center;
+    font-size: 20px;
+    border-radius: 10px;
+    border: 1px solid $dark-2;
+    background: $dark;
+    color: $white;
+
+    &:focus {
+      border-color: $primary;
+      outline: none;
+    }
+  }
+}
+
+/* FOOTER */
+.footerText {
+  margin-top: 18px;
+  font-size: 13px;
+  color: $gray;
+
+  span {
+    color: $primary;
+    cursor: pointer;
+  }
+}

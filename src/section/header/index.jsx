@@ -1,16 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Dropdown } from "react-bootstrap";
 import styles from "./index.module.scss";
 import logo from "../../assets/front/images/logo.svg";
 import { FaBars, FaTimes } from "react-icons/fa";
 import OtpLoginModal from "@/component/OtpLoginModal";
+import NgoLoginModal from "@/component/NgoLoginModal";
+import NgoRegisterModal from "@/component/NgoRegisterModal";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showOtpModal, setShowOtpModal] = useState(false);
+  const [ngoLoginModal, setNgoLoginModal] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -73,7 +78,7 @@ const Header = () => {
 
           {/* RIGHT - BUTTON */}
           <div className={styles.signinArea}>
-            {isLoggedIn ? (
+            {/* {isLoggedIn ? (
               <Link href="/dashboard" className={styles.signin}>
                 My Account
               </Link>
@@ -87,7 +92,48 @@ const Header = () => {
               >
                 Sign In
               </Link>
-            )}
+            )} */}
+
+              {/* <Link 
+                href="#" 
+                className={styles.signin}
+                onClick={() => {
+                  setShowOtpModal(true);
+                }}
+              >
+                User
+              </Link>
+              <Link 
+                href="#" 
+                className={styles.signin}
+                onClick={() => {
+                  setNgoLoginModal(true);
+                }}
+              >
+                NGO
+              </Link> */}
+
+              <Dropdown>
+                <Dropdown.Toggle variant="success" id="dropdown-basic" className={styles.signin}>
+                  Sign In
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  <Dropdown.Item 
+                    href="#"
+                    onClick={() => {
+                      setShowOtpModal(true);
+                    }}
+                  >As a User</Dropdown.Item>
+                  <Dropdown.Item 
+                    href="#"
+                    onClick={() => {
+                    setNgoLoginModal(true);
+                  }}
+                  >As a NGO</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+
             <button
               className={styles.menuBtn}
               onClick={() => setMenuOpen((prev) => !prev)}
@@ -99,11 +145,30 @@ const Header = () => {
       </Container>
     </header>
 
-    <OtpLoginModal
-      show={showOtpModal}
-      handleClose={() => setShowOtpModal(false)}
-      setIsLoggedIn={setIsLoggedIn}
-    />
+      <OtpLoginModal
+        show={showOtpModal}
+        handleClose={() => setShowOtpModal(false)}
+        setIsLoggedIn={setIsLoggedIn}
+      />
+    
+      <NgoLoginModal
+        show={ngoLoginModal}
+        handleClose={() => setNgoLoginModal(false)}
+        openRegister={() => {
+          setNgoLoginModal(false);
+          setShowRegister(true);
+        }}
+      />
+
+      <NgoRegisterModal
+        show={showRegister}
+        handleClose={() => setShowRegister(false)}
+        openLogin={() => {
+          setShowRegister(false);
+          setShowLogin(true);
+        }}
+      />
+
     </>
   );
 };

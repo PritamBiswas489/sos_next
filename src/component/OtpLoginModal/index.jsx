@@ -14,6 +14,7 @@ import {
   verifyOtp,
 } from "@/services/login.service";
 import { useRouter } from "next/navigation";
+import { encryptData } from "@/utils/crypto";
 
 const OtpLoginModal = ({ show, handleClose, setIsLoggedIn }) => {
   const [step, setStep] = useState(1);
@@ -21,9 +22,10 @@ const OtpLoginModal = ({ show, handleClose, setIsLoggedIn }) => {
   const [phone, setPhone] = useState("");
   const [timer, setTimer] = useState(60);
   const [canResend, setCanResend] = useState(false);
-  const timerRef = useRef(null); // ✅ FIXED
+  const timerRef = useRef(null); 
   const dispatch = useDispatch();
   const router = useRouter();
+  const [autoFillOTP, setAutoFillOTP] = useState("");
 
   const handleOtpChange = (value, index) => {
     if (!/^[0-9]?$/.test(value)) return;
@@ -46,7 +48,8 @@ const OtpLoginModal = ({ show, handleClose, setIsLoggedIn }) => {
     formState: { errors },
     watch,
     control,
-    reset: reset,
+    reset,
+    setValue, // ✅ ADD THIS
   } = useForm();
 
   const onSubmit = async (data) => {
@@ -68,6 +71,7 @@ const OtpLoginModal = ({ show, handleClose, setIsLoggedIn }) => {
       if (resData?.status === 200) {
         toast.success(resData?.msg || "OTP sent successfully");
         setStep(2);
+        setAutoFillOTP(resData?.data?.otpCode);
         startTimer();
       } else {
         const errorMessage =
@@ -118,12 +122,18 @@ const OtpLoginModal = ({ show, handleClose, setIsLoggedIn }) => {
         const resDataUser = responseUser.data;
 
         if (resDataUser?.status === 200) {
+
           const accessToken = resDataUser?.data?.accessToken;
           const refreshToken = resDataUser?.data?.refreshToken;
+          const role = resDataUser?.data?.user?.role;
+          const encryptedRole = encryptData(role);
+
           localStorage.setItem("accessToken", accessToken);
           localStorage.setItem("refreshToken", refreshToken);
+          localStorage.setItem("role", encryptedRole);
+
           toast.success("Login successful");
-          // router.push("/dashboard");
+          router.push("/dashboard");
           handleClose();
           setIsLoggedIn(true);
         } else {
@@ -215,6 +225,19 @@ const OtpLoginModal = ({ show, handleClose, setIsLoggedIn }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (autoFillOTP) {
+      const otpArray = autoFillOTP.toString().split("");
+
+      otpArray.forEach((digit, index) => {
+        setValue(`otp.${index}`, digit);
+      });
+
+      // optional focus
+      document.getElementById(`otp-${otpArray.length - 1}`)?.focus();
+    }
+  }, [autoFillOTP]);
+
   return (
     <Modal
       show={show}
@@ -244,19 +267,20 @@ const OtpLoginModal = ({ show, handleClose, setIsLoggedIn }) => {
                 <Controller
                   name="phone"
                   control={control}
+                  defaultValue="+254" 
                   rules={{
                     required: "Phone number is required",
                     validate: (value) =>
-                      value?.replace(/\D/g, "").length >= 10 ||
+                      value?.replace(/\D/g, "").length >= 9 || 
                       "Enter valid phone number",
                   }}
                   render={({ field }) => (
                     <PhoneInput
-                      defaultCountry="US"
+                      defaultCountry="KE"
                       value={field.value}
                       onChange={field.onChange}
-                      placeholder="000 000 0000"
-                      className={styles.phoneInput} // 👈 important
+                      placeholder="700 000 000"
+                      className={styles.phoneInput}
                     />
                   )}
                 />
@@ -284,7 +308,7 @@ const OtpLoginModal = ({ show, handleClose, setIsLoggedIn }) => {
 
               <h3 className={styles.title}>Enter OTP</h3>
 
-              <p className={styles.subtitle}>6-digit code sent to {phone}</p>
+              <p className={styles.subtitle}>4-digit code sent to {phone}</p>
 
               <div className={styles.otpLabel}>Verification Code</div>
 

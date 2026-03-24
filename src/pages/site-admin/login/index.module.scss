@@ -1,0 +1,52 @@
+@use "../../../assets/front/styles/variable" as *;
+.loginWrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background: #f5f7fb;
+}
+
+.card {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.loginBtn {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background: #007bff;
+  color: #fff;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: 0.3s;
+
+  &:hover {
+    background: #0056b3;
+  }
+
+  &:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+}
+
+.footer {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 14px;
+
+  span {
+    color: #007bff;
+    cursor: pointer;
+    font-weight: 500;
+  }
+}

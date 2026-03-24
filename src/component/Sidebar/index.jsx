@@ -13,20 +13,50 @@ import {
 } from "react-icons/fa";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { decryptData } from "@/utils/crypto";
 
-const menu = [
-  { icon: <FaHome />, label: "Dashboard", active: true, path: "/dashboard" },
-  { icon: <FaUser />, label: "Profile", path: "/dashboard/profile" },
-  { icon: <FaUsers />, label: "Family", path: "/dashboard/family" },
-  { icon: <FaMapMarkerAlt />, label: "Location", path: "/dashboard/location" },
-  { icon: <FaFileAlt />, label: "SOS History", path: "/dashboard/sos-history" },
-  { icon: <FaDownload />, label: "Downloads", path: "/dashboard/downloads" },
-  { icon: <FaCog />, label: "Settings", path: "/dashboard/settings" },
-  { icon: <FaLock />, label: "Privacy", path: "/dashboard/privacy" },
-];
+
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
   const router = useRouter();
+
+  const encryptedRole = localStorage.getItem("role");
+  const role = decryptData(encryptedRole);
+  // console.log('role', role)
+
+  const AdminMenu = [
+    { icon: <FaHome />, label: "Dashboard", active: true, path: "/site-admin/dashboard" },
+    { icon: <FaUsers />, label: "NGO List", path: "/site-admin/dashboard/ngo-list" },
+    // { icon: <FaUser />, label: "Profile", path: "/dashboard/profile" },
+    // { icon: <FaUsers />, label: "Family", path: "/dashboard/family" },
+    // { icon: <FaMapMarkerAlt />, label: "Location", path: "/dashboard/location" },
+    // { icon: <FaFileAlt />, label: "SOS History", path: "/dashboard/sos-history" },
+    // { icon: <FaDownload />, label: "Downloads", path: "/dashboard/downloads" },
+    // { icon: <FaCog />, label: "Settings", path: "/dashboard/settings" },
+    // { icon: <FaLock />, label: "Privacy", path: "/dashboard/privacy" },
+  ];
+
+  const UserMenu = [
+    { icon: <FaHome />, label: "Dashboard", active: true, path: "/dashboard" },
+    { icon: <FaUser />, label: "Profile", path: "/dashboard/profile" },
+    { icon: <FaUsers />, label: "Family", path: "/dashboard/family" },
+    { icon: <FaMapMarkerAlt />, label: "Location", path: "/dashboard/location" },
+    { icon: <FaFileAlt />, label: "SOS History", path: "/dashboard/sos-history" },
+    { icon: <FaDownload />, label: "Downloads", path: "/dashboard/downloads" },
+    { icon: <FaCog />, label: "Settings", path: "/dashboard/settings" },
+    { icon: <FaLock />, label: "Privacy", path: "/dashboard/privacy" },
+  ];
+
+  const NgoMenu = [
+    { icon: <FaHome />, label: "Dashboard", active: true, path: "/dashboard" },
+    { icon: <FaUser />, label: "Profile", path: "/dashboard/profile" },
+    { icon: <FaUsers />, label: "Family", path: "/dashboard/family" },
+    { icon: <FaMapMarkerAlt />, label: "Location", path: "/dashboard/location" },
+    { icon: <FaFileAlt />, label: "SOS History", path: "/dashboard/sos-history" },
+    { icon: <FaDownload />, label: "Downloads", path: "/dashboard/downloads" },
+    { icon: <FaCog />, label: "Settings", path: "/dashboard/settings" },
+    { icon: <FaLock />, label: "Privacy", path: "/dashboard/privacy" },
+  ];
 
   return (
     <>
@@ -38,22 +68,64 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           <div className={styles.logo}>
             <Image src={logo} alt="SOS Logo" width={133} height={30} />
           </div>
-          <ul className={styles.menu}>
-            {menu.map((item, i) => (
-              <li
-                key={i}
-                onClick={() => {
-                  (router.push(item.path), setIsOpen(false));
-                }}
-                className={`${styles.menuItem} ${
-                  router.pathname === item.path ? styles.active : ""
-                }`}
-              >
-                <span className={styles.icon}>{item.icon}</span>
-                <span className={styles.label}>{item.label}</span>
-              </li>
-            ))}
-          </ul>
+          {role==='ADMIN' && (
+            <ul className={styles.menu}>
+              {AdminMenu.map((item, i) => (
+                <li
+                  key={i}
+                  onClick={() => {
+                    (router.push(item.path), setIsOpen(false));
+                  }}
+                  className={`${styles.menuItem} ${
+                    router.pathname === item.path ? styles.active : ""
+                  }`}
+                >
+                  <span className={styles.icon}>{item.icon}</span>
+                  <span className={styles.label}>{item.label}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {role==='USER' && (
+            <ul className={styles.menu}>
+              {UserMenu.map((item, i) => (
+                <li
+                  key={i}
+                  onClick={() => {
+                    (router.push(item.path), setIsOpen(false));
+                  }}
+                  className={`${styles.menuItem} ${
+                    router.pathname === item.path ? styles.active : ""
+                  }`}
+                >
+                  <span className={styles.icon}>{item.icon}</span>
+                  <span className={styles.label}>{item.label}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {role==='NGO' && (
+            <ul className={styles.menu}>
+              {NgoMenu.map((item, i) => (
+                <li
+                  key={i}
+                  onClick={() => {
+                    (router.push(item.path), setIsOpen(false));
+                  }}
+                  className={`${styles.menuItem} ${
+                    router.pathname === item.path ? styles.active : ""
+                  }`}
+                >
+                  <span className={styles.icon}>{item.icon}</span>
+                  <span className={styles.label}>{item.label}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+
+
         </div>
         <div className={styles.userCard}>
           <div className={styles.avatar}>JD</div>
