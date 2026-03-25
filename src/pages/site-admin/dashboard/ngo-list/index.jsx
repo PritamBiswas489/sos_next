@@ -7,6 +7,9 @@ import { useDispatch } from "react-redux";
 import { SHOW_LOADER, HIDE_LOADER } from "@/redux/loaderSlice";
 import { toast } from "react-toastify";
 import { ngoList } from "@/services/admin.service";
+import { FaEye } from "react-icons/fa";
+import NgoDetailsModal from "@/component/Popup/NgoDetails";
+
 
 export default function Ngolist() {
   const dispatch = useDispatch();
@@ -14,8 +17,9 @@ export default function Ngolist() {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0); // 0-based
   const [totalPages, setTotalPages] = useState(0);
-
-  const itemsPerPage = 10;
+  const itemsPerPage = 3;
+  const [showModal, setShowModal] = useState(false);
+  const [selectedNgo, setSelectedNgo] = useState(null);
 
 
   const fetchNgoList = async (page = 0) => {
@@ -53,6 +57,16 @@ export default function Ngolist() {
     fetchNgoList(selected);
   };
 
+  const handleView = (item) => {
+    setSelectedNgo(item);
+    setShowModal(true);
+  };
+
+  const handleClose = () => {
+    setShowModal(false);
+    setSelectedNgo(null);
+  };
+
   return (
     <DashboardLayout>
       <Container fluid className={styles.page}>
@@ -69,6 +83,7 @@ export default function Ngolist() {
                   <th>Email</th>
                   <th>Phone</th>
                   <th>No. of Users</th>
+                  <th>Action</th>
                 </tr>
               </thead>
 
@@ -81,6 +96,12 @@ export default function Ngolist() {
                       <td>{item.email}</td>
                       <td>{item.phone_number}</td>
                       <td>{item.ngo_number_of_user_assigned}</td>
+                      <td>
+                        <FaEye
+                          style={{ cursor: "pointer", color: "#007bff" }}
+                          onClick={() => handleView(item)}
+                        />
+                      </td>
                     </tr>
                   ))
                 ) : (
@@ -113,6 +134,12 @@ export default function Ngolist() {
           </Col>
         </Row>
       </Container>
+      <NgoDetailsModal
+        show={showModal}
+        handleClose={() => setShowModal(false)}
+        selectedNgo={selectedNgo}
+      />
+
     </DashboardLayout>
   );
 }

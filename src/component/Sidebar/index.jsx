@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./index.module.scss";
-import logo from "../../assets/front/images/logo.svg";
+// import logo from "../../assets/front/images/logo.svg";
+import logo from "../../assets/front/images/logo.png";
 import {
   FaHome,
   FaUser,
