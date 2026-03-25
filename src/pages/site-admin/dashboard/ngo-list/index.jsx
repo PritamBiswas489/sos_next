@@ -6,9 +6,10 @@ import ReactPaginate from "react-paginate";
 import { useDispatch } from "react-redux";
 import { SHOW_LOADER, HIDE_LOADER } from "@/redux/loaderSlice";
 import { toast } from "react-toastify";
-import { ngoList } from "@/services/admin.service";
-import { FaEye } from "react-icons/fa";
-import NgoDetailsModal from "@/component/Popup/NgoDetails";
+import { ngoList, rejectNgo, verifyNgo } from "@/services/admin.service";
+import NgoDetailsModal from "@/component/Popup/Admin/NgoDetails";
+import { FaEye, FaEdit } from "react-icons/fa";
+import NgoUpdateModal from "@/component/Popup/Admin/NgoUpdate";
 
 
 export default function Ngolist() {
@@ -19,6 +20,7 @@ export default function Ngolist() {
   const [totalPages, setTotalPages] = useState(0);
   const itemsPerPage = 3;
   const [showModal, setShowModal] = useState(false);
+  const [showNgoUpdateModal, setShowNgoUpdateModal] = useState(false);
   const [selectedNgo, setSelectedNgo] = useState(null);
 
 
@@ -67,6 +69,67 @@ export default function Ngolist() {
     setSelectedNgo(null);
   };
 
+  const handleEdit = (item) => {
+    setSelectedNgo(item);
+    setShowNgoUpdateModal(true);
+  };
+
+  const handleAccept = async (ngo) => {
+  try {
+    dispatch(SHOW_LOADER());
+    const formData = {
+      id: ngo?.id,
+    }
+    const response = await verifyNgo(formData);
+    const resData = response.data;
+    if (resData?.status === 200) {
+      toast.success(resData?.message);
+      handleClose();
+      fetchNgoList(currentPage);
+    } else {
+      toast.error(
+        resData?.error?.message || ""
+      );
+    }
+  } catch (err) {
+    console.log('err', err)
+    toast.error("Failed to accept NGO");
+  } finally {
+    dispatch(HIDE_LOADER());
+  }
+};
+
+const handleReject = async (ngo) => {
+  try {
+    dispatch(SHOW_LOADER());
+    const formData = {
+      id: ngo?.id,
+    }
+    const response = await rejectNgo(formData);
+    const resData = response.data;
+    if (resData?.status === 200) {
+      toast.success(resData?.message);
+      handleClose();
+      fetchNgoList(currentPage);
+    } else {
+      toast.error(
+        resData?.error?.message || ""
+      );
+    }
+  } catch (err) {
+    console.log('err', err)
+    toast.error("Failed to accept NGO");
+  } finally {
+    dispatch(HIDE_LOADER());
+  }
+};
+
+
+
+const updateTable = () => {
+  fetchNgoList(currentPage);
+}
+
   return (
     <DashboardLayout>
       <Container fluid className={styles.page}>
@@ -78,11 +141,11 @@ export default function Ngolist() {
             <Table striped bordered hover responsive>
               <thead>
                 <tr>
-                  <th>#</th>
                   <th>Name</th>
                   <th>Email</th>
                   <th>Phone</th>
-                  <th>No. of Users</th>
+                  <th>Assigned Users</th>
+                  <th>Registered Users</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -91,15 +154,20 @@ export default function Ngolist() {
                 {data.length > 0 ? (
                   data.map((item, index) => (
                     <tr key={item.id}>
-                      <td>{currentPage * itemsPerPage + index + 1}</td>
                       <td>{item.name}</td>
                       <td>{item.email}</td>
                       <td>{item.phone_number}</td>
                       <td>{item.ngo_number_of_user_assigned}</td>
-                      <td>
+                      <td>{item.ngo_number_of_user_registered===null ? 0 : item.ngo_number_of_user_registered}</td>
+                      <td className="d-flex align-items-center gap-2">
                         <FaEye
-                          style={{ cursor: "pointer", color: "#007bff" }}
+                          className="text-primary cursor-pointer"
                           onClick={() => handleView(item)}
+                        />
+
+                        <FaEdit
+                          className="text-success cursor-pointer"
+                          onClick={() => handleEdit(item)}
                         />
                       </td>
                     </tr>
@@ -138,6 +206,16 @@ export default function Ngolist() {
         show={showModal}
         handleClose={() => setShowModal(false)}
         selectedNgo={selectedNgo}
+        onAccept={handleAccept}
+        onReject={handleReject}
+        updateTable={updateTable}
+      />
+
+      <NgoUpdateModal
+        show={showNgoUpdateModal}
+        handleClose={() => setShowNgoUpdateModal(false)}
+        selectedNgo={selectedNgo}
+        updateTable={updateTable}
       />
 
     </DashboardLayout>
