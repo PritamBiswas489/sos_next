@@ -8,6 +8,7 @@
 /* TITLE */
 .title {
   font-size: 24px;
+  margin-bottom: 0;
 }
 
 .subtitle {
@@ -367,7 +368,7 @@
 /* Pagination Styling */
 .pagination {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   margin-top: 20px;
   list-style: none;
   gap: 8px;
@@ -375,20 +376,19 @@
 
 .pageItem {
   padding: 8px 12px;
-  border: 1px solid #ddd;
   cursor: pointer;
   border-radius: 5px;
-  background: #fff;
+  background: $dark-4;
 
   &:hover {
-    background: #f1f1f1;
+    background: $border;
   }
 }
 
 .active {
-  background: #007bff;
-  color: #fff;
-  border-color: #007bff;
+  background: $primary;
+  color: $white;
+  // border-color: #007bff;
 }
 
 .disabled {
