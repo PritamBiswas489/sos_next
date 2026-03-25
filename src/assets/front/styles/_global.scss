@@ -84,6 +84,23 @@ h6 {
     }
   }
 }
+.table {
+  background: $dark-4;
+  th,
+  td {
+    background-color: transparent;
+    border: $border 0.5px solid;
+  }
+  th {
+    color: $white;
+    background: $text-light;
+    padding: 10px 15px;
+  }
+  td {
+    color: $gray;
+    padding: 10px 15px;
+  }
+}
 @media only screen and (max-width: 768px) {
   h2 {
     font-size: 1.626em;

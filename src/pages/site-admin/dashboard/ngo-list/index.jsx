@@ -11,7 +11,6 @@ import NgoDetailsModal from "@/component/Popup/Admin/NgoDetails";
 import { FaEye, FaEdit } from "react-icons/fa";
 import NgoUpdateModal from "@/component/Popup/Admin/NgoUpdate";
 
-
 export default function Ngolist() {
   const dispatch = useDispatch();
 
@@ -23,13 +22,12 @@ export default function Ngolist() {
   const [showNgoUpdateModal, setShowNgoUpdateModal] = useState(false);
   const [selectedNgo, setSelectedNgo] = useState(null);
 
-
   const fetchNgoList = async (page = 0) => {
     try {
       dispatch(SHOW_LOADER());
 
       const response = await ngoList({
-        page: page + 1, 
+        page: page + 1,
         limit: itemsPerPage,
       });
 
@@ -40,9 +38,7 @@ export default function Ngolist() {
         setTotalPages(resData?.data?.totalPages || 0);
         setCurrentPage((resData?.data?.currentPage || 1) - 1);
       } else {
-        toast.error(
-          resData?.error?.message || "Failed to fetch NGO list"
-        );
+        toast.error(resData?.error?.message || "Failed to fetch NGO list");
       }
     } catch (error) {
       toast.error(error?.message || "Something went wrong");
@@ -75,65 +71,62 @@ export default function Ngolist() {
   };
 
   const handleAccept = async (ngo) => {
-  try {
-    dispatch(SHOW_LOADER());
-    const formData = {
-      id: ngo?.id,
+    try {
+      dispatch(SHOW_LOADER());
+      const formData = {
+        id: ngo?.id,
+      };
+      const response = await verifyNgo(formData);
+      const resData = response.data;
+      if (resData?.status === 200) {
+        toast.success(resData?.message);
+        handleClose();
+        fetchNgoList(currentPage);
+      } else {
+        toast.error(resData?.error?.message || "");
+      }
+    } catch (err) {
+      console.log("err", err);
+      toast.error("Failed to accept NGO");
+    } finally {
+      dispatch(HIDE_LOADER());
     }
-    const response = await verifyNgo(formData);
-    const resData = response.data;
-    if (resData?.status === 200) {
-      toast.success(resData?.message);
-      handleClose();
-      fetchNgoList(currentPage);
-    } else {
-      toast.error(
-        resData?.error?.message || ""
-      );
+  };
+
+  const handleReject = async (ngo) => {
+    try {
+      dispatch(SHOW_LOADER());
+      const formData = {
+        id: ngo?.id,
+      };
+      const response = await rejectNgo(formData);
+      const resData = response.data;
+      if (resData?.status === 200) {
+        toast.success(resData?.message);
+        handleClose();
+        fetchNgoList(currentPage);
+      } else {
+        toast.error(resData?.error?.message || "");
+      }
+    } catch (err) {
+      console.log("err", err);
+      toast.error("Failed to accept NGO");
+    } finally {
+      dispatch(HIDE_LOADER());
     }
-  } catch (err) {
-    console.log('err', err)
-    toast.error("Failed to accept NGO");
-  } finally {
-    dispatch(HIDE_LOADER());
-  }
-};
+  };
 
-const handleReject = async (ngo) => {
-  try {
-    dispatch(SHOW_LOADER());
-    const formData = {
-      id: ngo?.id,
-    }
-    const response = await rejectNgo(formData);
-    const resData = response.data;
-    if (resData?.status === 200) {
-      toast.success(resData?.message);
-      handleClose();
-      fetchNgoList(currentPage);
-    } else {
-      toast.error(
-        resData?.error?.message || ""
-      );
-    }
-  } catch (err) {
-    console.log('err', err)
-    toast.error("Failed to accept NGO");
-  } finally {
-    dispatch(HIDE_LOADER());
-  }
-};
-
-
-
-const updateTable = () => {
-  fetchNgoList(currentPage);
-}
+  const updateTable = () => {
+    fetchNgoList(currentPage);
+  };
 
   return (
     <DashboardLayout>
       <Container fluid className={styles.page}>
-        <h2 className={styles.title}>NGO List</h2>
+        <div className="d-flex align-items-center justify-content-between mb-3">
+          <h2 className={styles.title}>NGO List</h2>
+          <button className="btn bg-warning btn-sm">Button</button>
+        </div>
 
         <Row>
           <Col>
@@ -158,15 +151,21 @@ const updateTable = () => {
                       <td>{item.email}</td>
                       <td>{item.phone_number}</td>
                       <td>{item.ngo_number_of_user_assigned}</td>
-                      <td>{item.ngo_number_of_user_registered===null ? 0 : item.ngo_number_of_user_registered}</td>
-                      <td className="d-flex align-items-center gap-2">
+                      <td>
+                        {item.ngo_number_of_user_registered === null
+                          ? 0
+                          : item.ngo_number_of_user_registered}
+                      </td>
+                      <td className="">
                         <FaEye
+                          size={20}
                           className="text-primary cursor-pointer"
                           onClick={() => handleView(item)}
                         />
 
                         <FaEdit
-                          className="text-success cursor-pointer"
+                          size={20}
+                          className="text-success cursor-pointer ms-3"
                           onClick={() => handleEdit(item)}
                         />
                       </td>
@@ -217,7 +216,6 @@ const updateTable = () => {
         selectedNgo={selectedNgo}
         updateTable={updateTable}
       />
-
     </DashboardLayout>
   );
 }
