@@ -11,6 +11,7 @@ import {
   FaDownload,
   FaCog,
   FaLock,
+  FaAndroid, 
 } from "react-icons/fa";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -28,6 +29,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   const AdminMenu = [
     { icon: <FaHome />, label: "Dashboard", active: true, path: "/site-admin/dashboard" },
     { icon: <FaUsers />, label: "NGO List", path: "/site-admin/dashboard/ngo-list" },
+    { icon: <FaAndroid />, label: "Apk Management", path: "/site-admin/dashboard/apk-management" },
     // { icon: <FaUser />, label: "Profile", path: "/dashboard/profile" },
     // { icon: <FaUsers />, label: "Family", path: "/dashboard/family" },
     // { icon: <FaMapMarkerAlt />, label: "Location", path: "/dashboard/location" },
@@ -49,14 +51,13 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   ];
 
   const NgoMenu = [
-    { icon: <FaHome />, label: "Dashboard", active: true, path: "/dashboard" },
-    { icon: <FaUser />, label: "Profile", path: "/dashboard/profile" },
-    { icon: <FaUsers />, label: "Family", path: "/dashboard/family" },
-    { icon: <FaMapMarkerAlt />, label: "Location", path: "/dashboard/location" },
-    { icon: <FaFileAlt />, label: "SOS History", path: "/dashboard/sos-history" },
-    { icon: <FaDownload />, label: "Downloads", path: "/dashboard/downloads" },
-    { icon: <FaCog />, label: "Settings", path: "/dashboard/settings" },
-    { icon: <FaLock />, label: "Privacy", path: "/dashboard/privacy" },
+    { icon: <FaHome />, label: "Dashboard", active: true, path: "/ngo/dashboard" },
+    { icon: <FaUsers />, label: "Users", path: "/ngo/dashboard/users" },
+    // { icon: <FaMapMarkerAlt />, label: "Location", path: "/dashboard/location" },
+    // { icon: <FaFileAlt />, label: "SOS History", path: "/dashboard/sos-history" },
+    // { icon: <FaDownload />, label: "Downloads", path: "/dashboard/downloads" },
+    // { icon: <FaCog />, label: "Settings", path: "/dashboard/settings" },
+    // { icon: <FaLock />, label: "Privacy", path: "/dashboard/privacy" },
   ];
 
   return (

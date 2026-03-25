@@ -37,3 +37,20 @@ export const ngoUpgradeUserLimit = async (data) => {
   const response = await api.post("auth-web/admin/ngo-upgrade-user-limit", data);
   return response;
 };
+
+export const apkReleases = async ({ page = 1, limit = 10 }) => {
+  const response = await api.get(
+    `auth-web/admin/apk-releases?limit=${limit}&page=${page}`
+  );
+  return response;
+};
+
+export const uploadApk = async (data) => {
+  const response = await api.post("auth-web/admin/upload-apk", 
+    data,
+    {
+      timeout: 120000, // 2 min for large APK
+    }
+  );
+  return response;
+};
