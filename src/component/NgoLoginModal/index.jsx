@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { Modal } from "react-bootstrap";
 import styles from "./index.module.scss";
-import { FaMobileAlt } from "react-icons/fa";
+import { FaMobileAlt, FaTimes } from "react-icons/fa";
 import { useForm, Controller } from "react-hook-form";
 import InputErrorMsg from "../InputErrorMsg/InputErrorMsg";
 import { toast } from "react-toastify";
@@ -109,6 +109,9 @@ const NgoLoginModal = ({ show, handleClose, openRegister }) => {
     >
       <Modal.Body className={styles.modalBody}>
         <div className={styles.card}>
+          <button className={styles.closeBtn} onClick={handleClose}>
+            <FaTimes />
+          </button>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className={styles.iconBox}>
               <FaMobileAlt />
@@ -158,10 +161,7 @@ const NgoLoginModal = ({ show, handleClose, openRegister }) => {
                 <InputErrorMsg error={errors.captcha.message} color="#f00" />
               )}
             </Form.Group>
-            <button
-              className={styles.primaryBtn}
-              disabled={!watch("captcha")}
-            >
+            <button className={styles.primaryBtn} disabled={!watch("captcha")}>
               Login →
             </button>
             <div className={styles.footerText}>

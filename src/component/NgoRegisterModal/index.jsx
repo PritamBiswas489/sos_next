@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
 import styles from "./index.module.scss";
-import { FaMobileAlt, FaKey } from "react-icons/fa";
+import { FaMobileAlt, FaKey, FaTimes } from "react-icons/fa";
 import { PhoneInput } from "react-international-phone";
 import { useForm, Controller } from "react-hook-form";
 import InputErrorMsg from "../InputErrorMsg/InputErrorMsg";
 import { toast } from "react-toastify";
 import { HIDE_LOADER, SHOW_LOADER } from "@/redux/loaderSlice";
 import { useDispatch } from "react-redux";
-import Form from 'react-bootstrap/Form';
+import Form from "react-bootstrap/Form";
 import {
   createUserAfterOtpVerification,
   registerNgo,
@@ -59,7 +59,6 @@ const NgoRegisterModal = ({ show, handleClose }) => {
   };
 
   const onSubmit = async (data) => {
-    
     if (!captchaValue) {
       toast.error("Please verify captcha");
       return;
@@ -90,12 +89,12 @@ const NgoRegisterModal = ({ show, handleClose }) => {
       const formData = new FormData();
       formData.append("name", data.name);
       formData.append("email", data.email);
-      formData.append("phoneNumber", data.phoneNumber); 
+      formData.append("phoneNumber", data.phoneNumber);
       formData.append("password", data.password);
       formData.append("numberOfUser", data.numberOfUser);
       formData.append("certificate", certificateFile);
 
-    //   console.log('formData', formData);return;
+      //   console.log('formData', formData);return;
 
       const response = await registerNgo(formData);
       const resData = response.data;
@@ -153,6 +152,9 @@ const NgoRegisterModal = ({ show, handleClose }) => {
     >
       <Modal.Body className={styles.modalBody}>
         <div className={styles.card}>
+          <button className={styles.closeBtn} onClick={handleClose}>
+            <FaTimes />
+          </button>
           <form onSubmit={handleSubmit(onSubmit)}>
             <h3 className={styles.title}>Registration</h3>
 
@@ -191,7 +193,7 @@ const NgoRegisterModal = ({ show, handleClose }) => {
               <Form.Label>Phone Number</Form.Label>
               <div className={styles.phoneBox}>
                 <Controller
-                  name="phoneNumber"   // changed from "phone" to "phoneNumber"
+                  name="phoneNumber" // changed from "phone" to "phoneNumber"
                   control={control}
                   defaultValue="+254"
                   rules={{
@@ -212,7 +214,10 @@ const NgoRegisterModal = ({ show, handleClose }) => {
                 />
               </div>
               {errors.phoneNumber && (
-                <InputErrorMsg error={errors.phoneNumber?.message} color={`#f00`} />
+                <InputErrorMsg
+                  error={errors.phoneNumber?.message}
+                  color={`#f00`}
+                />
               )}
             </Form.Group>
 
@@ -227,7 +232,10 @@ const NgoRegisterModal = ({ show, handleClose }) => {
                 })}
               />
               {errors.password && (
-                <InputErrorMsg error={errors.password?.message} color={`#f00`} />
+                <InputErrorMsg
+                  error={errors.password?.message}
+                  color={`#f00`}
+                />
               )}
             </Form.Group>
 
@@ -250,7 +258,10 @@ const NgoRegisterModal = ({ show, handleClose }) => {
                 <option value="2000">2000</option>
               </Form.Select>
               {errors.numberOfUser && (
-                <InputErrorMsg error={errors.numberOfUser?.message} color="#f00" />
+                <InputErrorMsg
+                  error={errors.numberOfUser?.message}
+                  color="#f00"
+                />
               )}
             </Form.Group>
 
