@@ -136,6 +136,36 @@
 :global(.PhoneInputCountryIcon) {
   background-color: transparent !important;
 }
+/* CLOSE BUTTON */
+.closeBtn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: $dark-2;
+  border: 1px solid rgba($white, 0.08);
+  color: $white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    background: $primary;
+  }
+
+  svg {
+    font-size: 14px;
+  }
+}
+
+/* make card relative for positioning */
+.card {
+  position: relative;
+}
 /* BUTTON */
 .primaryBtn {
   width: 100%;

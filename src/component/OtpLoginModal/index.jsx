@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
 import styles from "./index.module.scss";
-import { FaMobileAlt, FaKey } from "react-icons/fa";
+import { FaMobileAlt, FaKey, FaTimes } from "react-icons/fa";
 import { PhoneInput } from "react-international-phone";
 import { useForm, Controller } from "react-hook-form";
 import InputErrorMsg from "../InputErrorMsg/InputErrorMsg";
@@ -22,7 +22,7 @@ const OtpLoginModal = ({ show, handleClose, setIsLoggedIn }) => {
   const [phone, setPhone] = useState("");
   const [timer, setTimer] = useState(60);
   const [canResend, setCanResend] = useState(false);
-  const timerRef = useRef(null); 
+  const timerRef = useRef(null);
   const dispatch = useDispatch();
   const router = useRouter();
   const [autoFillOTP, setAutoFillOTP] = useState("");
@@ -122,7 +122,6 @@ const OtpLoginModal = ({ show, handleClose, setIsLoggedIn }) => {
         const resDataUser = responseUser.data;
 
         if (resDataUser?.status === 200) {
-
           const accessToken = resDataUser?.data?.accessToken;
           const refreshToken = resDataUser?.data?.refreshToken;
           const role = resDataUser?.data?.user?.role;
@@ -248,6 +247,11 @@ const OtpLoginModal = ({ show, handleClose, setIsLoggedIn }) => {
     >
       <Modal.Body className={styles.modalBody}>
         <div className={styles.card}>
+          {/* ✅ CLOSE BUTTON */}
+          <button className={styles.closeBtn} onClick={handleClose}>
+            <FaTimes />
+          </button>
+
           {/* STEP 1 */}
           {step === 1 && (
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -267,11 +271,11 @@ const OtpLoginModal = ({ show, handleClose, setIsLoggedIn }) => {
                 <Controller
                   name="phone"
                   control={control}
-                  defaultValue="+254" 
+                  defaultValue="+254"
                   rules={{
                     required: "Phone number is required",
                     validate: (value) =>
-                      value?.replace(/\D/g, "").length >= 9 || 
+                      value?.replace(/\D/g, "").length >= 9 ||
                       "Enter valid phone number",
                   }}
                   render={({ field }) => (
@@ -284,9 +288,8 @@ const OtpLoginModal = ({ show, handleClose, setIsLoggedIn }) => {
                     />
                   )}
                 />
-
-                {/* <input placeholder="000 000 0000" /> */}
               </div>
+
               {errors.phone && (
                 <InputErrorMsg error={errors.phone?.message} color={`#f00`} />
               )}
@@ -311,20 +314,6 @@ const OtpLoginModal = ({ show, handleClose, setIsLoggedIn }) => {
               <p className={styles.subtitle}>4-digit code sent to {phone}</p>
 
               <div className={styles.otpLabel}>Verification Code</div>
-
-              {/* <div className={styles.otpContainer}>
-                {otp.map((val, i) => (
-                  <input
-                    key={i}
-                    id={`otp-${i}`}
-                    value={val}
-                    maxLength="1"
-                    onChange={(e) => handleOtpChange(e.target.value, i)}
-                  />
-                ))}
-              </div>
-
-              <button className={styles.primaryBtn}>Verify & Login ✓</button> */}
 
               <form onSubmit={handleSubmit(onVerifyOtp)}>
                 <div className={styles.otpContainer}>
@@ -352,12 +341,10 @@ const OtpLoginModal = ({ show, handleClose, setIsLoggedIn }) => {
 
                             field.onChange(value);
 
-                            // auto focus next
                             if (value && i < 3) {
                               document.getElementById(`otp-${i + 1}`)?.focus();
                             }
 
-                            // auto focus previous
                             if (!value && i > 0) {
                               document.getElementById(`otp-${i - 1}`)?.focus();
                             }
@@ -368,7 +355,6 @@ const OtpLoginModal = ({ show, handleClose, setIsLoggedIn }) => {
                   ))}
                 </div>
 
-                {/* OPTIONAL ERROR */}
                 {errors.otp && (
                   <p style={{ color: "red", marginTop: "5px" }}>
                     Please enter valid OTP

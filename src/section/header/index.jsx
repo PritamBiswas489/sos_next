@@ -16,7 +16,6 @@ const Header = () => {
   const [ngoLoginModal, setNgoLoginModal] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -30,128 +29,101 @@ const Header = () => {
 
   return (
     <>
-    <header className={styles.header}>
-      <Container fluid="xxl">
-        <Row className="align-items-center justify-content-between">
-          {/* LEFT - LOGO */}
-          <div className={styles.logoArea}>
-            <Link href="/" className={styles.logo}>
-              <Image src={logo} alt="SOS Logo" width={133} height={30} />
-            </Link>
-          </div>
+      <header className={styles.header}>
+        <Container fluid="xxl">
+          <Row className="align-items-center justify-content-between">
+            {/* LEFT - LOGO */}
+            <div className={styles.logoArea}>
+              <Link href="/" className={styles.logo}>
+                <Image src={logo} alt="SOS Logo" width={133} height={30} />
+              </Link>
+            </div>
 
-          {/* CENTER - NAV */}
-          <nav className={`${styles.nav} ${menuOpen ? styles.open : ""}`}>
-            <ul>
-              <li>
-                <Link href="#">Features</Link>
-              </li>
-              <li>
-                <Link href="#">Family</Link>
-              </li>
-              <li>
-                <Link href="#">Safety</Link>
-              </li>
-              <li>
-                <Link href="#">Pricing</Link>
-              </li>
+            {/* CENTER - NAV */}
+            <nav className={`${styles.nav} ${menuOpen ? styles.open : ""}`}>
+              <ul>
+                <li>
+                  <Link href="#">Features</Link>
+                </li>
+                <li>
+                  <Link href="#">Family</Link>
+                </li>
+                <li>
+                  <Link href="#">Safety</Link>
+                </li>
+                <li>
+                  <Link href="#">Pricing</Link>
+                </li>
 
-              {/* MOBILE SIGN IN */}
-              <li className={styles.mobileOnly}>
-                 {isLoggedIn ? (
+                {/* MOBILE SIGN IN */}
+                <li className={styles.mobileOnly}>
+                  {isLoggedIn ? (
                     <Link href="/dashboard" className={styles.mobileSignin}>
                       My Account
                     </Link>
                   ) : (
-                    <Link 
-                      href="#" 
+                    <Link
+                      href="#"
                       className={styles.mobileSignin}
                       onClick={() => {
                         setShowOtpModal(true);
                       }}
-                      >
+                    >
                       Sign In
                     </Link>
                   )}
-              </li>
-            </ul>
-          </nav>
+                </li>
+              </ul>
+            </nav>
 
-          {/* RIGHT - BUTTON */}
-          <div className={styles.signinArea}>
-            {/* {isLoggedIn ? (
-              <Link href="/dashboard" className={styles.signin}>
-                My Account
-              </Link>
-            ) : (
-              <Link 
-                href="#" 
-                className={styles.signin}
-                onClick={() => {
-                  setShowOtpModal(true);
-                }}
-              >
-                Sign In
-              </Link>
-            )} */}
-
-              {/* <Link 
-                href="#" 
-                className={styles.signin}
-                onClick={() => {
-                  setShowOtpModal(true);
-                }}
-              >
-                User
-              </Link>
-              <Link 
-                href="#" 
-                className={styles.signin}
-                onClick={() => {
-                  setNgoLoginModal(true);
-                }}
-              >
-                NGO
-              </Link> */}
-
+            {/* RIGHT - BUTTON */}
+            <div className={styles.signinArea}>
               <Dropdown>
-                <Dropdown.Toggle variant="success" id="dropdown-basic" className={styles.signin}>
+                <Dropdown.Toggle
+                  variant="success"
+                  id="dropdown-basic"
+                  className={styles.signin}
+                >
                   Sign In
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                  <Dropdown.Item 
+                  <Dropdown.Item
                     href="#"
                     onClick={() => {
                       setShowOtpModal(true);
                     }}
-                  >As a User</Dropdown.Item>
-                  <Dropdown.Item 
+                  >
+                    As a User
+                  </Dropdown.Item>
+                  <Dropdown.Item
                     href="#"
                     onClick={() => {
-                    setNgoLoginModal(true);
-                  }}
-                  >As a NGO</Dropdown.Item>
+                      setNgoLoginModal(true);
+                    }}
+                  >
+                    As a NGO
+                  </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
 
-            <button
-              className={styles.menuBtn}
-              onClick={() => setMenuOpen((prev) => !prev)}
-            >
-              {menuOpen ? <FaTimes /> : <FaBars />}
-            </button>
-          </div>
-        </Row>
-      </Container>
-    </header>
+              <button
+                className={styles.menuBtn}
+                onClick={() => setMenuOpen((prev) => !prev)}
+              >
+                {menuOpen ? <FaTimes /> : <FaBars />}
+              </button>
+            </div>
+          </Row>
+        </Container>
+      </header>
 
       <OtpLoginModal
         show={showOtpModal}
         handleClose={() => setShowOtpModal(false)}
         setIsLoggedIn={setIsLoggedIn}
       />
-    
+
       <NgoLoginModal
         show={ngoLoginModal}
         handleClose={() => setNgoLoginModal(false)}
@@ -169,7 +141,6 @@ const Header = () => {
           setShowLogin(true);
         }}
       />
-
     </>
   );
 };
