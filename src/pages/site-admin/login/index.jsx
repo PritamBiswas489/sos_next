@@ -26,8 +26,6 @@ const LoginPage = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    
-
     try {
       dispatch(SHOW_LOADER());
 
@@ -61,10 +59,9 @@ const LoginPage = () => {
       if (resData?.status === 200) {
         const accessToken = resData?.data?.accessToken;
         const refreshToken = resData?.data?.refreshToken;
-        
+
         const role = resData?.data?.user?.role;
         const encryptedRole = encryptData(role);
-        
 
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
@@ -74,9 +71,7 @@ const LoginPage = () => {
         router.push("/site-admin/dashboard");
         // console.log('resData', resData?.data);
       } else {
-        toast.error(
-          resData?.error?.message || "Invalid email or password"
-        );
+        toast.error(resData?.error?.message || "Invalid email or password");
       }
     } catch (error) {
       toast.error(error?.message || "Something went wrong");
@@ -102,7 +97,7 @@ const LoginPage = () => {
 
               <form onSubmit={handleSubmit(onSubmit)}>
                 {/* Email */}
-                <Form.Group className="mb-3">
+                <Form.Group className="mb-3 position-relative">
                   <Form.Label>Email</Form.Label>
                   <Form.Control
                     type="email"
@@ -117,7 +112,7 @@ const LoginPage = () => {
                 </Form.Group>
 
                 {/* Password */}
-                <Form.Group className="mb-3">
+                <Form.Group className="mb-3 position-relative">
                   <Form.Label>Password</Form.Label>
                   <Form.Control
                     type="password"

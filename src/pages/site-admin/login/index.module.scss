@@ -3,11 +3,11 @@
   min-height: 100vh;
   display: flex;
   align-items: center;
-  background: #f5f7fb;
+  background: linear-gradient(180deg, $dark-3, $dark-5);
 }
 
 .card {
-  background: #fff;
+  background: linear-gradient(180deg, $dark, $dark-3);
   padding: 30px;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
@@ -23,8 +23,8 @@
   width: 100%;
   padding: 10px;
   border: none;
-  background: #007bff;
-  color: #fff;
+  background: $primary;
+  color: $white;
   border-radius: 6px;
   font-weight: 500;
   transition: 0.3s;
@@ -39,14 +39,27 @@
   }
 }
 
-.footer {
-  margin-top: 15px;
-  text-align: center;
-  font-size: 14px;
+:global(.form-control) {
+  background-color: $dark !important;
+  border: 1px solid $dark-2 !important;
+  color: $white !important;
+  border-radius: 10px;
+  padding: 12px;
+}
 
-  span {
-    color: #007bff;
-    cursor: pointer;
-    font-weight: 500;
-  }
+/* placeholder color */
+:global(.form-control::placeholder) {
+  color: $gray !important;
+  opacity: 1;
+}
+
+/* focus state */
+:global(.form-control:focus) {
+  background-color: $dark !important;
+  color: $white !important;
+  border-color: $text-light !important;
+  box-shadow: none !important;
+}
+:global(.form-label) {
+  color: $white;
 }

@@ -76,3 +76,9 @@
     left: 0;
   }
 }
+
+@media (max-width: 768px) {
+  .main {
+    padding: 30px 0;
+  }
+}
