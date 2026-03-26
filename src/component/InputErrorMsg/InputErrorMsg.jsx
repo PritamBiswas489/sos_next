@@ -4,7 +4,7 @@ function InputErrorMsg(props) {
   return (
     <>
       <div
-        className={`${styles["input-error"]}`}
+        className={`${styles["input-error"]} ${props.className ?? ``}`}
         style={{ color: props.color ?? "#f00" }}
       >
         {props.error}

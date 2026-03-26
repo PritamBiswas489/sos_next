@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Button, Modal, Col, Table } from "react-bootstrap";
+import { Container, Row, Button, Modal, Col, Table, Form } from "react-bootstrap";
 import styles from "./index.module.scss";
 
 import {
@@ -222,7 +222,8 @@ export default function Downloads() {
           <Modal.Body className={styles.modalBody}>
             <div className={styles.modalHeader}>
               <h5>
-                <FaKey className={styles.headerIcon} /> Request License Code
+                {/* <FaKey className={styles.headerIcon} /> Request License Code */}
+                Create User
               </h5>
               <button
                 className={styles.closeBtn}
@@ -232,54 +233,73 @@ export default function Downloads() {
               </button>
             </div>
 
-            <p className={styles.modalSubtitle}>
+            {/* <p className={styles.modalSubtitle}>
               Submit your details for verification. Your license will be issued
               within 24 hours.
+            </p> */}
+            <p className={styles.modalSubtitle}>
+              Submit User details for verification
             </p>
 
             <form onSubmit={handleSubmit(onSubmit)}>
               {/* NAME */}
-              <div className={styles.inputGroup}>
-                <FaUser />
-                <input
-                  type="text"
-                  placeholder="John Michael Doe"
-                  {...register("fullName", {
-                    required: "Full Name is required",
-                  })}
-                />
-              </div>
-              {errors.fullName && (
-                <InputErrorMsg error={errors.fullName.message} color="#f00" />
-              )}
+              <Form.Group className={`mb-4 ${styles.requestCcode}`}>
+                <div className={styles.inputGroup}>
+                  <FaUser />
+                  <input
+                    type="text"
+                    placeholder="John Michael Doe"
+                    {...register("fullName", {
+                      required: "Full Name is required",
+                    })}
+                  />
+                </div>
+                {errors.fullName && (
+                  <InputErrorMsg className={styles.errorStyle} error={errors.fullName.message} color="#f00" />
+                )}
+              </Form.Group>
+              
 
               {/* PHONE */}
+               <Form.Group className={`mb-4 ${styles.requestCcode}`}>
               <div className={styles.phoneBox}>
-                <Controller
-                  name="phone"
-                  control={control}
-                  defaultValue="+254"
-                  rules={{
-                    required: "Phone number is required",
-                  }}
-                  render={({ field }) => (
-                    <PhoneInput
-                      defaultCountry="KE"
-                      value={field.value}
-                      onChange={field.onChange}
-                      className={styles.phoneInput}
-                    />
-                  )}
-                />
+                  <Controller
+                    name="phone"
+                    control={control}
+                    defaultValue="+254"
+                    rules={{
+                      required: "Phone number is required",
+                      validate: (value) => {
+                        const cleaned = value.replace(/\D/g, ""); // remove non-digits
+
+                        if (cleaned.length < 10 || cleaned.length > 15) {
+                          return "Enter valid phone number";
+                        }
+
+                        return true;
+                      },
+                    }}
+                    render={({ field }) => (
+                      <PhoneInput
+                        defaultCountry="KE"
+                        value={field.value}
+                        onChange={field.onChange}
+                        className={styles.phoneInput}
+                      />
+                    )}
+                  />
               </div>
               {errors.phone && (
                 <InputErrorMsg
                   error={errors.phone.message}
                   color="#f00"
+                  className={styles.errorStyle}
                 />
               )}
+              </Form.Group>
 
               {/* EMAIL */}
+              <Form.Group className={`mb-4 ${styles.requestCcode}`}>
               <div className={`${styles.inputGroup} mt-3`}>
                 <MdEmail />
                 <input
@@ -287,6 +307,10 @@ export default function Downloads() {
                   placeholder="Email"
                   {...register("emailAddress", {
                     required: "Email is required",
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: "Enter a valid email address",
+                    }
                   })}
                 />
               </div>
@@ -294,10 +318,13 @@ export default function Downloads() {
                 <InputErrorMsg
                   error={errors.emailAddress.message}
                   color="#f00"
+                  className={styles.errorStyle}
                 />
               )}
+              </Form.Group>
 
               {/* ADDRESS */}
+              <Form.Group className={`mb-4 ${styles.requestCcode}`}>
               <div className={styles.inputGroup}>
                 <FaHome />
                 <input
@@ -312,8 +339,10 @@ export default function Downloads() {
                 <InputErrorMsg
                   error={errors.residentialAddress.message}
                   color="#f00"
+                  className={styles.errorStyle}
                 />
               )}
+              </Form.Group>
 
               {/* DOCS */}
               <div className={styles.documents}>
@@ -322,9 +351,9 @@ export default function Downloads() {
                 <div className={styles.docGrid}>
                   <div
                     className={`${styles.docItem} ${
-                      selectedDoc === "utility" ? styles.active : ""
+                      selectedDoc === "Utility Bill" ? styles.active : ""
                     }`}
-                    onClick={() => handleDocSelect("utility")}
+                    onClick={() => handleDocSelect("Utility Bill")}
                   >
                     <FaFileAlt />
                     <span>Utility Bill</span>
@@ -332,9 +361,9 @@ export default function Downloads() {
 
                   <div
                     className={`${styles.docItem} ${
-                      selectedDoc === "nid" ? styles.active : ""
+                      selectedDoc === "National ID" ? styles.active : ""
                     }`}
-                    onClick={() => handleDocSelect("nid")}
+                    onClick={() => handleDocSelect("National ID")}
                   >
                     <FaIdCard />
                     <span>National ID</span>
@@ -342,9 +371,9 @@ export default function Downloads() {
 
                   <div
                     className={`${styles.docItem} ${
-                      selectedDoc === "license" ? styles.active : ""
+                      selectedDoc === "Driver's License" ? styles.active : ""
                     }`}
-                    onClick={() => handleDocSelect("license")}
+                    onClick={() => handleDocSelect("Driver's License")}
                   >
                     <FaCar />
                     <span>Driver's License</span>
@@ -352,9 +381,9 @@ export default function Downloads() {
 
                   <div
                     className={`${styles.docItem} ${
-                      selectedDoc === "passport" ? styles.active : ""
+                      selectedDoc === "Int'l Passport" ? styles.active : ""
                     }`}
-                    onClick={() => handleDocSelect("passport")}
+                    onClick={() => handleDocSelect("Int'l Passport")}
                   >
                     <FaPassport />
                     <span>Int'l Passport</span>
@@ -376,7 +405,7 @@ export default function Downloads() {
                     browse
                   </span>
                 </p>
-                <small>PDF, JPG, PNG • Max 5MB each</small>
+                <small>PDF, JPG, PNG • Max 5MB</small>
 
                 <input
                   id="fileInput"

@@ -421,6 +421,16 @@
   background-color: transparent !important;
 }
 
+
+.requestCcode{
+  position: relative;
+  .errorStyle{
+    margin-top: 5px;
+    top: 100%;
+    left: 0;
+  }
+}
+
 @media (max-width: 767px) {
   .licenseBtn,
   .androidBtn {
