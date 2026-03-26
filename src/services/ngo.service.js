@@ -9,3 +9,10 @@ export const ngoCreateUser = async (data) => {
   );
   return response;
 };
+
+export const userListForNgo = async ({ page = 1, limit = 10 }) => {
+  const response = await api.get(
+    `auth-web/ngo/user-list-for-ngo?limit=${limit}&page=${page}`
+  );
+  return response;
+};

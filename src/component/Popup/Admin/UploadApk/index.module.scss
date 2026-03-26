@@ -1,0 +1,63 @@
+@use "../../../../assets/front/styles/variable" as *;
+.card {
+  background: linear-gradient(180deg, $dark, $dark-2);
+  border-radius: 22px;
+  padding: 36px 28px;
+  text-align: center;
+  color: $white;
+  position: relative;
+  p {
+    margin-bottom: 1rem;
+  }
+}
+
+.closeBtn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: $dark-2;
+  border: 1px solid rgba($white, 0.08);
+  color: $white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    background: $primary;
+  }
+
+  svg {
+    font-size: 14px;
+  }
+}
+
+.modalFooter {
+  padding-bottom: 0;
+}
+
+:global(.form-control) {
+  background-color: $dark !important;
+  border: 1px solid $dark-2 !important;
+  color: $white !important;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+/* placeholder color */
+:global(.form-control::placeholder) {
+  color: $gray !important;
+  opacity: 1;
+}
+
+/* focus state */
+:global(.form-control:focus) {
+  background-color: $dark !important;
+  color: $white !important;
+  border-color: $primary !important;
+  box-shadow: none !important;
+}

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Container, Row, Button, Modal } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Container, Row, Button, Modal, Col, Table } from "react-bootstrap";
 import styles from "./index.module.scss";
 
 import {
@@ -11,6 +11,7 @@ import {
   FaCar,
   FaPassport,
   FaCloudUploadAlt,
+  FaEye,
 } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import DashboardLayout from "@/component/DashboardLayout";
@@ -20,112 +21,197 @@ import InputErrorMsg from "@/component/InputErrorMsg/InputErrorMsg";
 import { useDispatch } from "react-redux";
 import { SHOW_LOADER, HIDE_LOADER } from "@/redux/loaderSlice";
 import { toast } from "react-toastify";
-import { ngoCreateUser } from "@/services/ngo.service";
+import { ngoCreateUser, userListForNgo } from "@/services/ngo.service";
+import ReactPaginate from "react-paginate";
 
 export default function Downloads() {
-  const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
-  const [show, setShow] = useState(false);
-  const [success, setSuccess] = useState(false);
+    const [show, setShow] = useState(false);
+    const [success, setSuccess] = useState(false);
 
-  // ✅ NEW STATES
-  const [selectedDoc, setSelectedDoc] = useState(null);
-  const [file, setFile] = useState(null);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    control,
-    reset,
-  } = useForm();
+    const [selectedDoc, setSelectedDoc] = useState(null);
+    const [file, setFile] = useState(null);
+  
+    const [data, setData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(0); // 0-based
+    const [totalPages, setTotalPages] = useState(0);
+    const itemsPerPage = 10;
 
-  // ✅ DOC SELECT (ONLY ONE)
-  const handleDocSelect = (doc) => {
-    setSelectedDoc(doc);
-  };
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        control,
+        reset,
+    } = useForm();
 
-  // ✅ FILE SELECT
-  const handleFileChange = (e) => {
-    const selected = e.target.files[0];
 
-    if (!selected) return;
+    const handleDocSelect = (doc) => {
+        setSelectedDoc(doc);
+    };
 
-    const validTypes = ["image/jpeg", "image/png", "application/pdf"];
+    const handleFileChange = (e) => {
+        const selected = e.target.files[0];
 
-    if (!validTypes.includes(selected.type)) {
-      toast.error("Only PDF, JPG, PNG allowed");
-      return;
-    }
+        if (!selected) return;
 
-    if (selected.size > 5 * 1024 * 1024) {
-      toast.error("Max file size is 5MB");
-      return;
-    }
+        const validTypes = ["image/jpeg", "image/png", "application/pdf"];
 
-    setFile(selected);
-  };
+        if (!validTypes.includes(selected.type)) {
+        toast.error("Only PDF, JPG, PNG allowed");
+        return;
+        }
 
-  const onSubmit = async (data) => {
-    // ✅ VALIDATIONS
-    if (!selectedDoc) {
-      toast.error("Please select a document");
-      return;
-    }
+        if (selected.size > 5 * 1024 * 1024) {
+        toast.error("Max file size is 5MB");
+        return;
+        }
 
-    if (!file) {
-      toast.error("Please upload a file");
-      return;
-    }
+        setFile(selected);
+    };
 
-    try {
-        dispatch(SHOW_LOADER());
+    const onSubmit = async (data) => {
+        if (!selectedDoc) {
+            toast.error("Please select a document");
+            return;
+        }
 
-        const formData = new FormData();
-        formData.append("fullName", data.fullName);
-        formData.append("phoneNumber", data.phone);
-        formData.append("emailAddress", data.emailAddress);
-        formData.append("residentialAddress", data.residentialAddress);
-        formData.append("documentType", selectedDoc);
-        formData.append("document", file);
+        if (!file) {
+            toast.error("Please upload a file");
+            return;
+        }
 
-        console.log("FORM DATA:", formData);
+        try {
+            dispatch(SHOW_LOADER());
 
-        const response = await ngoCreateUser(formData);
-        const resData = response.data;
+            const formData = new FormData();
+            formData.append("fullName", data.fullName);
+            formData.append("phoneNumber", data.phone);
+            formData.append("emailAddress", data.emailAddress);
+            formData.append("residentialAddress", data.residentialAddress);
+            formData.append("documentType", selectedDoc);
+            formData.append("document", file);
 
-        console.log('resData', resData);
+            const response = await ngoCreateUser(formData);
 
-        if (resData?.status === 200) {
-            toast.success(resData?.message);
-            resetForm();
+            toast.success(response?.data?.message || "Success");
+
+            
             setShow(false);
             reset();
             setSelectedDoc(null);
             setFile(null);
-        } else {
+            fetchUserList(0);
+
+        } catch (error) {
+            const resData = error?.response?.data;
+
             const errorMessage =
-            resData?.error?.reason ||
             resData?.error?.message ||
+            resData?.error?.reason ||
+            error?.message ||
             "Something went wrong";
+
             toast.error(errorMessage);
+        } finally {
+            dispatch(HIDE_LOADER());
         }
-    } catch (error) {
-        console.log('error', error)
-      toast.error("Something went wrong");
-    } finally {
-      dispatch(HIDE_LOADER());
-    }
-  };
+    };
+
+
+    const fetchUserList = async (page = 0) => {
+        try {
+          dispatch(SHOW_LOADER());
+    
+          const response = await userListForNgo({
+            page: page + 1,
+            limit: itemsPerPage,
+          });
+    
+          const resData = response.data;
+    
+          if (resData?.status === 200) {
+            setData(resData?.data?.rows || []);
+            setTotalPages(resData?.data?.totalPages || 0);
+            setCurrentPage((resData?.data?.currentPage || 1) - 1);
+          } else {
+            toast.error(resData?.error?.message || "Failed to fetch data");
+          }
+        } catch (error) {
+          toast.error(error?.message || "Something went wrong");
+        } finally {
+          dispatch(HIDE_LOADER());
+        }
+      };
+      useEffect(() => {
+        fetchUserList(0);
+      }, []);
 
   return (
     <DashboardLayout>
       <Container fluid className={styles.page}>
-        <h2 className={styles.title}>Users</h2>
 
-        <Button variant="success" onClick={() => setShow(true)}>
-          Create User
-        </Button>
+        <div className="d-flex align-items-center justify-content-between mb-3">
+          <h2 className={styles.title}>Users</h2>
+          <button className="btn bg-warning btn-sm" onClick={() => setShow(true)}>Create Users</button>
+        </div>
+
+        <Row>
+          <Col>
+            {/* ✅ Table */}
+            <Table striped bordered hover responsive>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>License</th>
+                  <th>Address</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {data.length > 0 ? (
+                  data.map((item, index) => (
+                    <tr key={item.id}>
+                      <td>{item?.name}</td>
+                      <td>{item?.email}</td>
+                      <td>{item?.phone_number}</td>
+                      <td>{item?.licenses?.license_key}</td>
+                      <td>{item?.kyc_documents?.address}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="text-center">
+                      No Data Found
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </Table>
+
+            {/* ✅ Pagination */}
+            {totalPages > 1 && (
+              <ReactPaginate
+                previousLabel={"← Prev"}
+                nextLabel={"Next →"}
+                breakLabel={"..."}
+                pageCount={totalPages}
+                forcePage={currentPage}
+                onPageChange={handlePageClick}
+                containerClassName={styles.pagination}
+                activeClassName={styles.active}
+                pageClassName={styles.pageItem}
+                previousClassName={styles.pageItem}
+                nextClassName={styles.pageItem}
+                disabledClassName={styles.disabled}
+              />
+            )}
+          </Col>
+        </Row>
 
         <Modal
           show={show}

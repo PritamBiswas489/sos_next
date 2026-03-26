@@ -79,13 +79,10 @@ export default function Ngolist() {
   return (
     <DashboardLayout>
       <Container fluid className={styles.page}>
-        <h2 className={styles.title}>Apk Management</h2>
-        <Button
-            variant="success"
-            onClick={() => setShowModal(true)}
-        >
-            Upload APK
-        </Button>
+        <div className="d-flex align-items-center justify-content-between mb-3">
+          <h2 className={styles.title}>Apk Management</h2>
+          <button className="btn bg-warning btn-sm" onClick={() => setShowModal(true)}>Upload APK</button>
+        </div>
         <Row>
           <Col>
             {/* ✅ Table */}

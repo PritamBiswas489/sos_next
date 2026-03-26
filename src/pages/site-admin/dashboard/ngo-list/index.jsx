@@ -17,7 +17,7 @@ export default function Ngolist() {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0); // 0-based
   const [totalPages, setTotalPages] = useState(0);
-  const itemsPerPage = 3;
+  const itemsPerPage = 10;
   const [showModal, setShowModal] = useState(false);
   const [showNgoUpdateModal, setShowNgoUpdateModal] = useState(false);
   const [selectedNgo, setSelectedNgo] = useState(null);
@@ -125,7 +125,7 @@ export default function Ngolist() {
       <Container fluid className={styles.page}>
         <div className="d-flex align-items-center justify-content-between mb-3">
           <h2 className={styles.title}>NGO List</h2>
-          <button className="btn bg-warning btn-sm">Button</button>
+          {/* <button className="btn bg-warning btn-sm">Button</button> */}
         </div>
 
         <Row>

@@ -41,13 +41,13 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
 
   const UserMenu = [
     { icon: <FaHome />, label: "Dashboard", active: true, path: "/dashboard" },
-    { icon: <FaUser />, label: "Profile", path: "/dashboard/profile" },
-    { icon: <FaUsers />, label: "Family", path: "/dashboard/family" },
-    { icon: <FaMapMarkerAlt />, label: "Location", path: "/dashboard/location" },
-    { icon: <FaFileAlt />, label: "SOS History", path: "/dashboard/sos-history" },
+    // { icon: <FaUser />, label: "Profile", path: "/dashboard/profile" },
+    // { icon: <FaUsers />, label: "Family", path: "/dashboard/family" },
+    // { icon: <FaMapMarkerAlt />, label: "Location", path: "/dashboard/location" },
+    // { icon: <FaFileAlt />, label: "SOS History", path: "/dashboard/sos-history" },
     { icon: <FaDownload />, label: "Downloads", path: "/dashboard/downloads" },
-    { icon: <FaCog />, label: "Settings", path: "/dashboard/settings" },
-    { icon: <FaLock />, label: "Privacy", path: "/dashboard/privacy" },
+    // { icon: <FaCog />, label: "Settings", path: "/dashboard/settings" },
+    // { icon: <FaLock />, label: "Privacy", path: "/dashboard/privacy" },
   ];
 
   const NgoMenu = [
