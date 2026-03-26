@@ -431,6 +431,37 @@
   }
 }
 
+/* Pagination Styling */
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  list-style: none;
+  gap: 8px;
+}
+
+.pageItem {
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 5px;
+  background: $dark-4;
+
+  &:hover {
+    background: $border;
+  }
+}
+
+.active {
+  background: $primary;
+  color: $white;
+  // border-color: #007bff;
+}
+
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 @media (max-width: 767px) {
   .licenseBtn,
   .androidBtn {

@@ -101,6 +101,9 @@ h6 {
     padding: 10px 15px;
   }
 }
+.react-international-phone-country-selector-dropdown__list-item--focused{
+  background-color: $dark-5 !important;
+}
 @media only screen and (max-width: 768px) {
   h2 {
     font-size: 1.626em;

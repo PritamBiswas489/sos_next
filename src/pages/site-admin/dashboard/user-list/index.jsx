@@ -38,7 +38,7 @@ export default function Userlist() {
         setTotalPages(resData?.data?.totalPages || 0);
         setCurrentPage((resData?.data?.currentPage || 1) - 1);
       } else {
-        toast.error(resData?.error?.message || "Failed to fetch NGO list");
+        toast.error(resData?.error?.message || "Failed to fetch User list");
       }
     } catch (error) {
       toast.error(error?.message || "Something went wrong");
@@ -94,7 +94,7 @@ export default function Userlist() {
     <DashboardLayout>
       <Container fluid className={styles.page}>
         <div className="d-flex align-items-center justify-content-between mb-3">
-          <h2 className={styles.title}>NGO List</h2>
+          <h2 className={styles.title}>User List</h2>
           {/* <button className="btn bg-warning btn-sm">Button</button> */}
         </div>
 

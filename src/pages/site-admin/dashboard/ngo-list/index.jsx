@@ -6,7 +6,7 @@ import ReactPaginate from "react-paginate";
 import { useDispatch } from "react-redux";
 import { SHOW_LOADER, HIDE_LOADER } from "@/redux/loaderSlice";
 import { toast } from "react-toastify";
-import { ngoList, rejectNgo, verifyNgo } from "@/services/admin.service";
+import { ngoAutocomplete, ngoList, rejectNgo, verifyNgo } from "@/services/admin.service";
 import NgoDetailsModal from "@/component/Popup/Admin/NgoDetails";
 import { FaEye, FaEdit } from "react-icons/fa";
 import NgoUpdateModal from "@/component/Popup/Admin/NgoUpdate";
@@ -17,10 +17,15 @@ export default function Ngolist() {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0); // 0-based
   const [totalPages, setTotalPages] = useState(0);
-  const itemsPerPage = 10;
+  const itemsPerPage = 5;
   const [showModal, setShowModal] = useState(false);
   const [showNgoUpdateModal, setShowNgoUpdateModal] = useState(false);
   const [selectedNgo, setSelectedNgo] = useState(null);
+
+  const [search, setSearch] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [allData, setAllData] = useState([]);
 
   const fetchNgoList = async (page = 0) => {
     try {
@@ -35,6 +40,7 @@ export default function Ngolist() {
 
       if (resData?.status === 200) {
         setData(resData?.data?.rows || []);
+        setAllData(resData?.data?.rows || []);
         setTotalPages(resData?.data?.totalPages || 0);
         setCurrentPage((resData?.data?.currentPage || 1) - 1);
       } else {
@@ -120,6 +126,75 @@ export default function Ngolist() {
     fetchNgoList(currentPage);
   };
 
+  // const handleSearchChange = async (value) => {
+  //   setSearch(value);
+
+  //   if (!value) {
+  //     setSuggestions([]);
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await ngoAutocomplete(value);
+  //     const resData = response.data;
+
+  //     if (resData?.status === 200) {
+  //       setSuggestions(resData?.data || []);
+  //       setShowDropdown(true);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  const handleSearchChange = async (value) => {
+  setSearch(value);
+
+  // ✅ reset when empty
+  if (!value.trim()) {
+    setSuggestions([]);
+    setShowDropdown(false);
+    setData(allData);
+    return;
+  }
+
+
+  if (value.length < 2) {
+    setSuggestions([]);
+    setShowDropdown(false);
+    return;
+  }
+
+  try {
+    const response = await ngoAutocomplete(value);
+    const resData = response.data;
+
+    if (resData?.status === 200) {
+      setSuggestions(resData?.data || []);
+      setShowDropdown(true);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+useEffect(() => {
+  if (!search) {
+    setData(allData);
+  }
+}, [search]);
+
+  const handleSelectNgo = (item) => {
+    setSearch(item.name);
+    setShowDropdown(false);
+
+    const filtered = allData.filter(
+      (ngo) => ngo.id === item.id
+    );
+
+    setData(filtered);
+  };
+
   return (
     <DashboardLayout>
       <Container fluid className={styles.page}>
@@ -130,8 +205,37 @@ export default function Ngolist() {
 
         <Row>
           <Col>
+
+            <div className="position-relative" style={{ width: "300px" }}>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search NGO..."
+                value={search}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                onFocus={() => setShowDropdown(true)}
+              />
+
+              {showDropdown && suggestions.length > 0 && (
+                <div
+                  className="border bg-white position-absolute w-100 search-dd"
+                  style={{ zIndex: 1000, maxHeight: "200px", overflowY: "auto" }}
+                >
+                  {suggestions.map((item) => (
+                    <div
+                      key={item.id}
+                      className="p-2 cursor-pointer hover-bg dropdown-item"
+                      onClick={() => handleSelectNgo(item)}
+                    >
+                      {item.name}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
             {/* ✅ Table */}
-            <Table striped bordered hover responsive>
+            <Table striped bordered hover responsive className="mt-3">
               <thead>
                 <tr>
                   <th>Name</th>
@@ -157,17 +261,25 @@ export default function Ngolist() {
                           : item.ngo_number_of_user_registered}
                       </td>
                       <td className="">
-                        <FaEye
-                          size={20}
-                          className="text-primary cursor-pointer"
-                          onClick={() => handleView(item)}
-                        />
+                        <ul className="d-flex align-items-center">
+                          <li>
+                            <FaEye
+                              size={20}
+                              className="text-primary cursor-pointer"
+                              onClick={() => handleView(item)}
+                            />
+                          </li>
+                          <li>
+                            <FaEdit
+                              size={20}
+                              className="text-success cursor-pointer ms-3"
+                              onClick={() => handleEdit(item)}
+                            />
+                          </li>
+                        </ul>
+                        
 
-                        <FaEdit
-                          size={20}
-                          className="text-success cursor-pointer ms-3"
-                          onClick={() => handleEdit(item)}
-                        />
+                        
                       </td>
                     </tr>
                   ))

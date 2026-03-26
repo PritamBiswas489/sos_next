@@ -76,3 +76,11 @@ export const changeKycDocumentStatus = async (data) => {
   return response;
 };
 
+export const ngoAutocomplete = async (name) => {
+  const response = await api.get(
+    `auth-web/admin/ngo-autocomplete-by-name?name=${name}`
+  );
+  return response;
+};
+
+

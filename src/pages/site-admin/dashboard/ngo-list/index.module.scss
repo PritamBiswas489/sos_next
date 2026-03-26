@@ -396,6 +396,23 @@
   cursor: not-allowed;
 }
 
+
+  :global(.search-dd) {
+    background-color: $dark-2 !important;
+    border: 1px solid rgba($white, 0.08) !important;
+  }
+
+  :global(.dropdown-item) {
+    color: $white !important;
+    transition: 0.3s;
+    font-size: 0.875rem;
+
+    &:hover {
+      background-color: rgba($white, 0.08);
+      color: $white;
+    }
+  }
+
 @media (max-width: 767px) {
   .licenseBtn,
   .androidBtn {
