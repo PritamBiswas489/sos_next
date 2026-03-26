@@ -54,3 +54,25 @@ export const uploadApk = async (data) => {
   );
   return response;
 };
+
+export const userList = async ({ page = 1, limit = 10 }) => {
+  const response = await api.get(
+    `auth-web/admin/user-list?limit=${limit}&page=${page}`
+  );
+  return response;
+};
+export const changeUserStatus = async (data) => {
+  const response = await api.post("auth-web/admin/change-user-status", data);
+  return response;
+};
+export const pendingKycDocuments = async ({ page = 1, limit = 10 }) => {
+  const response = await api.get(
+    `auth-web/admin/pending-kyc-documents?limit=${limit}&page=${page}`
+  );
+  return response;
+};
+export const changeKycDocumentStatus = async (data) => {
+  const response = await api.post("auth-web/admin/change-kyc-document-status", data);
+  return response;
+};
+

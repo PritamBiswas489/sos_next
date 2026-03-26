@@ -30,6 +30,8 @@ const DownloadsComponent = () => {
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [file, setFile] = useState(null);
   const [kycdata, setKycdata] = useState([]);
+  const [licenseCode, setLicenseCode] = useState('');
+  
   
 
     const {
@@ -93,7 +95,6 @@ const DownloadsComponent = () => {
             formData.append("residentialAddress", data.residentialAddress);
             formData.append("documentType", selectedDoc);
 
-            // ✅ Always append file (now guaranteed to exist)
             if (file) {
               formData.append("document", file);
             }
@@ -176,6 +177,7 @@ const DownloadsComponent = () => {
           getDocuments();
         }else{
           setSuccess(true);
+          setLicenseCode(resData?.data?.licenseCode);
         }
       } else {
         toast.error(resData?.error?.message || "");
@@ -240,6 +242,21 @@ const DownloadsComponent = () => {
 
   loadExistingFile();
 }, [kycdata]);
+
+const handleCopy = async () => {
+  if (navigator.clipboard) {
+    await navigator.clipboard.writeText(licenseCode);
+  } else {
+    const textarea = document.createElement("textarea");
+    textarea.value = licenseCode;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textarea);
+  }
+
+  toast.success("License code copied!");
+};
 
   return (
     <Container fluid className={styles.page}>
@@ -463,7 +480,7 @@ const DownloadsComponent = () => {
             <span className={styles.licenseLabel}>YOUR LICENSE KEY</span>
 
             <h2 className={styles.licenseKey}>
-              SOS-4F7 <br /> K-X29M
+              {licenseCode}
             </h2>
             <h6>
               <span>Details</span>
@@ -484,7 +501,9 @@ const DownloadsComponent = () => {
             </div>
           </div>
 
-          <button className={styles.copyBtn}>📋 Copy License Code</button>
+          <button className={styles.copyBtn} onClick={handleCopy}>
+            📋 Copy License Code
+          </button>
 
           <small className={styles.footerText}>
             This code is tied to your account. Do not share it. <br />

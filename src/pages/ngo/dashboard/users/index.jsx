@@ -51,6 +51,10 @@ export default function Downloads() {
     const handleDocSelect = (doc) => {
         setSelectedDoc(doc);
     };
+    const handlePageClick = ({ selected }) => {
+      setCurrentPage(selected);
+      fetchUserList(selected);
+    };
 
     const handleFileChange = (e) => {
         const selected = e.target.files[0];

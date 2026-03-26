@@ -106,7 +106,7 @@ export default function Ngolist() {
                                 href={item.apkFile}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="btn btn-sm btn-primary"
+                                className=""
                                 download
                                 >
                                 Download

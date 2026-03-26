@@ -29,6 +29,8 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   const AdminMenu = [
     { icon: <FaHome />, label: "Dashboard", active: true, path: "/site-admin/dashboard" },
     { icon: <FaUsers />, label: "NGO List", path: "/site-admin/dashboard/ngo-list" },
+    { icon: <FaUsers />, label: "User List", path: "/site-admin/dashboard/user-list" },
+    { icon: <FaFileAlt />, label: "Pending KYC", path: "/site-admin/dashboard/pending-kyc" },
     { icon: <FaAndroid />, label: "Apk Management", path: "/site-admin/dashboard/apk-management" },
     // { icon: <FaUser />, label: "Profile", path: "/dashboard/profile" },
     // { icon: <FaUsers />, label: "Family", path: "/dashboard/family" },
