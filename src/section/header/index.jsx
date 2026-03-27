@@ -9,6 +9,8 @@ import { FaBars, FaTimes } from "react-icons/fa";
 import OtpLoginModal from "@/component/OtpLoginModal";
 import NgoLoginModal from "@/component/NgoLoginModal";
 import NgoRegisterModal from "@/component/NgoRegisterModal";
+import { useRouter } from "next/router";
+import { decryptData } from "@/utils/crypto";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -16,9 +18,11 @@ const Header = () => {
   const [ngoLoginModal, setNgoLoginModal] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
+    console.log('token', token);
 
     if (token) {
       setIsLoggedIn(true);
@@ -26,6 +30,36 @@ const Header = () => {
       setIsLoggedIn(false);
     }
   }, []);
+
+  const handleDashboard = () => {
+    
+    const encryptedRole = localStorage.getItem("role");
+
+    if (!encryptedRole) {
+      router.push("/login");
+      return;
+    }
+
+    const role = decryptData(encryptedRole);
+
+    if (role === "ADMIN") {
+      router.push("/site-admin/dashboard");
+    } else if (role === "USER") {
+      router.push("/dashboard");
+    } else if (role === "NGO") {
+      router.push("/ngo/dashboard");
+    } else {
+      router.push("/login");
+    }
+  };
+
+  // const handleLogout = () => {
+  //   localStorage.removeItem("accessToken");
+  //   localStorage.removeItem("refreshToken");
+  //   localStorage.removeItem("role");
+
+  //   router.push("/");
+  // };
 
   return (
     <>
@@ -56,7 +90,7 @@ const Header = () => {
                 </li>
 
                 {/* MOBILE SIGN IN */}
-                <li className={styles.mobileOnly}>
+                {/* <li className={styles.mobileOnly}>
                   {isLoggedIn ? (
                     <Link href="/dashboard" className={styles.mobileSignin}>
                       My Account
@@ -72,40 +106,68 @@ const Header = () => {
                       Sign In
                     </Link>
                   )}
-                </li>
+                </li> */}
               </ul>
             </nav>
 
             {/* RIGHT - BUTTON */}
             <div className={styles.signinArea}>
-              <Dropdown>
-                <Dropdown.Toggle
-                  variant="success"
-                  id="dropdown-basic"
-                  className={styles.signin}
-                >
-                  Sign In
-                </Dropdown.Toggle>
+              {isLoggedIn ? (
+                <Dropdown>
+                  <Dropdown.Toggle
+                    variant="success"
+                    id="dropdown-basic"
+                    className={styles.signin}
+                  >
+                    My Account
+                  </Dropdown.Toggle>
 
-                <Dropdown.Menu>
-                  <Dropdown.Item
-                    href="#"
-                    onClick={() => {
-                      setShowOtpModal(true);
-                    }}
+                  <Dropdown.Menu>
+                     <Dropdown.Item
+                      href="#"
+                      onClick={handleDashboard}
+                    >
+                      Dashboard
+                    </Dropdown.Item>
+                    {/* <Dropdown.Item
+                      href="#"
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </Dropdown.Item> */}
+                  </Dropdown.Menu>
+                </Dropdown>
+                
+              ) : (
+                <Dropdown>
+                  <Dropdown.Toggle
+                    variant="success"
+                    id="dropdown-basic"
+                    className={styles.signin}
                   >
-                    As a User
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    href="#"
-                    onClick={() => {
-                      setNgoLoginModal(true);
-                    }}
-                  >
-                    As a NGO
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+                    Sign In
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      href="#"
+                      onClick={() => {
+                        setShowOtpModal(true);
+                      }}
+                    >
+                      As a User
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      href="#"
+                      onClick={() => {
+                        setNgoLoginModal(true);
+                      }}
+                    >
+                      As a NGO
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              )}
 
               <button
                 className={styles.menuBtn}

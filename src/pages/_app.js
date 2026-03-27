@@ -10,6 +10,7 @@ import { ToastContainer } from "react-toastify";
 import { Provider } from 'react-redux';
 import store from "@/redux/store";
 import PageLoader from "@/component/loader";
+import AuthGuard from "@/hooks/AuthGuard";
 
 
 
@@ -17,7 +18,9 @@ export default function App({ Component, pageProps }) {
   return (
     <>
     <Provider store={store}>
-        <Component {...pageProps} />
+        <AuthGuard>
+          <Component {...pageProps} />
+        </AuthGuard>
 
         <PageLoader
 					color={'#11b0ca'}

@@ -26,6 +26,8 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   const role = decryptData(encryptedRole);
   // console.log('role', role)
 
+  
+
   const AdminMenu = [
     { icon: <FaHome />, label: "Dashboard", active: true, path: "/site-admin/dashboard" },
     { icon: <FaUsers />, label: "NGO List", path: "/site-admin/dashboard/ngo-list" },
@@ -62,6 +64,14 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     // { icon: <FaLock />, label: "Privacy", path: "/dashboard/privacy" },
   ];
 
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("role");
+
+    router.push("/");
+  };
+
   return (
     <>
       {isOpen && (
@@ -88,6 +98,15 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                   <span className={styles.label}>{item.label}</span>
                 </li>
               ))}
+              <li
+                  onClick={handleLogout}
+                  className={styles.menuItem}
+                >
+                  <span className={styles.icon}>
+                    <FaLock />
+                  </span>
+                  <span className={styles.label}>Logout</span>
+              </li>
             </ul>
           )}
 
@@ -107,6 +126,15 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                   <span className={styles.label}>{item.label}</span>
                 </li>
               ))}
+              <li
+                  onClick={handleLogout}
+                  className={styles.menuItem}
+                >
+                  <span className={styles.icon}>
+                    <FaLock />
+                  </span>
+                  <span className={styles.label}>Logout</span>
+              </li>
             </ul>
           )}
 
@@ -126,18 +154,27 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                   <span className={styles.label}>{item.label}</span>
                 </li>
               ))}
+              <li
+                  onClick={handleLogout}
+                  className={styles.menuItem}
+                >
+                  <span className={styles.icon}>
+                    <FaLock />
+                  </span>
+                  <span className={styles.label}>Logout</span>
+              </li>
             </ul>
           )}
 
 
         </div>
-        <div className={styles.userCard}>
+        {/* <div className={styles.userCard}>
           <div className={styles.avatar}>JD</div>
           <div>
             <div className={styles.name}>John Doe</div>
             <div className={styles.plan}>Premium Plan</div>
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );
