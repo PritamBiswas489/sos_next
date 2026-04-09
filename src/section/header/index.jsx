@@ -36,7 +36,11 @@ const Header = () => {
     const encryptedRole = localStorage.getItem("role");
 
     if (!encryptedRole) {
-      router.push("/login");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("role");
+
+      window.location.href = "/";
       return;
     }
 
@@ -49,7 +53,10 @@ const Header = () => {
     } else if (role === "NGO") {
       router.push("/ngo/dashboard");
     } else {
-      router.push("/login");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("role");
+      window.location.href = "/";
     }
   };
 

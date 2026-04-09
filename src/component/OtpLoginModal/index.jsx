@@ -26,6 +26,19 @@ const OtpLoginModal = ({ show, handleClose, setIsLoggedIn }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [autoFillOTP, setAutoFillOTP] = useState("");
+  const [defaultCountry, setDefaultCountry] = useState("");
+
+  useEffect(() => {
+    fetch("/api/get-country")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Country code from API:", data?.country_code);  
+        if (data?.country_code) {
+          setDefaultCountry(data.country_code.toLowerCase());
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const handleOtpChange = (value, index) => {
     if (!/^[0-9]?$/.test(value)) return;
@@ -271,7 +284,7 @@ const OtpLoginModal = ({ show, handleClose, setIsLoggedIn }) => {
                 <Controller
                   name="phone"
                   control={control}
-                  defaultValue="+254"
+                  defaultValue=""
                   rules={{
                     required: "Phone number is required",
                     validate: (value) =>
@@ -280,7 +293,7 @@ const OtpLoginModal = ({ show, handleClose, setIsLoggedIn }) => {
                   }}
                   render={({ field }) => (
                     <PhoneInput
-                      defaultCountry="KE"
+                      defaultCountry={defaultCountry}
                       value={field.value}
                       onChange={field.onChange}
                       placeholder="700 000 000"

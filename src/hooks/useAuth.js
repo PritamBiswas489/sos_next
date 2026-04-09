@@ -11,7 +11,7 @@ const useAuth = () => {
     const token = localStorage.getItem("accessToken");
 
     if (!token) {
-      router.push("/");
+     window.location.href = "/";
     } else {
       setLoading(false);
     }

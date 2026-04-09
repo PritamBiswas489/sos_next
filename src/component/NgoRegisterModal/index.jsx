@@ -25,6 +25,18 @@ const NgoRegisterModal = ({ show, handleClose }) => {
   const recaptchaRef = useRef(null);
   const [certificateFile, setCertificateFile] = useState(null);
   const fileInputRef = useRef(null);
+  const [defaultCountry, setDefaultCountry] = useState("");
+
+  useEffect(() => {
+    fetch("/api/get-country")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.country_code) {
+          setDefaultCountry(data.country_code.toLowerCase());
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const {
     register,
@@ -127,7 +139,7 @@ const NgoRegisterModal = ({ show, handleClose }) => {
     reset({
       name: "",
       email: "",
-      phoneNumber: "+254",
+      phoneNumber: "",
       password: "",
       numberOfUser: "",
       captcha: "",
@@ -195,7 +207,7 @@ const NgoRegisterModal = ({ show, handleClose }) => {
                 <Controller
                   name="phoneNumber" // changed from "phone" to "phoneNumber"
                   control={control}
-                  defaultValue="+254"
+                  defaultValue=""
                   rules={{
                     required: "Phone number is required",
                     validate: (value) =>
@@ -204,7 +216,7 @@ const NgoRegisterModal = ({ show, handleClose }) => {
                   }}
                   render={({ field }) => (
                     <PhoneInput
-                      defaultCountry="KE"
+                      defaultCountry={defaultCountry}
                       value={field.value}
                       onChange={field.onChange}
                       placeholder="700 000 000"

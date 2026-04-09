@@ -69,7 +69,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("role");
 
-    router.push("/");
+    window.location.href = "/";
   };
 
   return (
