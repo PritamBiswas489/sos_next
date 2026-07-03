@@ -1,5 +1,17 @@
 @use "../../../../assets/front/styles/variable" as *;
 
+.card {
+  background: linear-gradient(180deg, $dark, $dark-2);
+  border-radius: 22px;
+  padding: 36px 28px;
+  // text-align: center;
+  color: $white;
+  // position: relative;
+  p {
+    margin-bottom: 1rem;
+  }
+}
+
 .page {
   padding: 20px;
   color: $white;
@@ -8,6 +20,7 @@
 /* TITLE */
 .title {
   font-size: 24px;
+  margin-bottom: 0;
 }
 
 .subtitle {
@@ -182,14 +195,6 @@
     outline: none;
     color: $white;
     width: 100%;
-  }
-  textarea {
-    background: transparent;
-    border: none;
-    outline: none;
-    color: $white;
-    width: 100%;
-    resize: none;
   }
 }
 
@@ -372,73 +377,6 @@
   }
 }
 
-
-.phoneBox {
-  display: flex;
-  align-items: center;
-  background: $dark;
-  border: 1px solid $dark-2;
-  border-radius: 12px;
-  padding: 6px;
-
-  .phoneInput {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    background: transparent;
-
-    /* country wrapper */
-    :global(.PhoneInputCountry) {
-      background: transparent !important;
-      border: 1px solid $dark-2;
-      border-radius: 10px;
-      padding: 10px 12px;
-      margin-right: 10px;
-    }
-
-    /* 🔥 HARD RESET (this is the real fix) */
-    :global(.PhoneInputCountry *) {
-      background: transparent !important;
-      box-shadow: none !important;
-    }
-
-    /* specifically target svg flag */
-    :global(.PhoneInputCountry svg) {
-      background: transparent !important;
-    }
-
-    /* remove any default white box */
-    :global(.PhoneInputCountryIcon) {
-      background: transparent !important;
-    }
-
-    /* input */
-    :global(input) {
-      background: transparent !important;
-      border: none !important;
-      outline: none !important;
-      box-shadow: none !important;
-      color: $white !important;
-      font-size: 14px;
-      padding: 12px;
-      width: 100%;
-    }
-  }
-}
-:global(.PhoneInputCountryIcon) {
-  background-color: transparent !important;
-}
-
-
-.requestCcode{
-  position: relative;
-  .errorStyle{
-    margin-top: 5px;
-    top: 100%;
-    left: 0;
-  }
-}
-
 /* Pagination Styling */
 .pagination {
   display: flex;
@@ -469,6 +407,23 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+
+  :global(.search-dd) {
+    background-color: $dark-2 !important;
+    border: 1px solid rgba($white, 0.08) !important;
+  }
+
+  :global(.dropdown-item) {
+    color: $white !important;
+    transition: 0.3s;
+    font-size: 0.875rem;
+
+    &:hover {
+      background-color: rgba($white, 0.08);
+      color: $white;
+    }
+  }
 
 @media (max-width: 767px) {
   .licenseBtn,

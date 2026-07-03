@@ -183,14 +183,6 @@
     color: $white;
     width: 100%;
   }
-  textarea {
-    background: transparent;
-    border: none;
-    outline: none;
-    color: $white;
-    width: 100%;
-    resize: none;
-  }
 }
 
 .documents p {
@@ -254,8 +246,8 @@
 
 /* BUTTON */
 .submitBtn {
-  width: 100%;
-  margin-top: 20px;
+  // width: 100%;
+  // margin-top: 20px;
   background: $primary;
   border: none;
   padding: 12px;

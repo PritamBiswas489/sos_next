@@ -19,3 +19,8 @@ export const getKycDocuments = async () => {
   const response = await api.get("auth-web/user/kyc/get-documents");
   return response;
 };
+
+export const contactAdmin = async (data) => {
+  const response = await api.post("auth-web/user/contact-admin", data);
+  return response;
+};

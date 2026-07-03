@@ -16,3 +16,8 @@ export const userListForNgo = async ({ page = 1, limit = 10 }) => {
   );
   return response;
 };
+
+export const contactAdmin = async (data) => {
+  const response = await api.post("auth-web/user/contact-admin", data);
+  return response;
+};

@@ -12,6 +12,7 @@ import {
   FaCog,
   FaLock,
   FaAndroid, 
+  FaVoicemail,
 } from "react-icons/fa";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -34,6 +35,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     { icon: <FaUsers />, label: "User List", path: "/site-admin/dashboard/user-list" },
     { icon: <FaFileAlt />, label: "Pending KYC", path: "/site-admin/dashboard/pending-kyc" },
     { icon: <FaAndroid />, label: "Apk Management", path: "/site-admin/dashboard/apk-management" },
+    { icon: <FaVoicemail />, label: "Contact List", path: "/site-admin/dashboard/contact-list" },
     // { icon: <FaUser />, label: "Profile", path: "/dashboard/profile" },
     // { icon: <FaUsers />, label: "Family", path: "/dashboard/family" },
     // { icon: <FaMapMarkerAlt />, label: "Location", path: "/dashboard/location" },
@@ -50,13 +52,15 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     // { icon: <FaMapMarkerAlt />, label: "Location", path: "/dashboard/location" },
     // { icon: <FaFileAlt />, label: "SOS History", path: "/dashboard/sos-history" },
     { icon: <FaDownload />, label: "Downloads", path: "/dashboard/downloads" },
-    // { icon: <FaCog />, label: "Settings", path: "/dashboard/settings" },
+    { icon: <FaVoicemail />, label: "Contact Admin", path: "/dashboard/contact-admin" },
+    { icon: <FaDownload />, label: "Request ISO", path: "/dashboard/request-iso" },
     // { icon: <FaLock />, label: "Privacy", path: "/dashboard/privacy" },
   ];
 
   const NgoMenu = [
     { icon: <FaHome />, label: "Dashboard", active: true, path: "/ngo/dashboard" },
     { icon: <FaUsers />, label: "Users", path: "/ngo/dashboard/users" },
+    { icon: <FaVoicemail />, label: "Contact Admin", path: "/ngo/dashboard/contact-admin" },
     // { icon: <FaMapMarkerAlt />, label: "Location", path: "/dashboard/location" },
     // { icon: <FaFileAlt />, label: "SOS History", path: "/dashboard/sos-history" },
     // { icon: <FaDownload />, label: "Downloads", path: "/dashboard/downloads" },

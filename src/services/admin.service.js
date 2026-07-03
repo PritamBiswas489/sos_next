@@ -83,4 +83,31 @@ export const ngoAutocomplete = async (name) => {
   return response;
 };
 
+export const contactList = async (params) => {
+  const { page = 1, limit = 10, userId, mobileNumber, fromDate, toDate } = params;
+  
+  const queryParams = new URLSearchParams({
+    limit,
+    page,
+  });
+
+  // Add optional filters
+  if (userId) queryParams.append("userId", userId);
+  if (mobileNumber) queryParams.append("mobileNumber", mobileNumber);
+  if (fromDate) queryParams.append("fromDate", fromDate);
+  if (toDate) queryParams.append("toDate", toDate);
+
+  const response = await api.get(
+    `auth-web/admin/contact-admin-list?${queryParams.toString()}`
+  );
+  return response;
+};
+
+export const replyContactAdmin = async (data) => {
+  const response = await api.post("auth-web/admin/reply-email-contact-admin", data);
+  return response;
+};
+
+
+
 
