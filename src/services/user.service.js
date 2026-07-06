@@ -24,3 +24,8 @@ export const contactAdmin = async (data) => {
   const response = await api.post("auth-web/user/contact-admin", data);
   return response;
 };
+
+export const requestisoAccess = async (data) => {
+  const response = await api.post("auth-web/user/request-for-ios-access", data);
+  return response;
+};

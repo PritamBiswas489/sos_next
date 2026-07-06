@@ -108,6 +108,41 @@ export const replyContactAdmin = async (data) => {
   return response;
 };
 
+export const fetchIsoList = async (params) => {
+  const { page = 1, limit = 10, user_id, mobileNumber, testFlightEmail, status } = params;
+  
+  const queryParams = new URLSearchParams({
+    limit,
+    page,
+  });
+
+  // Add optional filters
+  if (user_id) queryParams.append("user_id", user_id);
+  if (mobileNumber) queryParams.append("mobileNumber", mobileNumber);
+  if (testFlightEmail) queryParams.append("testFlightEmail", testFlightEmail);
+  if (status) queryParams.append("status", status);
+
+  const response = await api.get(
+    `auth-web/admin/request-ios-access-list?${queryParams.toString()}`
+  );
+  return response;
+};
+
+export const replyIsoReply = async (data) => {
+  const response = await api.post("auth-web/admin/reply-email-request-ios-access", data);
+  return response;
+};
+
+export const updateEmailForIosAccess = async (data) => {
+  const response = await api.post("auth-web/admin/update-email-for-ios-access-request", data);
+  return response;
+};
+
+export const changeIosAccessRequestStatus = async (data) => {
+  const response = await api.post("auth-web/admin/request-ios-access-status-change", data);
+  return response;
+};
+
 
 
 

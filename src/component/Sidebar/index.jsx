@@ -13,6 +13,7 @@ import {
   FaLock,
   FaAndroid, 
   FaVoicemail,
+  FaApple,
 } from "react-icons/fa";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -36,6 +37,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     { icon: <FaFileAlt />, label: "Pending KYC", path: "/site-admin/dashboard/pending-kyc" },
     { icon: <FaAndroid />, label: "Apk Management", path: "/site-admin/dashboard/apk-management" },
     { icon: <FaVoicemail />, label: "Contact List", path: "/site-admin/dashboard/contact-list" },
+    { icon: <FaApple />, label: "iOS Request List", path: "/site-admin/dashboard/ios-request-list" },
     // { icon: <FaUser />, label: "Profile", path: "/dashboard/profile" },
     // { icon: <FaUsers />, label: "Family", path: "/dashboard/family" },
     // { icon: <FaMapMarkerAlt />, label: "Location", path: "/dashboard/location" },
@@ -53,7 +55,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     // { icon: <FaFileAlt />, label: "SOS History", path: "/dashboard/sos-history" },
     { icon: <FaDownload />, label: "Downloads", path: "/dashboard/downloads" },
     { icon: <FaVoicemail />, label: "Contact Admin", path: "/dashboard/contact-admin" },
-    { icon: <FaDownload />, label: "Request ISO", path: "/dashboard/request-iso" },
+    { icon: <FaDownload />, label: "Request iOS", path: "/dashboard/request-ios" },
     // { icon: <FaLock />, label: "Privacy", path: "/dashboard/privacy" },
   ];
 
