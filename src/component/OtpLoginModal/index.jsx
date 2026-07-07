@@ -7,7 +7,7 @@ import { useForm, Controller } from "react-hook-form";
 import InputErrorMsg from "../InputErrorMsg/InputErrorMsg";
 import { toast } from "react-toastify";
 import { HIDE_LOADER, SHOW_LOADER } from "@/redux/loaderSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useStore } from "react-redux";
 import axios from "axios";
 import {
   createUserAfterOtpVerification,
@@ -16,6 +16,7 @@ import {
 } from "@/services/login.service";
 import { useRouter } from "next/navigation";
 import { encryptData } from "@/utils/crypto";
+import { setUser } from "@/redux/userSlice";
 
 const OtpLoginModal = ({ show, handleClose, setIsLoggedIn }) => {
   const [step, setStep] = useState(1);
@@ -32,6 +33,8 @@ const OtpLoginModal = ({ show, handleClose, setIsLoggedIn }) => {
   const [tmpAccessToken, setTmpAccessToken] = useState(null);
   const [tmpRefreshToken, setTmpRefreshToken] = useState(null);
   const [tmpRole, setTmpRole] = useState(null);
+
+  const store = useStore();
 
   useEffect(() => {
     fetch("/api/get-country")
@@ -148,6 +151,13 @@ const OtpLoginModal = ({ show, handleClose, setIsLoggedIn }) => {
           const role = resDataUser?.data?.user?.role;
           const encryptedRole = encryptData(role);
 
+          // console.log("Before dispatch:", resDataUser.data);
+          localStorage.setItem(
+            "userRecord",
+            JSON.stringify(resDataUser.data.user)
+          );
+          dispatch(setUser(resDataUser.data.user));
+
           setTmpAccessToken(resDataUser?.data?.accessToken);
           setTmpRefreshToken(resDataUser?.data?.refreshToken);
           setTmpRole(encryptedRole);
@@ -229,13 +239,18 @@ const OtpLoginModal = ({ show, handleClose, setIsLoggedIn }) => {
         }
       );
 
-      // console.log(response.data);
+      console.log(response.data);
 
       if (response.data?.status === 200) {
 
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
         localStorage.setItem("role", encryptedRole);
+
+        localStorage.setItem(
+          "userRecord",
+          JSON.stringify(response.data?.data)
+        );
 
         toast.success(response.data?.message || "Profile updated successfully");
         router.push("/dashboard");

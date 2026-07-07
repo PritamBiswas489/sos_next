@@ -62,6 +62,7 @@ const AuthGuard = ({ children }) => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("role");
+    localStorage.removeItem("userRecord");
 
     window.location.href = "/";
   };

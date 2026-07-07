@@ -11,8 +11,9 @@
   border-right: 1px solid $dark-2;
 }
 
-.logoMenu {
-}
+// .logoMenu {
+
+// }
 
 /* LOGO */
 .logo {
@@ -47,6 +48,8 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  height: calc(100vh - 120px);
+  overflow-y: auto;
 }
 
 .menuItem {

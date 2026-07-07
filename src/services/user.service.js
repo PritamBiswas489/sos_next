@@ -29,3 +29,9 @@ export const requestisoAccess = async (data) => {
   const response = await api.post("auth-web/user/request-for-ios-access", data);
   return response;
 };
+
+export const getRequestStatus = async () => {
+  const response = await api.get("auth-web/user/status-of-ios-access-request");
+  return response;
+};
+

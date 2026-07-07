@@ -145,4 +145,34 @@ export const changeIosAccessRequestStatus = async (data) => {
 
 
 
+export const fetchAppFeedbackList = async (params) => {
+  const { page = 1, limit = 10, user_id, status, fromDate, toDate } = params;
+  
+  const queryParams = new URLSearchParams({
+    limit,
+    page,
+  });
+
+  // Add optional filters
+  if (user_id) queryParams.append("user_id", user_id);
+  if (fromDate) queryParams.append("fromDate", fromDate);
+  if (toDate) queryParams.append("toDate", toDate);
+  if (status) queryParams.append("status", status);
+
+  const response = await api.get(
+    `auth-web/admin/app-feedback-list?${queryParams.toString()}`
+  );
+  return response;
+};
+
+export const replyAppFeedback = async (data) => {
+  const response = await api.post("auth-web/admin/reply-email-app-feedback", data);
+  return response;
+};
+
+export const updateAppFeedbackStatus = async (data) => {
+  const response = await api.post("auth-web/admin/update-app-feedback-status", data);
+  return response;
+};
+
 

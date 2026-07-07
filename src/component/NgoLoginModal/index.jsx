@@ -68,6 +68,11 @@ const NgoLoginModal = ({ show, handleClose, openRegister }) => {
         localStorage.setItem("refreshToken", refreshToken);
         localStorage.setItem("role", encryptedRole);
 
+        localStorage.setItem(
+            "userRecord",
+            JSON.stringify(resData?.data?.user)
+          );
+
         toast.success(resData?.msg || "Login successful");
 
         router.push("/ngo/dashboard");

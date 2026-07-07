@@ -67,6 +67,11 @@ const LoginPage = () => {
         localStorage.setItem("refreshToken", refreshToken);
         localStorage.setItem("role", encryptedRole);
 
+        localStorage.setItem(
+          "userRecord",
+          JSON.stringify(resData?.data?.user)
+        );
+
         toast.success(resData?.msg || "Login successful");
         router.push("/site-admin/dashboard");
         // console.log('resData', resData?.data);

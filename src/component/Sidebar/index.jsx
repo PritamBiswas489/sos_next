@@ -14,6 +14,7 @@ import {
   FaAndroid, 
   FaVoicemail,
   FaApple,
+  FaCommentDots,
 } from "react-icons/fa";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -38,6 +39,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     { icon: <FaAndroid />, label: "Apk Management", path: "/site-admin/dashboard/apk-management" },
     { icon: <FaVoicemail />, label: "Contact List", path: "/site-admin/dashboard/contact-list" },
     { icon: <FaApple />, label: "iOS Request List", path: "/site-admin/dashboard/ios-request-list" },
+    { icon: <FaCommentDots />, label: "App Feedback List", path: "/site-admin/dashboard/app-feedback-list" },
     // { icon: <FaUser />, label: "Profile", path: "/dashboard/profile" },
     // { icon: <FaUsers />, label: "Family", path: "/dashboard/family" },
     // { icon: <FaMapMarkerAlt />, label: "Location", path: "/dashboard/location" },
@@ -62,7 +64,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   const NgoMenu = [
     { icon: <FaHome />, label: "Dashboard", active: true, path: "/ngo/dashboard" },
     { icon: <FaUsers />, label: "Users", path: "/ngo/dashboard/users" },
-    { icon: <FaVoicemail />, label: "Contact Admin", path: "/ngo/dashboard/contact-admin" },
+    // { icon: <FaVoicemail />, label: "Contact Admin", path: "/ngo/dashboard/contact-admin" },
     // { icon: <FaMapMarkerAlt />, label: "Location", path: "/dashboard/location" },
     // { icon: <FaFileAlt />, label: "SOS History", path: "/dashboard/sos-history" },
     // { icon: <FaDownload />, label: "Downloads", path: "/dashboard/downloads" },

@@ -6,9 +6,9 @@ import ReactPaginate from "react-paginate";
 import { useDispatch } from "react-redux";
 import { SHOW_LOADER, HIDE_LOADER } from "@/redux/loaderSlice";
 import { toast } from "react-toastify";
-import { contactList, replyContactAdmin } from "@/services/admin.service";
+import { contactList, fetchAppFeedbackList, replyContactAdmin, replyIsoReply, updateEmailForIosAccess, changeIosAccessRequestStatus, replyAppFeedback, updateAppFeedbackStatus } from "@/services/admin.service";
 import NgoDetailsModal from "@/component/Popup/Admin/NgoDetails";
-import { FaEye, FaEdit, FaReply } from "react-icons/fa";
+import { FaEye, FaEdit, FaReply, FaEnvelope, FaToggleOn, FaDownload } from "react-icons/fa";
 import NgoUpdateModal from "@/component/Popup/Admin/NgoUpdate";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -26,8 +26,10 @@ export default function Ngolist() {
 
   // Filter states
   const [filters, setFilters] = useState({
-    userId: "",
+    user_id: "",
     mobileNumber: "",
+    testFlightEmail: "",
+    status: "",
     fromDate: "",
     toDate: "",
   });
@@ -43,7 +45,18 @@ export default function Ngolist() {
   const [selectedContact, setSelectedContact] = useState(null);
   const [replyMessage, setReplyMessage] = useState("");
 
-  const fetchContactList = async (page = 0) => {
+  // Update Email modal state
+  const [showUpdateEmailModal, setShowUpdateEmailModal] = useState(false);
+  const [selectedItemForEmail, setSelectedItemForEmail] = useState(null);
+  const [updateEmail, setUpdateEmail] = useState("");
+
+  // Status Change modal state
+  const [showStatusModal, setShowStatusModal] = useState(false);
+  const [newStatus, setNewStatus] = useState("");
+  const [updatingFeedbackId, setUpdatingFeedbackId] = useState(null);
+  const statusOptions = ["new", "reviewed", "resolved", "ignored"];
+
+  const fetchAppFeedback = async (page = 0, activeFilters = filters) => {
     try {
       dispatch(SHOW_LOADER());
 
@@ -53,14 +66,14 @@ export default function Ngolist() {
       };
 
       // Add filters if they have values
-      if (filters.userId) params.userId = filters.userId;
-      if (filters.mobileNumber) params.mobileNumber = filters.mobileNumber;
-      if (filters.fromDate) params.fromDate = filters.fromDate;
-      if (filters.toDate) params.toDate = filters.toDate;
+      if (activeFilters?.user_id) params.user_id = activeFilters.user_id;
+      if (activeFilters?.status) params.status = activeFilters.status;
+      if (activeFilters?.fromDate) params.fromDate = activeFilters.fromDate;
+      if (activeFilters?.toDate) params.toDate = activeFilters.toDate;
 
       console.log("params", params);
 
-      const response = await contactList(params);
+      const response = await fetchAppFeedbackList(params);
 
       const resData = response.data;
 
@@ -79,12 +92,12 @@ export default function Ngolist() {
     }
   };
   useEffect(() => {
-    fetchContactList(0);
+    fetchAppFeedback(0);
   }, []);
 
   const handlePageClick = ({ selected }) => {
     setCurrentPage(selected);
-    fetchContactList(selected);
+    fetchAppFeedback(selected);
   };
 
   const handleFilterChange = (e) => {
@@ -148,8 +161,8 @@ export default function Ngolist() {
 
     try {
       dispatch(SHOW_LOADER());
-      const response = await replyContactAdmin({
-        contact_id: selectedContact.id,
+      const response = await replyAppFeedback({
+        feedback_id: selectedContact.id,
         message: replyMessage,
       });
 
@@ -157,7 +170,7 @@ export default function Ngolist() {
         toast.success("Reply sent successfully");
         setShowReplyModal(false);
         setReplyMessage("");
-        fetchContactList(currentPage);
+        fetchAppFeedback(currentPage);
       } else {
         toast.error(response.data?.error?.message || "Failed to send reply");
       }
@@ -174,190 +187,226 @@ export default function Ngolist() {
     setSelectedContact(null);
   };
 
+
+
+  const handleStatusUpdate = async (feedbackId, selectedStatus) => {
+    if (!feedbackId || !selectedStatus) return;
+
+    try {
+      setUpdatingFeedbackId(feedbackId);
+      dispatch(SHOW_LOADER());
+
+      const response = await updateAppFeedbackStatus({
+        feedback_id: Number(feedbackId),
+        status: selectedStatus,
+      });
+
+      if (response?.data?.status === 200 || response?.data?.status === 201) {
+        toast.success("Status updated successfully");
+        fetchAppFeedback(currentPage);
+      } else {
+        toast.error(response?.data?.error?.message || "Failed to update status");
+      }
+    } catch (error) {
+      toast.error(error?.message || "Something went wrong");
+    } finally {
+      setUpdatingFeedbackId(null);
+      dispatch(HIDE_LOADER());
+    }
+  };
+
   const handleApplyFilters = () => {
     setCurrentPage(0);
-    fetchContactList(0);
+    fetchAppFeedback(0, filters);
   };
 
   const handleClearFilters = () => {
-    setFilters({
-      userId: "",
+    const emptyFilters = {
+      user_id: "",
       mobileNumber: "",
+      testFlightEmail: "",
+      status: "",
       fromDate: "",
       toDate: "",
-    });
+    };
+
+    setFilters(emptyFilters);
     setCurrentPage(0);
+    fetchAppFeedback(0, emptyFilters);
   };
 
   useEffect(() => {
     handleApplyFilters();
   }, []);
 
-  const handleSearchChange = (value) => {
-    setSearch(value);
-    if (value.trim()) {
-      const filtered = allData.filter(
-        (item) =>
-          item?.user?.name?.toLowerCase().includes(value.toLowerCase()) ||
-          item?.user?.phone_number?.includes(value)
-      );
-      setSuggestions(filtered);
-    } else {
-      setSuggestions([]);
-    }
-  };
 
-  const handleSelectNgo = (item) => {
-    setSearch(item?.user?.name || "");
-    setSuggestions([]);
-    setShowDropdown(false);
-  };
   return (
     <DashboardLayout>
       <Container fluid className={styles.page}>
         <div className="d-flex align-items-center justify-content-between mb-3">
-          <h2 className={styles.title}>Contact List</h2>
-          {/* <button className="btn bg-warning btn-sm">Button</button> */}
+          <h2 className={styles.title}>App Feedback List</h2>
         </div>
 
         <Row>
           <Col>
-            {/* Filter Section */}
             <div className="mb-4 p-3 border rounded">
-              {/* <h5 className="mb-3">Filters</h5> */}
               <Row className="g-3">
                 <Col md={2}>
                   <label className="form-label">User ID</label>
                   <input
                     type="text"
                     className="form-control"
-                    name="userId"
+                    name="user_id"
                     placeholder="Enter User ID"
-                    value={filters.userId}
+                    value={filters.user_id}
                     onChange={handleFilterChange}
                   />
                 </Col>
 
+                
                 <Col md={2}>
-                  <label className="form-label">Mobile Number</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="mobileNumber"
-                    placeholder="Enter Mobile Number"
-                    value={filters.mobileNumber}
-                    onChange={handleFilterChange}
-                  />
-                </Col>
-
-                <Col md={2}>
-                  <label className="form-label">From Date</label>
-                  <DatePicker
+                    <label className="form-label">From Date</label>
+                    <DatePicker
                     selected={filters.fromDate ? new Date(filters.fromDate) : null}
                     onChange={(date) => handleDateChange("fromDate", date)}
                     className="form-control"
                     placeholderText="Select From Date"
                     dateFormat="MM/dd/yyyy"
-                  />
+                    />
                 </Col>
 
                 <Col md={2}>
-                  <label className="form-label">To Date</label>
-                  <DatePicker
+                    <label className="form-label">To Date</label>
+                    <DatePicker
                     selected={filters.toDate ? new Date(filters.toDate) : null}
                     onChange={(date) => handleDateChange("toDate", date)}
                     className="form-control"
                     placeholderText="Select To Date"
                     dateFormat="MM/dd/yyyy"
-                  />
+                    />
                 </Col>
 
-                <Col md={4} className="d-flex align-items-end gap-2">
+                <Col md={2}>
+                  <label className="form-label">Status</label>
+                  <select
+                    className="form-control"
+                    name="status"
+                    value={filters.status}
+                    onChange={handleFilterChange}
+                  >
+                    <option value="">All Status</option>
+                    {statusOptions.map((status) => (
+                      <option key={status} value={status}>
+                        {status.charAt(0).toUpperCase() + status.slice(1)}
+                      </option>
+                    ))}
+                  </select>
+                </Col>
+
+                <Col md={2} className="d-flex align-items-end gap-2">
                   <button
                     className="btn btn-primary"
                     onClick={handleApplyFilters}
-                    style={{ flex: 1 }}
                   >
                     Search
                   </button>
                   <button
                     className="btn btn-outline-secondary"
                     onClick={handleClearFilters}
-                    style={{ flex: 1 }}
                   >
                     Clear
                   </button>
                 </Col>
               </Row>
             </div>
-
-            {/* ✅ Table */}
             <Table striped bordered hover responsive className="mt-3">
               <thead>
                 <tr>
                   <th>User ID</th>
-                  <th>Name</th>
-                  <th>Phone</th>
+                  <th>User</th>
+                  <th>Rating</th>
+                  <th>Feedback Type</th>
                   <th>Message</th>
+                  <th>File</th>
+                  <th>Status</th>
                   <th>Date</th>
                   <th>Action</th>
                 </tr>
               </thead>
-
               <tbody>
                 {data.length > 0 ? (
                   data.map((item, index) => (
                     <tr key={item.id}>
 
-                      <td>{item?.userId}</td>
-                      <td>{item?.user?.name}</td>
-                      <td>{item?.user?.phone_number}</td>
+                      <td>#{item?.user_id}</td>
+                      <td>{item?.user?.name} <br/> {item?.user?.phone_number} </td>
+                      <td>{item?.rating}</td>
+                      <td>{item?.feedback_type}</td>
+                      <td>{item?.message}</td>
                       <td>
-                        <MessageCell message={item.message} itemId={item.id} />
+                        {item?.feedback_files?.length > 0 ? (
+                          <div className="d-flex flex-column gap-2">
+                            {item.feedback_files.map((file) => (
+                              <a
+                                key={file.id}
+                                href={file.file_url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-2"
+                              >
+                                <FaDownload size={12} />
+                                {file.file_type || "Download"}
+                              </a>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-white">No files</span>
+                        )}
                       </td>
-                      <td>{new Date(item.createdAt).toLocaleDateString()}</td>
-                      <td className="">
-                        <ul className="d-flex align-items-center">
-                          <li>
-                            <FaReply
-                              size={18}
-                              className="text-success cursor-pointer"
-                              onClick={() => handleReplyClick(item)}
-                              title="Reply"
-                            />
-                          </li>
-                          {/* <li>
-                            <FaEye
-                              size={20}
-                              className="text-primary cursor-pointer"
-                              onClick={() => handleView(item)}
-                            />
-                          </li>
-                          <li>
-                            <FaEdit
-                              size={20}
-                              className="text-success cursor-pointer ms-3"
-                              onClick={() => handleEdit(item)}
-                            />
-                          </li> */}
-                        </ul>
-                        
+                      <td>
+                        <span className={`badge bg-${item?.status === 'reviewed' ? 'success' : item?.status === 'ignored' ? 'danger' : item?.status === 'resolved' ? 'warning' : 'info'}`}>
+                          {item?.status || 'New'}
+                        </span>
+                      </td>
+                      <td>{new Date(item.created_at).toLocaleDateString()}</td>
+                      <td>
+                        <div className="d-flex flex-column gap-2">
+                          <select
+                            className="form-select form-select-sm"
+                            value={item?.status || "new"}
+                            onChange={(e) => handleStatusUpdate(item.id, e.target.value)}
+                            disabled={updatingFeedbackId === item.id}
+                          >
+                            {statusOptions.map((status) => (
+                              <option key={status} value={status}>
+                                {status.charAt(0).toUpperCase() + status.slice(1)}
+                              </option>
+                            ))}
+                          </select>
 
-                        
+                          <ul className="d-flex align-items-center gap-3 list-unstyled mb-0">
+                            <li>
+                              <FaReply
+                                size={18}
+                                className="text-success cursor-pointer"
+                                onClick={() => handleReplyClick(item)}
+                                title="Reply"
+                              />
+                            </li>
+                          </ul>
+                        </div>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="5" className="text-center">
+                    <td colSpan="8" className="text-center">
                       No Data Found
                     </td>
                   </tr>
                 )}
               </tbody>
             </Table>
-
-            {/* ✅ Pagination */}
             {totalPages > 1 && (
               <ReactPaginate
                 previousLabel={"← Prev"}
@@ -379,42 +428,38 @@ export default function Ngolist() {
 
         {/* Reply Modal */}
         <Modal show={showReplyModal} onHide={handleCloseReplyModal} centered>
-            <div className={styles.card}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Reply to Contact</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    {selectedContact && (
-                    <div className="mb-3">
-                        <div className="mb-2">
-                        <strong>From:</strong> {selectedContact?.user?.name}
-                        </div>
-                        <div className="mb-3">
-                        <strong>Message:</strong>
-                        <p className="mt-2 p-2 rounded">{selectedContact?.message}</p>
-                        </div>
-                        <label className="form-label">Your Reply</label>
-                        <textarea
-                        className="form-control"
-                        rows={5}
-                        placeholder="Enter your reply message..."
-                        value={replyMessage}
-                        onChange={(e) => setReplyMessage(e.target.value)}
-                        style={{ resize: "vertical" }}
-                        />
-                    </div>
-                    )}
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseReplyModal}>
-                    Cancel
-                    </Button>
-                    <Button variant="primary" onClick={handleSendReply}>
-                    Send Reply
-                    </Button>
-                </Modal.Footer>
-            </div>
+          <div className={styles.card}>
+            <Modal.Header closeButton>
+              <Modal.Title className="fw-bold">Reply</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              {selectedContact && (
+                <div>
+                  <div className="mb-3">
+                    <label className="form-label fw-bold">Your Reply</label>
+                    <textarea
+                      className="form-control"
+                      rows={5}
+                      placeholder="Enter your reply message..."
+                      value={replyMessage}
+                      onChange={(e) => setReplyMessage(e.target.value)}
+                      style={{ resize: "vertical" }}
+                    />
+                  </div>
+                </div>
+              )}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleCloseReplyModal}>
+                Cancel
+              </Button>
+              <Button variant="primary" onClick={handleSendReply}>
+                Send Reply
+              </Button>
+            </Modal.Footer>
+          </div>
         </Modal>
+
       </Container>
     </DashboardLayout>
   );
