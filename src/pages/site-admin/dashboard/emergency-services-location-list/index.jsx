@@ -6,55 +6,43 @@ import ReactPaginate from "react-paginate";
 import { useDispatch } from "react-redux";
 import { SHOW_LOADER, HIDE_LOADER } from "@/redux/loaderSlice";
 import { toast } from "react-toastify";
-import { contactList, fetchAppFeedbackList, replyContactAdmin, replyIsoReply, updateEmailForIosAccess, changeIosAccessRequestStatus, replyAppFeedback, updateAppFeedbackStatus } from "@/services/admin.service";
+import { fetchEmergencyServicesLocationList, updateAppFeedbackStatus, updateEmergencyServicesLocation } from "@/services/admin.service";
 import NgoDetailsModal from "@/component/Popup/Admin/NgoDetails";
 import { FaEye, FaEdit, FaReply, FaEnvelope, FaToggleOn, FaDownload } from "react-icons/fa";
 import NgoUpdateModal from "@/component/Popup/Admin/NgoUpdate";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-export default function AppFeedback() {
+export default function EmergencyServicesLocation() {
   const dispatch = useDispatch();
 
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0); // 0-based
   const [totalPages, setTotalPages] = useState(0);
   const itemsPerPage = 5;
-  const [showModal, setShowModal] = useState(false);
-  const [showNgoUpdateModal, setShowNgoUpdateModal] = useState(false);
-  const [selectedNgo, setSelectedNgo] = useState(null);
 
   // Filter states
   const [filters, setFilters] = useState({
-    user_id: "",
-    mobileNumber: "",
-    testFlightEmail: "",
+    requestBy: "",
+    serviceType: "",
+    phoneNumber: "",
+    placeId: "",
+    locationName: "",
     status: "",
     fromDate: "",
     toDate: "",
   });
 
-  const [search, setSearch] = useState("");
-  const [suggestions, setSuggestions] = useState([]);
-  const [showDropdown, setShowDropdown] = useState(false);
+  
   const [allData, setAllData] = useState([]);
   const [expandedMessages, setExpandedMessages] = useState({});
   
   // Reply modal state
-  const [showReplyModal, setShowReplyModal] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
   const [replyMessage, setReplyMessage] = useState("");
 
-  // Update Email modal state
-  const [showUpdateEmailModal, setShowUpdateEmailModal] = useState(false);
-  const [selectedItemForEmail, setSelectedItemForEmail] = useState(null);
-  const [updateEmail, setUpdateEmail] = useState("");
-
-  // Status Change modal state
-  const [showStatusModal, setShowStatusModal] = useState(false);
-  const [newStatus, setNewStatus] = useState("");
   const [updatingFeedbackId, setUpdatingFeedbackId] = useState(null);
-  const statusOptions = ["new", "reviewed", "resolved", "ignored"];
+  const statusOptions = ["pending", "approved"];
 
   const fetchAppFeedback = async (page = 0, activeFilters = filters) => {
     try {
@@ -66,14 +54,18 @@ export default function AppFeedback() {
       };
 
       // Add filters if they have values
-      if (activeFilters?.user_id) params.user_id = activeFilters.user_id;
+      if (activeFilters?.requestBy) params.requestBy = activeFilters.requestBy;
+      if (activeFilters?.serviceType) params.serviceType = activeFilters.serviceType;
+      if (activeFilters?.phoneNumber) params.phoneNumber = activeFilters.phoneNumber;
+      if (activeFilters?.placeId) params.placeId = activeFilters.placeId;
+      if (activeFilters?.locationName) params.locationName = activeFilters.locationName;
       if (activeFilters?.status) params.status = activeFilters.status;
       if (activeFilters?.fromDate) params.fromDate = activeFilters.fromDate;
       if (activeFilters?.toDate) params.toDate = activeFilters.toDate;
 
-      console.log("params", params);
+      // console.log("params", params);
 
-      const response = await fetchAppFeedbackList(params);
+      const response = await fetchEmergencyServicesLocationList(params);
 
       const resData = response.data;
 
@@ -123,70 +115,7 @@ export default function AppFeedback() {
     }));
   };
 
-  const MessageCell = ({ message, itemId }) => {
-    const isExpanded = expandedMessages[itemId];
-    const maxLength = 80;
-    const isLong = message?.length > maxLength;
-
-    return (
-      <div>
-        <span>
-          {isExpanded ? message : message?.substring(0, maxLength)}
-          {isLong && !isExpanded && "..."}
-        </span>
-        {isLong && (
-          <button
-            className="btn btn-link btn-sm ms-2 p-0"
-            style={{ textDecoration: "none", color: "#0d6efd" }}
-            onClick={() => toggleMessageExpand(itemId)}
-          >
-            {isExpanded ? "Show less" : "Show more"}
-          </button>
-        )}
-      </div>
-    );
-  };
-
-  const handleReplyClick = (contact) => {
-    setSelectedContact(contact);
-    setReplyMessage("");
-    setShowReplyModal(true);
-  };
-
-  const handleSendReply = async () => {
-    if (!replyMessage.trim()) {
-      toast.error("Please enter a message");
-      return;
-    }
-
-    try {
-      dispatch(SHOW_LOADER());
-      const response = await replyAppFeedback({
-        feedback_id: selectedContact.id,
-        message: replyMessage,
-      });
-
-      if (response.data?.status === 200 || response.data?.status === 201) {
-        toast.success("Reply sent successfully");
-        setShowReplyModal(false);
-        setReplyMessage("");
-        fetchAppFeedback(currentPage);
-      } else {
-        toast.error(response.data?.error?.message || "Failed to send reply");
-      }
-    } catch (error) {
-      toast.error(error?.message || "Something went wrong");
-    } finally {
-      dispatch(HIDE_LOADER());
-    }
-  };
-
-  const handleCloseReplyModal = () => {
-    setShowReplyModal(false);
-    setReplyMessage("");
-    setSelectedContact(null);
-  };
-
+ 
 
 
   const handleStatusUpdate = async (feedbackId, selectedStatus) => {
@@ -196,8 +125,8 @@ export default function AppFeedback() {
       setUpdatingFeedbackId(feedbackId);
       dispatch(SHOW_LOADER());
 
-      const response = await updateAppFeedbackStatus({
-        feedback_id: Number(feedbackId),
+      const response = await updateEmergencyServicesLocation({
+        id: Number(feedbackId),
         status: selectedStatus,
       });
 
@@ -222,9 +151,11 @@ export default function AppFeedback() {
 
   const handleClearFilters = () => {
     const emptyFilters = {
-      user_id: "",
-      mobileNumber: "",
-      testFlightEmail: "",
+      requestBy: "",
+      serviceType: "",
+      phoneNumber: "",
+      placeId: "",
+      locationName: "",
       status: "",
       fromDate: "",
       toDate: "",
@@ -244,57 +175,97 @@ export default function AppFeedback() {
     <DashboardLayout>
       <Container fluid className={styles.page}>
         <div className="d-flex align-items-center justify-content-between mb-3">
-          <h2 className={styles.title}>App Feedback List</h2>
+          <h2 className={styles.title}>Emergency Services Location</h2>
         </div>
 
         <Row>
           <Col>
             <div className="mb-4 p-3 border rounded">
               <Row className="g-3">
-                <Col md={2}>
-                  <label className="form-label">User ID</label>
+                <Col md={3}>
                   <input
                     type="text"
                     className="form-control"
-                    name="user_id"
+                    name="requestBy"
                     placeholder="Enter User ID"
-                    value={filters.user_id}
+                    value={filters.requestBy}
+                    onChange={handleFilterChange}
+                  />
+                </Col>
+
+                <Col md={3}>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="serviceType"
+                    placeholder="Service Type"
+                    value={filters.serviceType}
+                    onChange={handleFilterChange}
+                  />
+                </Col>
+
+                <Col md={3}>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="phoneNumber"
+                    placeholder="Phone Number"
+                    value={filters.phoneNumber}
+                    onChange={handleFilterChange}
+                  />
+                </Col>
+
+                <Col md={3}>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="placeId"
+                    placeholder="Place Id"
+                    value={filters.placeId}
+                    onChange={handleFilterChange}
+                  />
+                </Col>
+
+                <Col md={3}>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="locationName"
+                    placeholder="Location Name"
+                    value={filters.locationName}
                     onChange={handleFilterChange}
                   />
                 </Col>
 
                 
-                <Col md={2}>
-                    <label className="form-label">From Date</label>
+                <Col md={3}>
                     <DatePicker
                     selected={filters.fromDate ? new Date(filters.fromDate) : null}
                     onChange={(date) => handleDateChange("fromDate", date)}
                     className="form-control"
-                    placeholderText="Select From Date"
+                    placeholderText="From Date"
                     dateFormat="MM/dd/yyyy"
                     />
                 </Col>
 
-                <Col md={2}>
-                    <label className="form-label">To Date</label>
+                <Col md={3}>
                     <DatePicker
                     selected={filters.toDate ? new Date(filters.toDate) : null}
                     onChange={(date) => handleDateChange("toDate", date)}
                     className="form-control"
-                    placeholderText="Select To Date"
+                    placeholderText="To Date"
                     dateFormat="MM/dd/yyyy"
                     />
                 </Col>
 
-                <Col md={2}>
-                  <label className="form-label">Status</label>
+                <Col md={3}>
                   <select
                     className="form-control"
                     name="status"
                     value={filters.status}
                     onChange={handleFilterChange}
                   >
-                    <option value="">All Status</option>
+                    <option value="">Status</option>
                     {statusOptions.map((status) => (
                       <option key={status} value={status}>
                         {status.charAt(0).toUpperCase() + status.slice(1)}
@@ -303,7 +274,7 @@ export default function AppFeedback() {
                   </select>
                 </Col>
 
-                <Col md={2} className="d-flex align-items-end gap-2">
+                <Col md={2} className="d-flex justify-content-end align-items-end gap-2 ms-auto">
                   <button
                     className="btn btn-primary"
                     onClick={handleApplyFilters}
@@ -324,13 +295,13 @@ export default function AppFeedback() {
                 <tr>
                   <th>User ID</th>
                   <th>User</th>
-                  <th>Rating</th>
-                  <th>Type</th>
-                  <th>Message</th>
-                  <th>File</th>
+                  <th>Place Id</th>
+                  <th>Location Name</th>
+                  <th>Address</th>
+                  <th>Phone Number</th>
+                  <th>Service Type</th>
                   <th>Date</th>
-                  <th>Status</th>
-                  <th>Action</th>
+                  <th style={{ width: "150px", minWidth: "150px" }}>Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -338,7 +309,7 @@ export default function AppFeedback() {
                   data.map((item, index) => (
                     <tr key={item.id}>
 
-                      <td>#{item?.user_id}</td>
+                      <td>#{item?.user?.id}</td>
                       <td>
                         <div className="d-flex align-items-center gap-2">
                           {item?.user?.profile_photo ? (
@@ -351,10 +322,6 @@ export default function AppFeedback() {
                                 borderRadius: "50%",
                                 objectFit: "cover",
                               }}
-                              // onError={(e) => {
-                              //   e.target.style.display = "none";
-                              //   e.target.nextElementSibling.style.display = "flex";
-                              // }}
                             />
                           ) : null}
                           <div
@@ -379,44 +346,12 @@ export default function AppFeedback() {
                           </div>
                         </div>
                       </td>
-                      <td>{item?.rating}</td>
-                      <td>{item?.feedback_type}</td>
-                      <td>{item?.message}</td>
-                      <td>
-                        {item?.feedback_files?.length > 0 ? (
-                          <div className="d-flex flex-column gap-2">
-                            {item.feedback_files.map((file) => (
-                              <button
-                                key={file.id}
-                                onClick={async () => {
-                                  try {
-                                    const response = await fetch(file.file_url);
-                                    const blob = await response.blob();
-                                    const blobUrl = window.URL.createObjectURL(blob);
-                                    const link = document.createElement("a");
-                                    link.href = blobUrl;
-                                    link.download = file.file_url.split("/").pop() || "download";
-                                    document.body.appendChild(link);
-                                    link.click();
-                                    document.body.removeChild(link);
-                                    window.URL.revokeObjectURL(blobUrl);
-                                  } catch (error) {
-                                    console.error("Download failed:", error);
-                                    toast.error("Failed to download file");
-                                  }
-                                }}
-                                className="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-2"
-                                style={{ textDecoration: "none", cursor: "pointer" }}
-                              >
-                                <FaDownload size={12} />
-                                {file.file_type || "Download"}
-                              </button>
-                            ))}
-                          </div>
-                        ) : (
-                          <span className="text-white">No files</span>
-                        )}
-                      </td>
+                      <td>{item?.placeId}</td>
+                      <td>{item?.locationName}</td>
+                      <td>{item?.address}</td>
+                      <td>{item?.phoneNumber}</td>
+                      <td>{item?.serviceType}</td>
+                      
                       <td>{new Date(item.created_at).toLocaleDateString()}</td>
                       <td>
                         <div className="d-flex flex-column gap-2">
@@ -433,18 +368,6 @@ export default function AppFeedback() {
                             ))}
                           </select>
                         </div>
-                      </td>
-                      <td>
-                        <ul className="d-flex align-items-center gap-3 list-unstyled mb-0">
-                            <li>
-                              <FaReply
-                                size={18}
-                                className="text-success cursor-pointer"
-                                onClick={() => handleReplyClick(item)}
-                                title="Reply"
-                              />
-                            </li>
-                        </ul>
                       </td>
                     </tr>
                   ))
@@ -475,40 +398,6 @@ export default function AppFeedback() {
             )}
           </Col>
         </Row>
-
-        {/* Reply Modal */}
-        <Modal show={showReplyModal} onHide={handleCloseReplyModal} centered>
-          <div className={styles.card}>
-            <Modal.Header closeButton>
-              <Modal.Title className="fw-bold">Reply</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              {selectedContact && (
-                <div>
-                  <div className="mb-3">
-                    <label className="form-label fw-bold">Your Reply</label>
-                    <textarea
-                      className="form-control"
-                      rows={5}
-                      placeholder="Enter your reply message..."
-                      value={replyMessage}
-                      onChange={(e) => setReplyMessage(e.target.value)}
-                      style={{ resize: "vertical" }}
-                    />
-                  </div>
-                </div>
-              )}
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={handleCloseReplyModal}>
-                Cancel
-              </Button>
-              <Button variant="primary" onClick={handleSendReply}>
-                Send Reply
-              </Button>
-            </Modal.Footer>
-          </div>
-        </Modal>
 
       </Container>
     </DashboardLayout>

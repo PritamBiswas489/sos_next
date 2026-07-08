@@ -19,6 +19,8 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { decryptData } from "@/utils/crypto";
+import { HiOutlineLocationMarker } from "react-icons/hi";
+import { MdReport } from "react-icons/md";
 
 
 
@@ -40,6 +42,8 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     { icon: <FaVoicemail />, label: "Contact List", path: "/site-admin/dashboard/contact-list" },
     { icon: <FaApple />, label: "iOS Request List", path: "/site-admin/dashboard/ios-request-list" },
     { icon: <FaCommentDots />, label: "App Feedback List", path: "/site-admin/dashboard/app-feedback-list" },
+    { icon: <FaMapMarkerAlt />, label: "Emergency Services Location", path: "/site-admin/dashboard/emergency-services-location-list" },
+    { icon: <MdReport />, label: "Abouse Report", path: "/site-admin/dashboard/abouse-report-list" },
     // { icon: <FaUser />, label: "Profile", path: "/dashboard/profile" },
     // { icon: <FaUsers />, label: "Family", path: "/dashboard/family" },
     // { icon: <FaMapMarkerAlt />, label: "Location", path: "/dashboard/location" },
@@ -58,6 +62,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     { icon: <FaDownload />, label: "Downloads", path: "/dashboard/downloads" },
     { icon: <FaVoicemail />, label: "Contact Admin", path: "/dashboard/contact-admin" },
     { icon: <FaDownload />, label: "Request iOS", path: "/dashboard/request-ios" },
+    { icon: <FaMapMarkerAlt />, label: "Request Emergency Location", path: "/dashboard/request-emergency-location" },
     // { icon: <FaLock />, label: "Privacy", path: "/dashboard/privacy" },
   ];
 

@@ -175,4 +175,69 @@ export const updateAppFeedbackStatus = async (data) => {
   return response;
 };
 
+export const fetchEmergencyServicesLocationList = async (params) => {
+  const { page = 1, limit = 10, requestBy, serviceType, phoneNumber, placeId, locationName, status, fromDate, toDate } = params;
+  
+  const queryParams = new URLSearchParams({
+    limit,
+    page,
+  });
+
+  // Add optional filters
+  if (requestBy) queryParams.append("requestBy", requestBy);
+  if (serviceType) queryParams.append("serviceType", serviceType);
+  if (phoneNumber) queryParams.append("phoneNumber", phoneNumber);
+  if (placeId) queryParams.append("placeId", placeId);
+  if (locationName) queryParams.append("locationName", locationName);
+  if (fromDate) queryParams.append("fromDate", fromDate);
+  if (toDate) queryParams.append("toDate", toDate);
+  if (status) queryParams.append("status", status);
+
+  const response = await api.get(
+    `auth-web/admin/emergency-services-location-list?${queryParams.toString()}`
+  );
+  return response;
+};
+
+export const updateEmergencyServicesLocation = async (data) => {
+  const response = await api.post("auth-web/admin/change-emergency-services-location-status", data);
+  return response;
+};
+
+export const fetchAbouseReportList = async (params) => {
+  const { page = 1, limit = 10, userId, user_id, abuserId, abuser_id, abuseType, threatLevel, history_of_violence, weapon_access, restraining_order, userName, mobileNumber, abuserName, abuserPhone, abuserEmail, incidentFromDate, incidentToDate, fromDate, toDate } = params;
+  
+  const queryParams = new URLSearchParams({
+    limit,
+    page,
+  });
+
+  // Add optional filters
+  if (userId) queryParams.append("userId", userId);
+  if (user_id) queryParams.append("user_id", user_id);
+  if (abuserId) queryParams.append("abuserId", abuserId);
+  if (abuser_id) queryParams.append("abuser_id", abuser_id);
+  if (abuseType) queryParams.append("abuseType", abuseType);
+  if (threatLevel) queryParams.append("threatLevel", threatLevel);
+  if (history_of_violence) queryParams.append("history_of_violence", history_of_violence);
+  if (weapon_access) queryParams.append("weapon_access", weapon_access);
+  if (restraining_order) queryParams.append("restraining_order", restraining_order);
+  if (userName) queryParams.append("userName", userName);
+  if (mobileNumber) queryParams.append("mobileNumber", mobileNumber);
+  if (abuserName) queryParams.append("abuserName", abuserName);
+  if (abuserPhone) queryParams.append("abuserPhone", abuserPhone);
+  if (abuserEmail) queryParams.append("abuserEmail", abuserEmail);
+  if (incidentFromDate) queryParams.append("incidentFromDate", incidentFromDate);
+  if (incidentToDate) queryParams.append("incidentToDate", incidentToDate);
+  if (fromDate) queryParams.append("fromDate", fromDate);
+  if (toDate) queryParams.append("toDate", toDate);
+
+  const response = await api.get(
+    `auth-web/admin/get-abouse-report-list?${queryParams.toString()}`
+  );
+  return response;
+};
+
+
+
 
