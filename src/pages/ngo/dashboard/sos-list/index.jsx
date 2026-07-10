@@ -316,13 +316,18 @@ export default function Soslist() {
                       <td>{item?.location}</td>
                       <td>
                         {item?.audio_records?.length > 0 ? (
-                          <div className="d-flex flex-column">
+                          <div className="d-flex flex-column gap-2">
                             {item.audio_records.map((audio) => (
                               <div key={audio.id}>
-                                <audio controls preload="none" style={{ width: "250px" }}>
-                                  <source src={audio.file_url} type="audio/mpeg" />
-                                  Your browser does not support the audio element.
-                                </audio>
+                                <a
+                                  href={audio.file_url}
+                                  download
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="btn btn-primary btn-sm"
+                                >
+                                  Download
+                                </a>
                               </div>
                             ))}
                           </div>
