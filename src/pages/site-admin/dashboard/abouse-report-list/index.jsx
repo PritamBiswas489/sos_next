@@ -591,6 +591,21 @@ export default function AbouseReport() {
                       <div className={styles.sectionTitle}>Abuser Details</div>
                       <div className={styles.detailGrid}>
                         <div className={styles.detailItem}>
+                          {selectedReport?.abuser?.photo ? (
+                            <Image
+                              src={selectedReport.abuser.photo}
+                              alt={selectedReport.abuser?.full_name || "Abuser"}
+                              width={80}
+                              height={80}
+                              style={{
+                                borderRadius: "50%",
+                                objectFit: "cover",
+                              }}
+                            />
+                          ) : (
+                            <div>
+                            </div>
+                          )}
                           <span className={styles.detailLabel}>Name</span>
                           <span className={styles.detailValue}>{selectedReport.abuser?.full_name || "-"}</span>
                         </div>

@@ -25,6 +25,9 @@ export default function AllSoslist() {
   const [showNgoUpdateModal, setShowNgoUpdateModal] = useState(false);
   const [selectedNgo, setSelectedNgo] = useState(null);
 
+  const [showAudioModal, setShowAudioModal] = useState(false);
+  const [audioFiles, setAudioFiles] = useState([]);
+
   // Filter states
   const [filters, setFilters] = useState({
     ngo_id: "",
@@ -172,6 +175,42 @@ export default function AllSoslist() {
   };
 
 
+const openAudioModal = (audios) => {
+  setAudioFiles(audios || []);
+  setShowAudioModal(true);
+};
+
+const closeAudioModal = () => {
+  setShowAudioModal(false);
+  setAudioFiles([]);
+};
+
+const handleDownloadAudio = async (url) => {
+  try {
+    dispatch(SHOW_LOADER());
+
+    const response = await fetch(url);
+    const blob = await response.blob();
+
+    const blobUrl = window.URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = blobUrl;
+    link.download = url.split("/").pop() || "audio.mp3";
+
+    document.body.appendChild(link);
+    link.click();
+
+    link.remove();
+    window.URL.revokeObjectURL(blobUrl);
+  } catch (err) {
+    toast.error("Failed to download audio.");
+  } finally {
+    dispatch(HIDE_LOADER());
+  }
+};
+
+
 
   return (
     <DashboardLayout>
@@ -315,7 +354,7 @@ export default function AllSoslist() {
                       </td>
                       <td>{item?.location}</td>
                       <td>
-                        {item?.audio_records?.length > 0 ? (
+                        {/* {item?.audio_records?.length > 0 ? (
                           <div className="d-flex flex-column gap-2">
                             {item.audio_records.map((audio) => (
                               <div key={audio.id}>
@@ -331,6 +370,17 @@ export default function AllSoslist() {
                               </div>
                             ))}
                           </div>
+                        ) : (
+                          <span>No Audio</span>
+                        )} */}
+
+                        {item?.audio_records?.length > 0 ? (
+                          <button
+                            className="btn btn-link p-0"
+                            onClick={() => openAudioModal(item.audio_records)}
+                          >
+                            Audio
+                          </button>
                         ) : (
                           <span>No Audio</span>
                         )}
@@ -384,6 +434,40 @@ export default function AllSoslist() {
             )}
           </Col>
         </Row>
+
+        <Modal
+            show={showAudioModal}
+            onHide={closeAudioModal}
+            centered
+            size="lg"
+          >
+            <div className={styles.card}>
+              <Modal.Header closeButton>
+                <Modal.Title>Audio Files</Modal.Title>
+              </Modal.Header>
+
+              <Modal.Body>
+                <Row className="g-3">
+                {audioFiles.length > 0 ? (
+                  audioFiles.map((audio, index) => (
+                    <Col lg={3} md={6} sm={12} xs={12}
+                      key={audio.id}
+                    >
+                      <Button
+                        className="btn btn-primary btn-sm w-100"
+                        onClick={() => handleDownloadAudio(audio.file_url)}
+                      >
+                        Download Audio {index + 1}
+                      </Button>
+                    </Col>
+                  ))
+                ) : (
+                  <p>No audio found.</p>
+                )}
+                </Row>
+              </Modal.Body>
+            </div>
+          </Modal>
 
       </Container>
     </DashboardLayout>

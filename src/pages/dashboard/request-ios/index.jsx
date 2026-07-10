@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Button, Modal, Form } from "react-bootstrap";
 import styles from "./index.module.scss";
 
@@ -53,6 +53,7 @@ const RequestIos = () => {
             if(response?.data?.status===200){
               toast.success(response?.data?.message || "Success");
               reset();
+              checkRequestStatus();
             }else{
               toast.error(response?.data?.message || "Something went wrong");
             }
@@ -81,11 +82,11 @@ const RequestIos = () => {
       if (response?.data?.status === 200 && payload?.hasRequest) {
         setRequestStatusData(payload?.request || null);
         setShowStatusModal(true);
-        toast.success(response?.data?.message || "Request found");
+        // toast.success(response?.data?.message || "Request found");
       } else {
         setRequestStatusData(null);
         setShowStatusModal(false);
-        toast.info(response?.data?.message || "No iOS request found");
+        // toast.info(response?.data?.message || "No iOS request found");
       }
     } catch (error) {
             const resData = error?.response?.data;
@@ -102,6 +103,10 @@ const RequestIos = () => {
         }
   }
 
+  useEffect(() => {
+    checkRequestStatus();
+  }, []);
+
   return (
     <DashboardLayout>
       <Container fluid className={styles.page}>
@@ -109,7 +114,35 @@ const RequestIos = () => {
 
         {/* HERO */}
         <div className={styles.heroCard}>
-            <form onSubmit={handleSubmit(onSubmit)}>
+
+            {showStatusModal ? (
+              
+              <>
+                {requestStatusData ? (
+                  <>
+                    <p className="text-white">
+                      <strong className="text-white">Status:</strong> {requestStatusData.status}
+                    </p>
+
+                    <p className="text-white mt-2">
+                      <strong className="text-white">Email:</strong> {requestStatusData.testFlightEmail}
+                    </p>
+
+                    <p className="text-white mt-2">
+                      <strong className="text-white">Request Date:</strong>{" "}
+                      {new Date(requestStatusData.createdAt).toLocaleString()}
+                    </p>
+                    <p className="mt-2 text-danger">
+                      Want to change Email? Contact Admin.
+                    </p>
+                  </>
+                ) : (
+                  <p>No request details available.</p>
+                )}
+              </>
+
+            ) : (
+              <form onSubmit={handleSubmit(onSubmit)}>
               {/* NAME */}
               <Form.Group className={`mb-4 ${styles.requestCcode}`}>
                 <div className={styles.inputGroup}>
@@ -130,42 +163,14 @@ const RequestIos = () => {
                   <button type="submit" className={styles.submitBtn}>
                     Submit Request →
                   </button>
-
-                  <button
-                    type="button"
-                    className={styles.submitBtn}
-                    onClick={() => checkRequestStatus()}
-                  >
-                    Status of Request →
-                  </button>
                 </div>
-            </form>  
+              </form>  
+            )}
+
+            
             
         </div>
 
-        <Modal show={showStatusModal} onHide={() => setShowStatusModal(false)} centered>
-          <div className={styles.card}>
-            <Modal.Header closeButton>
-              <Modal.Title>iOS Request Status</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              {requestStatusData ? (
-                <>
-                  <p><strong>Status:</strong> {requestStatusData.status}</p>
-                  <p><strong>Email:</strong> {requestStatusData.testFlightEmail}</p>
-                  <p><strong>Request Date:</strong> {new Date(requestStatusData.createdAt).toLocaleString()}</p>
-                </>
-              ) : (
-                <p>No request details available.</p>
-              )}
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={() => setShowStatusModal(false)}>
-                Close
-              </Button>
-            </Modal.Footer>
-          </div>
-        </Modal>
       </Container>
     </DashboardLayout>
   );

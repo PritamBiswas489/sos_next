@@ -10,10 +10,10 @@ const DashboardComponent = () => {
     <Container fluid className={styles.page}>
       <h2 className={styles.title}>My Account</h2>
       <p className={styles.subtitle}>
-        Welcome back, John. Here's your safety overview.
+        Welcome back.
       </p>
 
-      <TopCards />
+      {/* <TopCards /> */}
       <ProfileCard />
     </Container>
   );

@@ -348,7 +348,7 @@ export default function EmergencyServicesLocation() {
                       <td>{item?.phoneNumber}</td>
                       <td>{item?.serviceType}</td>
                       
-                      <td>{new Date(item.created_at).toLocaleDateString()}</td>
+                      <td>{new Date(item.createdAt).toLocaleDateString()}</td>
                       <td>
                         <div className="d-flex flex-column gap-2">
                           <select

@@ -40,7 +40,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     { icon: <FaUsers />, label: "User List", path: "/site-admin/dashboard/user-list" },
     { icon: <FaFileAlt />, label: "Pending KYC", path: "/site-admin/dashboard/pending-kyc" },
     { icon: <FaAndroid />, label: "Apk Management", path: "/site-admin/dashboard/apk-management" },
-    { icon: <FaVoicemail />, label: "Contact List", path: "/site-admin/dashboard/contact-list" },
+    { icon: <FaVoicemail />, label: "Messages From User", path: "/site-admin/dashboard/contact-list" },
     { icon: <FaApple />, label: "iOS Request List", path: "/site-admin/dashboard/ios-request-list" },
     { icon: <FaCommentDots />, label: "App Feedback List", path: "/site-admin/dashboard/app-feedback-list" },
     { icon: <FaMapMarkerAlt />, label: "Emergency Services Location", path: "/site-admin/dashboard/emergency-services-location-list" },
