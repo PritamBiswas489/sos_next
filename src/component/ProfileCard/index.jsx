@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./index.module.scss";
+import Image from "next/image";
 
 const ProfileCard = () => {
   const userData =
@@ -11,9 +12,15 @@ const ProfileCard = () => {
 
   const phone = userData?.phoneNumber ?? userData?.phone_number ?? "";
 
-  const avatarLetter = userData?.name
-    ? userData.name.trim().charAt(0).toUpperCase()
-    : "?";
+  // const avatarLetter = userData?.name
+  //   ? userData.name.trim().charAt(0).toUpperCase()
+  //   : "?";
+
+  const avatarLetter = userData?.name?.split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word.charAt(0).toUpperCase())
+    .join("");
 
   // const profileImage = userData?.profile_photo
   //   ? `${process.env.NEXT_PUBLIC_API_PROFILE_BASE_URL}${userData.profile_photo}`
@@ -28,18 +35,26 @@ const ProfileCard = () => {
       <div className={styles.avatar}>
         {profileImage ? (
           // <img
-          //   src={profileImage}
-          //   alt={userData?.name || "Profile"}
+          //   src="{profileImage}"
+          //   alt="Profile"
           //   className={styles.avatarImage}
-          //   width={133} height={30}
+          //   onError={(e) => {
+          //     console.log("Image failed:", e);
+          //     console.log(profileImage);
+          //   }}
           // />
-          <img
-            src="{profileImage}"
+
+          <Image 
+            height={'100'} 
+            width={'100'} 
+            src={profileImage} 
             alt="Profile"
-            className={styles.avatarImage}
-            onError={(e) => {
-              console.log("Image failed:", e);
-              console.log(profileImage);
+            // className={styles.avatarImage}
+            style={{
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              objectFit: "cover",
             }}
           />
         ) : (

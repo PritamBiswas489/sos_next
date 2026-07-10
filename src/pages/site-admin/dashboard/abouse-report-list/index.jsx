@@ -10,6 +10,7 @@ import { fetchAbouseReportList } from "@/services/admin.service";
 import { FaFilter } from "react-icons/fa";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Image from "next/image";
 
 export default function AbouseReport() {
   const dispatch = useDispatch();
@@ -428,10 +429,22 @@ export default function AbouseReport() {
                       <td>#{item.id}</td>
                       <td>
                         <div className="d-flex align-items-center gap-2">
-                          {item?.user?.profile_photo ? (
-                            <img
-                              src={item.user.profile_photo}
-                              alt={item.user.name}
+                          {item?.abuser?.photo ? (
+                            // <img
+                            //   src={item.abuser.photo}
+                            //   alt={item.abuser.full_name}
+                            //   style={{
+                            //     width: "40px",
+                            //     height: "40px",
+                            //     borderRadius: "50%",
+                            //     objectFit: "cover",
+                            //   }}
+                            // />
+                            <Image 
+                              height={'100'} 
+                              width={'100'} 
+                              src={item.abuser.photo} 
+                              alt={item.abuser.full_name} 
                               style={{
                                 width: "40px",
                                 height: "40px",

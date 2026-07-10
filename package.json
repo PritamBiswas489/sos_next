@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@madzadev/audio-player": "^2.1.14",
     "@react-google-maps/api": "^2.20.8",
     "@reduxjs/toolkit": "^2.11.2",
     "axios": "^1.13.6",

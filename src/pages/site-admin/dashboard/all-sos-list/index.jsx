@@ -6,28 +6,29 @@ import ReactPaginate from "react-paginate";
 import { useDispatch } from "react-redux";
 import { SHOW_LOADER, HIDE_LOADER } from "@/redux/loaderSlice";
 import { toast } from "react-toastify";
-import { contactList, replyContactAdmin } from "@/services/admin.service";
+import { allSOSList, contactList, ngoSOSList, replyContactAdmin } from "@/services/admin.service";
 import NgoDetailsModal from "@/component/Popup/Admin/NgoDetails";
 import { FaEye, FaEdit, FaReply } from "react-icons/fa";
 import NgoUpdateModal from "@/component/Popup/Admin/NgoUpdate";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Image from "next/image";
 
-export default function Ngolist() {
+export default function AllSoslist() {
   const dispatch = useDispatch();
 
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0); // 0-based
   const [totalPages, setTotalPages] = useState(0);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
   const [showModal, setShowModal] = useState(false);
   const [showNgoUpdateModal, setShowNgoUpdateModal] = useState(false);
   const [selectedNgo, setSelectedNgo] = useState(null);
 
   // Filter states
   const [filters, setFilters] = useState({
-    userId: "",
-    mobileNumber: "",
+    ngo_id: "",
+    status: "",
     fromDate: "",
     toDate: "",
   });
@@ -43,7 +44,9 @@ export default function Ngolist() {
   const [selectedContact, setSelectedContact] = useState(null);
   const [replyMessage, setReplyMessage] = useState("");
 
-  const fetchContactList = async (page = 0) => {
+  const statusOptions = ["active", "expired", "cancelled", "resolved"];
+
+  const fetchNgoSosList = async (page = 0) => {
     try {
       dispatch(SHOW_LOADER());
 
@@ -53,14 +56,14 @@ export default function Ngolist() {
       };
 
       // Add filters if they have values
-      if (filters.userId) params.userId = filters.userId;
-      if (filters.mobileNumber) params.mobileNumber = filters.mobileNumber;
+      if (filters.ngo_id) params.ngo_id = filters.ngo_id;
+      if (filters.status) params.status = filters.status;
       if (filters.fromDate) params.fromDate = filters.fromDate;
       if (filters.toDate) params.toDate = filters.toDate;
 
       console.log("params", params);
 
-      const response = await contactList(params);
+      const response = await allSOSList(params);
 
       const resData = response.data;
 
@@ -79,12 +82,12 @@ export default function Ngolist() {
     }
   };
   useEffect(() => {
-    fetchContactList(0);
+    fetchNgoSosList(0);
   }, []);
 
   const handlePageClick = ({ selected }) => {
     setCurrentPage(selected);
-    fetchContactList(selected);
+    fetchNgoSosList(selected);
   };
 
   const handleFilterChange = (e) => {
@@ -134,89 +137,47 @@ export default function Ngolist() {
     );
   };
 
-  const handleReplyClick = (contact) => {
-    setSelectedContact(contact);
-    setReplyMessage("");
-    setShowReplyModal(true);
-  };
+ 
 
-  const handleSendReply = async () => {
-    if (!replyMessage.trim()) {
-      toast.error("Please enter a message");
-      return;
-    }
 
-    try {
-      dispatch(SHOW_LOADER());
-      const response = await replyContactAdmin({
-        contact_id: selectedContact.id,
-        message: replyMessage,
-      });
-
-      if (response.data?.status === 200 || response.data?.status === 201) {
-        toast.success("Reply sent successfully");
-        setShowReplyModal(false);
-        setReplyMessage("");
-        fetchContactList(currentPage);
-      } else {
-        toast.error(response.data?.error?.message || "Failed to send reply");
-      }
-    } catch (error) {
-      toast.error(error?.message || "Something went wrong");
-    } finally {
-      dispatch(HIDE_LOADER());
-    }
-  };
-
-  const handleCloseReplyModal = () => {
-    setShowReplyModal(false);
-    setReplyMessage("");
-    setSelectedContact(null);
-  };
 
   const handleApplyFilters = () => {
     setCurrentPage(0);
-    fetchContactList(0);
+    fetchNgoSosList(0);
   };
 
   const handleClearFilters = () => {
     setFilters({
-      userId: "",
-      mobileNumber: "",
+      ngo_id: "",
+      status: "",
       fromDate: "",
       toDate: "",
     });
     setCurrentPage(0);
+    fetchNgoSosList(0);
   };
 
   useEffect(() => {
     handleApplyFilters();
   }, []);
 
-  const handleSearchChange = (value) => {
-    setSearch(value);
-    if (value.trim()) {
-      const filtered = allData.filter(
-        (item) =>
-          item?.user?.name?.toLowerCase().includes(value.toLowerCase()) ||
-          item?.user?.phone_number?.includes(value)
-      );
-      setSuggestions(filtered);
-    } else {
-      setSuggestions([]);
-    }
+
+  const getInitials = (name) => {
+    if (!name) return "U";
+    return name
+      .split(" ")
+      .map((part) => part.charAt(0).toUpperCase())
+      .slice(0, 2)
+      .join("");
   };
 
-  const handleSelectNgo = (item) => {
-    setSearch(item?.user?.name || "");
-    setSuggestions([]);
-    setShowDropdown(false);
-  };
+
+
   return (
     <DashboardLayout>
       <Container fluid className={styles.page}>
         <div className="d-flex align-items-center justify-content-between mb-3">
-          <h2 className={styles.title}>Contact List</h2>
+          <h2 className={styles.title}>SOS List</h2>
           {/* <button className="btn bg-warning btn-sm">Button</button> */}
         </div>
 
@@ -227,27 +188,32 @@ export default function Ngolist() {
               {/* <h5 className="mb-3">Filters</h5> */}
               <Row className="g-3">
                 <Col md={2}>
-                  <label className="form-label">User ID</label>
+                  <label className="form-label">NGO ID</label>
                   <input
                     type="text"
                     className="form-control"
-                    name="userId"
-                    placeholder="Enter User ID"
-                    value={filters.userId}
+                    name="ngo_id"
+                    placeholder="NGO ID"
+                    value={filters.ngo_id}
                     onChange={handleFilterChange}
                   />
                 </Col>
 
                 <Col md={2}>
-                  <label className="form-label">Mobile Number</label>
-                  <input
-                    type="text"
+                  <label className="form-label">Status</label>
+                  <select
                     className="form-control"
-                    name="mobileNumber"
-                    placeholder="Enter Mobile Number"
-                    value={filters.mobileNumber}
+                    name="status"
+                    value={filters.status}
                     onChange={handleFilterChange}
-                  />
+                  >
+                    <option value="">All Status</option>
+                    {statusOptions.map((status) => (
+                      <option key={status} value={status}>
+                        {status.charAt(0).toUpperCase() + status.slice(1)}
+                      </option>
+                    ))}
+                  </select>
                 </Col>
 
                 <Col md={2}>
@@ -295,12 +261,11 @@ export default function Ngolist() {
             <Table striped bordered hover responsive className="mt-3">
               <thead>
                 <tr>
-                  <th>User ID</th>
-                  <th>Name</th>
-                  {/* <th>Phone</th> */}
-                  <th>Message</th>
+                  <th>User</th>
+                  <th>Location</th>
+                  <th>Audio</th>
                   <th>Date</th>
-                  <th>Action</th>
+                  <th>Status</th>
                 </tr>
               </thead>
 
@@ -308,75 +273,80 @@ export default function Ngolist() {
                 {data.length > 0 ? (
                   data.map((item, index) => (
                     <tr key={item.id}>
-
-                      <td>{item?.userId}</td>
                       <td>
-                        {/* {item?.user?.name} */}
-
                         <div className="d-flex align-items-center gap-2">
-                          <div
-                            style={{
-                              width: "40px",
-                              height: "40px",
-                              borderRadius: "50%",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              backgroundColor: "#007bff",
-                              color: "white",
-                              fontWeight: "bold",
-                              fontSize: "14px",
-                            }}
-                          >
-                            {
-                              item?.user?.name
-                                ?.split(" ")
-                                .filter(Boolean)
-                                .slice(0, 2)
-                                .map((word) => word.charAt(0).toUpperCase())
-                                .join("")
-                            }
-                          </div>
+                          {item?.user?.profile_photo ? (
+                            <Image 
+                              height={'100'} 
+                              width={'100'} 
+                              src={item.user.profile_photo} 
+                              alt={item.user.name} 
+                              style={{
+                                width: "40px",
+                                height: "40px",
+                                borderRadius: "50%",
+                                objectFit: "cover",
+                              }}
+                            />
+                          ) : (
+                            <div
+                              style={{
+                                width: "40px",
+                                height: "40px",
+                                borderRadius: "50%",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                backgroundColor: "#007bff",
+                                color: "white",
+                                fontWeight: "bold",
+                                fontSize: "14px",
+                              }}
+                            >
+                              {getInitials(item?.user?.name)}
+                            </div>
+                          )}
                           <div>
-                            <div className="fw-semibold">{item?.user?.name}</div>
-                            <div className="small">{item?.user?.phone_number}</div>
+                            <div className="fw-semibold">{item?.user?.name || "Unknown"}</div>
+                            <div className="small">{item?.user?.phone_number || item?.user?.email || "-"}</div>
                           </div>
                         </div>
 
                       </td>
-                      {/* <td>{item?.user?.phone_number}</td> */}
+                      <td>{item?.location}</td>
                       <td>
-                        <MessageCell message={item.message} itemId={item.id} />
+                        {item?.audio_records?.length > 0 ? (
+                          <div className="d-flex flex-column">
+                            {item.audio_records.map((audio) => (
+                              <div key={audio.id}>
+                                <audio controls preload="none" style={{ width: "250px" }}>
+                                  <source src={audio.file_url} type="audio/mpeg" />
+                                  Your browser does not support the audio element.
+                                </audio>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <span>No Audio</span>
+                        )}
                       </td>
-                      <td>{new Date(item.createdAt).toLocaleDateString()}</td>
-                      <td className="">
-                        <ul className="d-flex align-items-center">
-                          <li>
-                            <FaReply
-                              size={18}
-                              className="text-success cursor-pointer"
-                              onClick={() => handleReplyClick(item)}
-                              title="Reply"
-                            />
-                          </li>
-                          {/* <li>
-                            <FaEye
-                              size={20}
-                              className="text-primary cursor-pointer"
-                              onClick={() => handleView(item)}
-                            />
-                          </li>
-                          <li>
-                            <FaEdit
-                              size={20}
-                              className="text-success cursor-pointer ms-3"
-                              onClick={() => handleEdit(item)}
-                            />
-                          </li> */}
-                        </ul>
-                        
-
-                        
+                      <td>{new Date(item.created_at).toLocaleDateString()}</td>
+                      <td>
+                        <span
+                          className={`badge ${
+                            item?.status === "active"
+                              ? "bg-success"
+                              : item?.status === "expired"
+                              ? "bg-warning text-dark"
+                              : item?.status === "cancelled"
+                              ? "bg-danger"
+                              : item?.status === "resolved"
+                              ? "bg-primary"
+                              : "bg-secondary"
+                          }`}
+                        >
+                          {item?.status}
+                        </span>
                       </td>
                     </tr>
                   ))
@@ -410,44 +380,6 @@ export default function Ngolist() {
           </Col>
         </Row>
 
-        {/* Reply Modal */}
-        <Modal show={showReplyModal} onHide={handleCloseReplyModal} centered>
-            <div className={styles.card}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Reply to Contact</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    {selectedContact && (
-                    <div className="mb-3">
-                        <div className="mb-2">
-                        <strong>From:</strong> {selectedContact?.user?.name}
-                        </div>
-                        <div className="mb-3">
-                        <strong>Message:</strong>
-                        <p className="mt-2 p-2 rounded">{selectedContact?.message}</p>
-                        </div>
-                        <label className="form-label">Your Reply</label>
-                        <textarea
-                        className="form-control"
-                        rows={5}
-                        placeholder="Enter your reply message..."
-                        value={replyMessage}
-                        onChange={(e) => setReplyMessage(e.target.value)}
-                        style={{ resize: "vertical" }}
-                        />
-                    </div>
-                    )}
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseReplyModal}>
-                    Cancel
-                    </Button>
-                    <Button variant="primary" onClick={handleSendReply}>
-                    Send Reply
-                    </Button>
-                </Modal.Footer>
-            </div>
-        </Modal>
       </Container>
     </DashboardLayout>
   );

@@ -395,7 +395,7 @@ export default function Ngolist() {
                 <tr>
                   <th>User ID</th>
                   <th>Name</th>
-                  <th>Phone</th>
+                  {/* <th>Phone</th> */}
                   <th>Email</th>
                   <th>Request Email</th>
                   <th>Status</th>
@@ -408,9 +408,39 @@ export default function Ngolist() {
                   data.map((item, index) => (
                     <tr key={item.id}>
 
-                      <td>{item?.userId}</td>
-                      <td>{item?.user?.name}</td>
-                      <td>{item?.user?.phone_number}</td>
+                      <td>#{item?.userId}</td>
+                      <td>
+                        <div className="d-flex align-items-center gap-2">
+                          <div
+                            style={{
+                              width: "40px",
+                              height: "40px",
+                              borderRadius: "50%",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              backgroundColor: "#007bff",
+                              color: "white",
+                              fontWeight: "bold",
+                              fontSize: "14px",
+                            }}
+                          >
+                            {
+                              item?.user?.name
+                                ?.split(" ")
+                                .filter(Boolean)
+                                .slice(0, 2)
+                                .map((word) => word.charAt(0).toUpperCase())
+                                .join("")
+                            }
+                          </div>
+                          <div>
+                            <div className="fw-semibold">{item?.user?.name}</div>
+                            <div className="small">{item?.user?.phone_number}</div>
+                          </div>
+                        </div>
+                      </td>
+                      {/* <td>{item?.user?.phone_number}</td> */}
                       <td>{item?.user?.email}</td>
                       <td>{item?.testFlightEmail}</td>
                       <td>

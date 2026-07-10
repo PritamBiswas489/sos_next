@@ -239,5 +239,26 @@ export const fetchAbouseReportList = async (params) => {
 };
 
 
+export const allSOSList = async (params) => {
+  const { page = 1, limit = 10, ngo_id, status, fromDate, toDate } = params;
+  
+  const queryParams = new URLSearchParams({
+    limit,
+    page,
+  });
+
+  // Add optional filters
+  if (ngo_id) queryParams.append("ngo_id", ngo_id);
+  if (status) queryParams.append("status", status);
+  if (fromDate) queryParams.append("fromDate", fromDate);
+  if (toDate) queryParams.append("toDate", toDate);
+
+  const response = await api.get(
+    `auth-web/admin/all-sos-list?${queryParams.toString()}`
+  );
+  return response;
+};
+
+
 
 

@@ -15,6 +15,7 @@ import {
   FaVoicemail,
   FaApple,
   FaCommentDots,
+  FaHandsHelping,
 } from "react-icons/fa";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -44,6 +45,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     { icon: <FaCommentDots />, label: "App Feedback List", path: "/site-admin/dashboard/app-feedback-list" },
     { icon: <FaMapMarkerAlt />, label: "Emergency Services Location", path: "/site-admin/dashboard/emergency-services-location-list" },
     { icon: <MdReport />, label: "Abouse Report", path: "/site-admin/dashboard/abouse-report-list" },
+    { icon: <FaHandsHelping />, label: "SOS List", path: "/site-admin/dashboard/all-sos-list" },
     // { icon: <FaUser />, label: "Profile", path: "/dashboard/profile" },
     // { icon: <FaUsers />, label: "Family", path: "/dashboard/family" },
     // { icon: <FaMapMarkerAlt />, label: "Location", path: "/dashboard/location" },
@@ -51,6 +53,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     // { icon: <FaDownload />, label: "Downloads", path: "/dashboard/downloads" },
     // { icon: <FaCog />, label: "Settings", path: "/dashboard/settings" },
     // { icon: <FaLock />, label: "Privacy", path: "/dashboard/privacy" },
+
   ];
 
   const UserMenu = [
@@ -69,6 +72,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   const NgoMenu = [
     { icon: <FaHome />, label: "Dashboard", active: true, path: "/ngo/dashboard" },
     { icon: <FaUsers />, label: "Users", path: "/ngo/dashboard/users" },
+    { icon: <FaHandsHelping />, label: "SOS List", path: "/ngo/dashboard/sos-list" },
     // { icon: <FaVoicemail />, label: "Contact Admin", path: "/ngo/dashboard/contact-admin" },
     // { icon: <FaMapMarkerAlt />, label: "Location", path: "/dashboard/location" },
     // { icon: <FaFileAlt />, label: "SOS History", path: "/dashboard/sos-history" },

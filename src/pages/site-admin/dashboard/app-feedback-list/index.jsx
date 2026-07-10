@@ -12,6 +12,7 @@ import { FaEye, FaEdit, FaReply, FaEnvelope, FaToggleOn, FaDownload } from "reac
 import NgoUpdateModal from "@/component/Popup/Admin/NgoUpdate";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Image from "next/image";
 
 export default function AppFeedback() {
   const dispatch = useDispatch();
@@ -342,19 +343,17 @@ export default function AppFeedback() {
                       <td>
                         <div className="d-flex align-items-center gap-2">
                           {item?.user?.profile_photo ? (
-                            <img
-                              src={item.user.profile_photo}
-                              alt={item.user.name}
-                              style={{
+                            <Image 
+                              height={'100'} 
+                              width={'100'} 
+                              src={item.user.profile_photo} 
+                              alt={item.user.name} 
+                                style={{
                                 width: "40px",
                                 height: "40px",
                                 borderRadius: "50%",
                                 objectFit: "cover",
                               }}
-                              // onError={(e) => {
-                              //   e.target.style.display = "none";
-                              //   e.target.nextElementSibling.style.display = "flex";
-                              // }}
                             />
                           ) : null}
                           <div
@@ -371,7 +370,15 @@ export default function AppFeedback() {
                               fontSize: "14px",
                             }}
                           >
-                            {item?.user?.name?.split(" ")[0]?.charAt(0).toUpperCase()}
+                            {/* {item?.user?.name?.split(" ")[0]?.charAt(0).toUpperCase()} */}
+                            {
+                              item?.user?.name
+                                ?.split(" ")
+                                .filter(Boolean)
+                                .slice(0, 2)
+                                .map((word) => word.charAt(0).toUpperCase())
+                                .join("")
+                            }
                           </div>
                           <div>
                             <div className="fw-semibold">{item?.user?.name}</div>

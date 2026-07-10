@@ -4,13 +4,8 @@ const nextConfig = {
   reactCompiler: true,
   reactStrictMode: true,
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "back-sos.pritamaqua.aqualeafitsol.com",
-      },
-    ],
-  }
+    domains: ["back-sos.pritamaqua.aqualeafitsol.com"],
+  },
 };
 
 export default nextConfig;

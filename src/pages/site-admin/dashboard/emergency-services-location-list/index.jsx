@@ -312,24 +312,12 @@ export default function EmergencyServicesLocation() {
                       <td>#{item?.user?.id}</td>
                       <td>
                         <div className="d-flex align-items-center gap-2">
-                          {item?.user?.profile_photo ? (
-                            <img
-                              src={item.user.profile_photo}
-                              alt={item.user.name}
-                              style={{
-                                width: "40px",
-                                height: "40px",
-                                borderRadius: "50%",
-                                objectFit: "cover",
-                              }}
-                            />
-                          ) : null}
                           <div
                             style={{
                               width: "40px",
                               height: "40px",
                               borderRadius: "50%",
-                              display: item?.user?.profile_photo ? "none" : "flex",
+                              display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
                               backgroundColor: "#007bff",
@@ -338,7 +326,15 @@ export default function EmergencyServicesLocation() {
                               fontSize: "14px",
                             }}
                           >
-                            {item?.user?.name?.split(" ")[0]?.charAt(0).toUpperCase()}
+                            {/* {item?.user?.name?.split(" ")[0]?.charAt(0).toUpperCase()} */}
+                            {
+                              item?.user?.name
+                                ?.split(" ")
+                                .filter(Boolean)
+                                .slice(0, 2)
+                                .map((word) => word.charAt(0).toUpperCase())
+                                .join("")
+                            }
                           </div>
                           <div>
                             <div className="fw-semibold">{item?.user?.name}</div>
