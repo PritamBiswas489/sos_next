@@ -42,3 +42,20 @@ export const sOsList = async (params) => {
   );
   return response;
 };
+
+export const registerNewLocation = async (data) => {
+  const response = await api.post("auth-web/ngo/request-register-new-location", data);
+  return response;
+};
+
+export const getMyRequestedEmergencyServices = async ({ page = 1, limit = 10 }) => {
+  const queryParams = new URLSearchParams({
+    page,
+    limit,
+  });
+
+  const response = await api.get(
+    `auth-web/ngo/get-my-requested-emergency-services?${queryParams.toString()}`
+  );
+  return response;
+};

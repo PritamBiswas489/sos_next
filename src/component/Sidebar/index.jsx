@@ -73,6 +73,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     { icon: <FaHome />, label: "Dashboard", active: true, path: "/ngo/dashboard" },
     { icon: <FaUsers />, label: "Users", path: "/ngo/dashboard/users" },
     { icon: <FaHandsHelping />, label: "SOS List", path: "/ngo/dashboard/sos-list" },
+    { icon: <FaMapMarkerAlt />, label: "Request Emergency Location", path: "/ngo/dashboard/request-emergency-location" },
     // { icon: <FaVoicemail />, label: "Contact Admin", path: "/ngo/dashboard/contact-admin" },
     // { icon: <FaMapMarkerAlt />, label: "Location", path: "/dashboard/location" },
     // { icon: <FaFileAlt />, label: "SOS History", path: "/dashboard/sos-history" },

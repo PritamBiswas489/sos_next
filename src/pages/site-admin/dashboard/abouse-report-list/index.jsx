@@ -429,21 +429,11 @@ export default function AbouseReport() {
                       <td>#{item.id}</td>
                       <td>
                         <div className="d-flex align-items-center gap-2">
-                          {item?.abuser?.photo ? (
-                            // <img
-                            //   src={item.abuser.photo}
-                            //   alt={item.abuser.full_name}
-                            //   style={{
-                            //     width: "40px",
-                            //     height: "40px",
-                            //     borderRadius: "50%",
-                            //     objectFit: "cover",
-                            //   }}
-                            // />
+                          {item?.user?.profile_photo ? (
                             <Image 
                               height={'100'} 
                               width={'100'} 
-                              src={item.abuser.photo} 
+                              src={item.user?.profile_photo} 
                               alt={item.abuser.full_name} 
                               style={{
                                 width: "40px",
@@ -472,7 +462,8 @@ export default function AbouseReport() {
                           )}
                           <div>
                             <div className="fw-semibold">{item?.user?.name || "Unknown"}</div>
-                            <div className="small">{item?.user?.phone_number || item?.user?.email || "-"}</div>
+                            <div className="small">{item?.user?.phone_number || "-"}</div>
+                            <div className="small">{item?.user?.email || "-"}</div>
                           </div>
                         </div>
                       </td>

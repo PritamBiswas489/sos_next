@@ -183,6 +183,13 @@
     color: $white;
     width: 100%;
   }
+  textarea {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: $white;
+    width: 100%;
+  }
 }
 
 .documents p {
@@ -242,6 +249,12 @@
     margin-top: 5px;
     color: $gray;
   }
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: flex-start; // Align to the left/start
+  margin-top: 20px;
 }
 
 /* BUTTON */

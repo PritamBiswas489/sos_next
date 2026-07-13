@@ -66,33 +66,36 @@ export default function Downloads() {
       <Container fluid className={styles.page}>
 
         <div className="d-flex align-items-center justify-content-between mb-3">
-          <h2 className={styles.title}>Users</h2>
+          <h2 className={styles.title}>Contact Admin</h2>
         </div>
 
         <Row>
           <Col>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                {/* NAME */}
-                <Form.Group className={`mb-4 ${styles.requestCcode}`}>
-                    <div>
-                        <textarea 
-                            className="form-control"
-                            rows={5}
-                            placeholder="Enter your message"
-                            {...register("message", {
-                            required: "Message is required",
-                            })}
-                        >
-                        </textarea>
+            <div className={styles.heroCard}>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    {/* NAME */}
+                    <Form.Group className={`mb-4 ${styles.requestCcode}`}>
+                        <div className={styles.inputGroup}>
+                            <textarea 
+                                rows={5}
+                                placeholder="Enter your message"
+                                {...register("message", {
+                                required: "Message is required",
+                                })}
+                            >
+                            </textarea>
+                        </div>
+                        {errors.message && (
+                            <InputErrorMsg className={styles.errorStyle} error={errors.message.message} color="#f00" />
+                        )}
+                    </Form.Group>
+                    <div className={styles.buttonGroup}>
+                        <button type="submit" className={styles.submitBtn}>
+                            Submit →
+                        </button>
                     </div>
-                    {errors.message && (
-                        <InputErrorMsg className={styles.errorStyle} error={errors.message.message} color="#f00" />
-                    )}
-                </Form.Group>
-                <button type="submit" className={styles.submitBtn}>
-                    Submit →
-                </button>
-            </form>
+                </form>
+            </div>
           </Col>
         </Row>
       </Container>

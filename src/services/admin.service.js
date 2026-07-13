@@ -204,6 +204,11 @@ export const updateEmergencyServicesLocation = async (data) => {
   return response;
 };
 
+export const registerNewLocationAdmin = async (data) => {
+  const response = await api.post("auth-web/admin/register-new-location", data);
+  return response;
+};
+
 export const fetchAbouseReportList = async (params) => {
   const { page = 1, limit = 10, userId, user_id, abuserId, abuser_id, abuseType, threatLevel, history_of_violence, weapon_access, restraining_order, userName, mobileNumber, abuserName, abuserPhone, abuserEmail, incidentFromDate, incidentToDate, fromDate, toDate } = params;
   

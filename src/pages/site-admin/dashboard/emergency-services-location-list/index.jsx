@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "@/component/DashboardLayout";
 import styles from "./index.module.scss";
-import { Col, Container, Row, Table, Modal, Button } from "react-bootstrap";
+import { Col, Container, Row, Table, Modal, Button, Form } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
 import { useDispatch } from "react-redux";
 import { SHOW_LOADER, HIDE_LOADER } from "@/redux/loaderSlice";
 import { toast } from "react-toastify";
-import { fetchEmergencyServicesLocationList, updateAppFeedbackStatus, updateEmergencyServicesLocation } from "@/services/admin.service";
+import { useForm } from "react-hook-form";
+import InputErrorMsg from "@/component/InputErrorMsg/InputErrorMsg";
+import GooglePlaceInput from "@/component/GooglePlaceInput";
+import { fetchEmergencyServicesLocationList, updateAppFeedbackStatus, updateEmergencyServicesLocation, registerNewLocationAdmin } from "@/services/admin.service";
 import NgoDetailsModal from "@/component/Popup/Admin/NgoDetails";
-import { FaEye, FaEdit, FaReply, FaEnvelope, FaToggleOn, FaDownload } from "react-icons/fa";
+import { FaEye, FaEdit, FaReply, FaEnvelope, FaToggleOn, FaDownload, FaMapMarkerAlt, FaPhoneAlt, FaTags } from "react-icons/fa";
 import NgoUpdateModal from "@/component/Popup/Admin/NgoUpdate";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -20,6 +23,9 @@ export default function EmergencyServicesLocation() {
   const [currentPage, setCurrentPage] = useState(0); // 0-based
   const [totalPages, setTotalPages] = useState(0);
   const itemsPerPage = 5;
+  const [showAddLocationModal, setShowAddLocationModal] = useState(false);
+  const [locationData, setLocationData] = useState(null);
+  const [loadingCreate, setLoadingCreate] = useState(false);
 
   // Filter states
   const [filters, setFilters] = useState({
@@ -43,6 +49,40 @@ export default function EmergencyServicesLocation() {
 
   const [updatingFeedbackId, setUpdatingFeedbackId] = useState(null);
   const statusOptions = ["pending", "approved"];
+
+  const CATEGORIES = [
+    { id: 'medical-emergency', label: 'Medical Emergency' },
+    { id: 'police-station', label: 'Police Station' },
+    { id: 'fire-station', label: 'Fire Station' },
+    { id: 'disaster-relief-center', label: 'Disaster Relief Center' },
+    { id: 'blood-bank', label: 'Blood Bank' },
+    { id: 'pharmacy-24x7', label: 'Pharmacy (24x7)' },
+    { id: 'urgent-care-center', label: 'Urgent Care Center' },
+    { id: 'trauma-center', label: 'Trauma Center' },
+    { id: 'emergency-shelter', label: 'Emergency Shelter' },
+    { id: 'roadside-assistance', label: 'Roadside Assistance' },
+    { id: 'emergency-helpline', label: 'Emergency Helpline' },
+    { id: 'ambulance-pickup-point', label: 'Ambulance Pickup Point' },
+    { id: 'flood-cyclone-shelter', label: 'Flood/Cyclone Shelter' },
+    { id: 'emergency-service-office', label: 'Emergency Service Office' },
+    { id: 'child-help-center', label: 'Child Help Center' },
+    { id: 'womens-safety-center', label: "Women's Safety Center" },
+  ];
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue,
+    watch,
+  } = useForm({
+    defaultValues: {
+      location: "",
+      phoneNumber: "",
+      category: "",
+    },
+  });
 
   const fetchAppFeedback = async (page = 0, activeFilters = filters) => {
     try {
@@ -144,6 +184,65 @@ export default function EmergencyServicesLocation() {
     }
   };
 
+  const onSubmit = async (data) => {
+    const phoneNumber = data.phoneNumber || locationData?.phoneNumber || "";
+
+    try {
+      setLoadingCreate(true);
+      dispatch(SHOW_LOADER());
+
+      if (!locationData) {
+        toast.error("Please select a location");
+        return;
+      }
+
+      const formData = {
+        locationName: locationData?.locationName,
+        latitude: locationData?.latitude,
+        longitude: locationData?.longitude,
+        address: locationData?.address,
+        phoneNumber,
+        placeId: locationData?.placeId,
+        serviceType: data.category,
+      };
+
+      const response = await registerNewLocationAdmin(formData);
+
+      if (response?.data?.status === 200) {
+        toast.success(response?.data?.message || "Location added successfully");
+        setShowAddLocationModal(false);
+        reset();
+        setLocationData(null);
+        fetchAppFeedback(0);
+      } else {
+        toast.error(response?.data?.message || "Something went wrong");
+      }
+    } catch (error) {
+      const resData = error?.response?.data;
+      const errorMessage =
+        resData?.error?.message ||
+        resData?.error?.reason ||
+        error?.message ||
+        "Something went wrong";
+      toast.error(errorMessage);
+    } finally {
+      setLoadingCreate(false);
+      dispatch(HIDE_LOADER());
+    }
+  };
+
+  const location = watch("location");
+
+  useEffect(() => {
+    if (!location) {
+      setValue("phoneNumber", "");
+    }
+  }, [location, setValue]);
+
+  const getCategoryLabel = (value) => {
+    return CATEGORIES.find((item) => item.id === value)?.label || value;
+  };
+
   const handleApplyFilters = () => {
     setCurrentPage(0);
     fetchAppFeedback(0, filters);
@@ -176,7 +275,15 @@ export default function EmergencyServicesLocation() {
       <Container fluid className={styles.page}>
         <div className="d-flex align-items-center justify-content-between mb-3">
           <h2 className={styles.title}>Emergency Services Location</h2>
+          <Button
+            className="btn btn-primary outline-primary"
+            onClick={() => setShowAddLocationModal(true)}
+          >
+            Add New location
+          </Button>
         </div>
+
+        
 
         <Row>
           <Col>
@@ -394,6 +501,114 @@ export default function EmergencyServicesLocation() {
             )}
           </Col>
         </Row>
+
+        {/* <Modal show={showAddLocationModal} onHide={() => setShowAddLocationModal(false)} centered> */}
+        <Modal
+          show={showAddLocationModal}
+          onHide={() => setShowAddLocationModal(false)}
+          centered
+          enforceFocus={false}
+          restoreFocus={false}
+          size="lg"
+        >
+          <div className={styles.card}>
+            <Modal.Header closeButton className={styles.modalHeader}>
+              <Modal.Title>Add New Location</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <Row className="g-3">
+                  <Col md={12}>
+                    <Form.Group className="mb-4">
+                      <GooglePlaceInput
+                        onPlaceSelected={(place) => {
+                          setLocationData(place);
+                          if (place?.phoneNumber) {
+                            setValue("phoneNumber", place.phoneNumber);
+                          }
+                        }}
+                      >
+                        <div className={styles.inputGroup}>
+                          <FaMapMarkerAlt />
+                          <input
+                            type="text"
+                            placeholder="Search emergency location"
+                            {...register("location", {
+                              required: "Please select a location",
+                            })}
+                          />
+                        </div>
+                      </GooglePlaceInput>
+                      {errors.location && (
+                        <InputErrorMsg
+                          className={styles.errorStyle}
+                          error={errors.location.message}
+                          color="#f00"
+                        />
+                      )}
+                    </Form.Group>
+                  </Col>
+
+                  <Col md={6}>
+                    <Form.Group className="mb-4">
+                      <div className={styles.inputGroup}>
+                        <FaPhoneAlt />
+                        <input
+                          type="text"
+                          placeholder="Phone Number"
+                          {...register("phoneNumber", {
+                            required: "Phone Number is required",
+                          })}
+                        />
+                      </div>
+                      {errors.phoneNumber && (
+                        <InputErrorMsg
+                          className={styles.errorStyle}
+                          error={errors.phoneNumber.message}
+                          color="#f00"
+                        />
+                      )}
+                    </Form.Group>
+                  </Col>
+
+                  <Col md={6}>
+                    <Form.Group className={`mb-4 ${styles.requestCcode}`}>
+                      <div className={styles.inputGroup}>
+                        <FaTags />
+                        <select
+                          {...register("category", {
+                            required: "Category is required",
+                          })}
+                        >
+                          <option value="">Select category</option>
+                          {CATEGORIES.map((category) => (
+                            <option key={category.id} value={category.id}>
+                              {category.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      
+                    </Form.Group>
+                    {errors.category && (
+                      <InputErrorMsg
+                        className={styles.errorStyle}
+                        error={errors.category.message}
+                        color="#f00"
+                      />
+                    )}
+                  </Col>
+                </Row>
+
+                <div className={styles.buttonGroup}>
+                  <button type="submit" className={styles.submitBtn} disabled={loadingCreate}>
+                    {loadingCreate ? "Submitting..." : "Submit Request →"}
+                  </button>
+                </div>
+              </form>
+            </Modal.Body>
+          </div>
+        </Modal>
 
       </Container>
     </DashboardLayout>

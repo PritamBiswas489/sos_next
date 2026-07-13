@@ -33,7 +33,7 @@ const ProfileCard = () => {
   return (
     <div className={styles.card}>
       <div className={styles.avatar}>
-        {profileImage ? (
+        {userData?.profile_photo ? (
           // <img
           //   src="{profileImage}"
           //   alt="Profile"
@@ -47,7 +47,7 @@ const ProfileCard = () => {
           <Image 
             height={'100'} 
             width={'100'} 
-            src={profileImage} 
+            src={userData?.profile_photo} 
             alt="Profile"
             // className={styles.avatarImage}
             style={{
