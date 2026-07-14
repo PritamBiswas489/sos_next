@@ -9,9 +9,9 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import InputErrorMsg from "@/component/InputErrorMsg/InputErrorMsg";
 import GooglePlaceInput from "@/component/GooglePlaceInput";
-import { fetchEmergencyServicesLocationList, updateAppFeedbackStatus, updateEmergencyServicesLocation, registerNewLocationAdmin } from "@/services/admin.service";
+import { fetchEmergencyServicesLocationList, updateAppFeedbackStatus, updateEmergencyServicesLocation, registerNewLocationAdmin, deleteEmergencyServicesLocation } from "@/services/admin.service";
 import NgoDetailsModal from "@/component/Popup/Admin/NgoDetails";
-import { FaEye, FaEdit, FaReply, FaEnvelope, FaToggleOn, FaDownload, FaMapMarkerAlt, FaPhoneAlt, FaTags } from "react-icons/fa";
+import { FaEye, FaEdit, FaReply, FaEnvelope, FaToggleOn, FaDownload, FaMapMarkerAlt, FaPhoneAlt, FaTags, FaTrash } from "react-icons/fa";
 import NgoUpdateModal from "@/component/Popup/Admin/NgoUpdate";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -180,6 +180,26 @@ export default function EmergencyServicesLocation() {
       toast.error(error?.message || "Something went wrong");
     } finally {
       setUpdatingFeedbackId(null);
+      dispatch(HIDE_LOADER());
+    }
+  };
+
+  const handleDeleteLocation = async (id) => {
+    if (!id) return;
+    if (!window.confirm("Are you sure you want to delete this location?")) return;
+
+    try {
+      dispatch(SHOW_LOADER());
+      const response = await deleteEmergencyServicesLocation({ id });
+      if (response?.data?.status === 200 || response?.data?.status === 201) {
+        toast.success(response?.data?.message || "Location deleted successfully");
+        fetchAppFeedback(currentPage);
+      } else {
+        toast.error(response?.data?.error?.message || "Failed to delete location");
+      }
+    } catch (error) {
+      toast.error(error?.message || "Something went wrong");
+    } finally {
       dispatch(HIDE_LOADER());
     }
   };
@@ -409,6 +429,7 @@ export default function EmergencyServicesLocation() {
                   <th>Service Type</th>
                   <th>Date</th>
                   <th style={{ width: "150px", minWidth: "150px" }}>Status</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -471,6 +492,16 @@ export default function EmergencyServicesLocation() {
                             ))}
                           </select>
                         </div>
+                      </td>
+                      <td>
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-outline-danger"
+                          onClick={() => handleDeleteLocation(item.id)}
+                          title="Delete location"
+                        >
+                          <FaTrash />
+                        </button>
                       </td>
                     </tr>
                   ))

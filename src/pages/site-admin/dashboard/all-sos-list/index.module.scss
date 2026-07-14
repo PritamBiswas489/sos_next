@@ -141,6 +141,112 @@
   color: $white;
 }
 
+.notificationHeader {
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba($primary, 0.15);
+  margin-bottom: 20px;
+}
+
+.notificationHeader h5 {
+  margin-bottom: 6px;
+}
+
+.notificationSubtitle {
+  color: $gray;
+  margin: 0;
+  font-size: 14px;
+}
+
+.notificationList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.notificationItem {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px;
+  border-radius: 16px;
+  background: rgba($dark, 0.8);
+  border: 1px solid rgba($primary, 0.15);
+}
+
+.notificationUser {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 240px;
+  flex: 1 1 260px;
+}
+
+.notificationAvatar,
+.notificationAvatarFallback {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.notificationAvatarFallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba($primary, 0.2), rgba($secondary, 0.18));
+  color: $white;
+  font-size: 18px;
+  font-weight: 700;
+  border: 1px solid rgba($primary, 0.15);
+}
+
+.notificationUserInfo {
+  min-width: 160px;
+}
+
+.notificationName {
+  font-weight: 700;
+  color: $white;
+}
+
+.notificationPhone {
+  color: $gray;
+  font-size: 13px;
+}
+
+.notificationDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: right;
+  min-width: 180px;
+  flex: 0 0 auto;
+}
+
+.notificationStatus {
+  display: inline-flex;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba($primary, 0.16);
+  color: $primary;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.notificationMetaRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: $gray;
+  font-size: 13px;
+}
+
+.notificationMetaRow strong {
+  color: $white;
+}
+
 /* HEADER */
 .modalHeader {
   display: flex;

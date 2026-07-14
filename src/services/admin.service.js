@@ -204,6 +204,11 @@ export const updateEmergencyServicesLocation = async (data) => {
   return response;
 };
 
+export const deleteEmergencyServicesLocation = async (data) => {
+  const response = await api.post("auth-web/admin/delete-emergency-service-location", data);
+  return response;
+};
+
 export const registerNewLocationAdmin = async (data) => {
   const response = await api.post("auth-web/admin/register-new-location", data);
   return response;

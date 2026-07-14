@@ -27,6 +27,8 @@ export default function AllSoslist() {
 
   const [showAudioModal, setShowAudioModal] = useState(false);
   const [audioFiles, setAudioFiles] = useState([]);
+  const [showNotificationModal, setShowNotificationModal] = useState(false);
+  const [selectedNotifications, setSelectedNotifications] = useState([]);
 
   // Filter states
   const [filters, setFilters] = useState({
@@ -210,6 +212,15 @@ const handleDownloadAudio = async (url) => {
   }
 };
 
+const openNotificationModal = (notifications) => {
+  setSelectedNotifications(Array.isArray(notifications) ? notifications : []);
+  setShowNotificationModal(true);
+};
+
+const closeNotificationModal = () => {
+  setShowNotificationModal(false);
+  setSelectedNotifications([]);
+};
 
 
   return (
@@ -303,6 +314,7 @@ const handleDownloadAudio = async (url) => {
                   <th>User</th>
                   <th>Location</th>
                   <th>Audio</th>
+                  <th>Notification</th>
                   <th>Date</th>
                   <th>Status</th>
                 </tr>
@@ -385,6 +397,18 @@ const handleDownloadAudio = async (url) => {
                           <span>No Audio</span>
                         )}
                       </td>
+                      <td>
+                        {item?.notifications?.length > 0 ? (
+                          <button
+                            className="btn btn-link p-0"
+                            onClick={() => openNotificationModal(item.notifications)}
+                          >
+                            Details
+                          </button>
+                        ) : (
+                          <span>--</span>
+                        )}
+                      </td>
                       <td>{new Date(item.created_at).toLocaleDateString()}</td>
                       <td>
                         <span
@@ -465,6 +489,73 @@ const handleDownloadAudio = async (url) => {
                   <p>No audio found.</p>
                 )}
                 </Row>
+              </Modal.Body>
+            </div>
+          </Modal>
+
+          <Modal
+            show={showNotificationModal}
+            onHide={closeNotificationModal}
+            centered
+            size="lg"
+          >
+            <div className={styles.card}>
+              <Modal.Header closeButton>
+                <Modal.Title>Notification Details</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <div className={styles.notificationHeader}>
+                  <div>
+                    <h5>{selectedNotifications.length} Notification{selectedNotifications.length !== 1 ? "s" : ""}</h5>
+                    {/* <p className={styles.notificationSubtitle}>SOS alert recipients and current response status.</p> */}
+                  </div>
+                </div>
+                <div className={styles.notificationList}>
+                  {selectedNotifications.length > 0 ? (
+                    selectedNotifications.map((notification) => (
+                      <div key={notification?.id} className={styles.notificationItem}>
+                        <div className={styles.notificationUser}>
+                          {notification?.to_user?.profile_photo ? (
+                            <Image
+                              src={notification.to_user.profile_photo}
+                              alt={notification.to_user.name}
+                              width={56}
+                              height={56}
+                              className={styles.notificationAvatar}
+                            />
+                          ) : (
+                            <div className={styles.notificationAvatarFallback}>
+                              {getInitials(notification?.to_user?.name)}
+                            </div>
+                          )}
+                          <div className={styles.notificationUserInfo}>
+                            <div className={styles.notificationName}>
+                              {notification?.to_user?.name || "Unknown User"}
+                            </div>
+                            <div className={styles.notificationPhone}>
+                              {notification?.to_user?.phone_number || "-"}
+                            </div>
+                          </div>
+                        </div>
+                        <div className={styles.notificationDetails}>
+                          <span className={styles.notificationStatus}>
+                            {notification?.response_status || "pending"}
+                          </span>
+                          <div className={styles.notificationMetaRow}>
+                            <strong>Alert</strong>
+                            <span>{notification?.alert_number ?? "-"}</span>
+                          </div>
+                          <div className={styles.notificationMetaRow}>
+                            <strong>Sent</strong>
+                            <span>{notification?.created_at ? new Date(notification.created_at).toLocaleString() : "-"}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="mb-0">No notification details found.</p>
+                  )}
+                </div>
               </Modal.Body>
             </div>
           </Modal>

@@ -16,6 +16,7 @@ import {
   FaApple,
   FaCommentDots,
   FaHandsHelping,
+  FaUserFriends,
 } from "react-icons/fa";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -66,6 +67,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     { icon: <FaVoicemail />, label: "Contact Admin", path: "/dashboard/contact-admin" },
     { icon: <FaDownload />, label: "Request iOS", path: "/dashboard/request-ios" },
     { icon: <FaMapMarkerAlt />, label: "Request Emergency Location", path: "/dashboard/request-emergency-location" },
+    { icon: <FaUserFriends />, label: "Trusted Contacts", path: "/dashboard/trusted-contacts" },
     // { icon: <FaLock />, label: "Privacy", path: "/dashboard/privacy" },
   ];
 

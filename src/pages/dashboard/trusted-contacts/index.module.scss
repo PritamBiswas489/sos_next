@@ -1,4 +1,4 @@
-@use "../../../../assets/front/styles/variable" as *;
+@use "../../../assets/front/styles/variable" as *;
 
 .card {
   background: linear-gradient(180deg, $dark, $dark-2);
@@ -12,15 +12,39 @@
   }
 }
 
+.buttonGroup {
+  display: flex;
+  gap: 15px; /* Adjust spacing as needed */
+}
+
 .page {
   padding: 20px;
   color: $white;
 }
 
+.tabBar {
+  display: flex;
+  gap: 10px;
+  margin: 16px 0 20px;
+}
+
+.tabButton {
+  border: 1px solid rgba($primary, 0.3);
+  background: transparent;
+  color: $white;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.tabButtonActive {
+  background: $primary;
+  border-color: $primary;
+}
+
 /* TITLE */
 .title {
   font-size: 24px;
-  margin-bottom: 0;
 }
 
 .subtitle {
@@ -33,7 +57,7 @@
   background: linear-gradient(135deg, $dark-2, $dark);
   border-radius: 18px;
   padding: 30px;
-  text-align: center;
+  // text-align: center;
   position: relative;
   overflow: hidden;
   border: 1px solid rgba($primary, 0.2);
@@ -46,6 +70,147 @@
 .heroCard p {
   color: $gray;
   font-size: 14px;
+}
+
+.listPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.requestCard {
+  background: rgba($dark, 0.7);
+  border: 1px solid rgba($primary, 0.2);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.contactRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.avatar {
+  flex: 0 0 auto;
+}
+
+.avatarImg {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba($primary, 0.12);
+}
+
+.initials {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba($primary,0.12), rgba($secondary,0.08));
+  color: $white;
+  font-weight: 700;
+  font-size: 20px;
+  border: 2px solid rgba($primary, 0.08);
+}
+
+.contactDetails {
+  flex: 1 1 auto;
+}
+
+.contactMeta {
+  flex: 0 0 140px;
+  text-align: right;
+}
+
+.sosBadge {
+  display: inline-block;
+  background: rgba($danger, 0.14);
+  color: $danger;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.phone {
+  color: $gray;
+  font-size: 13px;
+}
+
+.requestHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.requestHead h5 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.requestMeta {
+  margin: 0 0 6px;
+  color: $gray;
+  font-size: 14px;
+}
+
+.statusBadge {
+  background: rgba($bg-green, 0.15);
+  color: $bg-green;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.emptyState {
+  padding: 20px;
+  text-align: center;
+  color: $gray;
+  border: 1px dashed rgba($primary, 0.3);
+  border-radius: 12px;
+}
+
+.paginationContainer {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 0 0;
+  flex-wrap: wrap;
+}
+
+.paginationPage {
+  list-style: none;
+}
+
+.paginationLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  min-height: 38px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid rgba($primary, 0.3);
+  background: $dark;
+  color: $white;
+  cursor: pointer;
+}
+
+.paginationActive .paginationLink {
+  background: $primary;
+  border-color: $primary;
+}
+
+.paginationDisabled .paginationLink {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* BUTTONS */
@@ -141,112 +306,6 @@
   color: $white;
 }
 
-.notificationHeader {
-  padding-bottom: 18px;
-  border-bottom: 1px solid rgba($primary, 0.15);
-  margin-bottom: 20px;
-}
-
-.notificationHeader h5 {
-  margin-bottom: 6px;
-}
-
-.notificationSubtitle {
-  color: $gray;
-  margin: 0;
-  font-size: 14px;
-}
-
-.notificationList {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.notificationItem {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 18px;
-  border-radius: 16px;
-  background: rgba($dark, 0.8);
-  border: 1px solid rgba($primary, 0.15);
-}
-
-.notificationUser {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  min-width: 240px;
-  flex: 1 1 260px;
-}
-
-.notificationAvatar,
-.notificationAvatarFallback {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.notificationAvatarFallback {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, rgba($primary, 0.2), rgba($secondary, 0.18));
-  color: $white;
-  font-size: 18px;
-  font-weight: 700;
-  border: 1px solid rgba($primary, 0.15);
-}
-
-.notificationUserInfo {
-  min-width: 160px;
-}
-
-.notificationName {
-  font-weight: 700;
-  color: $white;
-}
-
-.notificationPhone {
-  color: $gray;
-  font-size: 13px;
-}
-
-.notificationDetails {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  text-align: right;
-  min-width: 180px;
-  flex: 0 0 auto;
-}
-
-.notificationStatus {
-  display: inline-flex;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: rgba($primary, 0.16);
-  color: $primary;
-  font-weight: 700;
-  text-transform: capitalize;
-}
-
-.notificationMetaRow {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  color: $gray;
-  font-size: 13px;
-}
-
-.notificationMetaRow strong {
-  color: $white;
-}
-
 /* HEADER */
 .modalHeader {
   display: flex;
@@ -297,6 +356,13 @@
 
   input {
     background: transparent;
+    border: none;
+    outline: none;
+    color: $white;
+    width: 100%;
+  }
+  select {
+    background: $dark;
     border: none;
     outline: none;
     color: $white;
@@ -365,8 +431,8 @@
 
 /* BUTTON */
 .submitBtn {
-  width: 100%;
-  margin-top: 20px;
+  // width: 100%;
+  // margin-top: 20px;
   background: $primary;
   border: none;
   padding: 12px;
@@ -483,53 +549,14 @@
   }
 }
 
-/* Pagination Styling */
-.pagination {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-  list-style: none;
-  gap: 8px;
-}
-
-.pageItem {
-  padding: 8px 12px;
-  cursor: pointer;
-  border-radius: 5px;
-  background: $dark-4;
-
-  &:hover {
-    background: $border;
+.requestCcode{
+  position: relative;
+  .errorStyle{
+    margin-top: 5px;
+    top: 100%;
+    left: 0;
   }
 }
-
-.active {
-  background: $primary;
-  color: $white;
-  // border-color: #007bff;
-}
-
-.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-
-  :global(.search-dd) {
-    background-color: $dark-2 !important;
-    border: 1px solid rgba($white, 0.08) !important;
-  }
-
-  :global(.dropdown-item) {
-    color: $white !important;
-    transition: 0.3s;
-    font-size: 0.875rem;
-
-    &:hover {
-      background-color: rgba($white, 0.08);
-      color: $white;
-    }
-  }
 
 @media (max-width: 767px) {
   .licenseBtn,

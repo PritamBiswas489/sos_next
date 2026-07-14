@@ -35,3 +35,8 @@ export const getRequestStatus = async () => {
   return response;
 };
 
+export const getTrustedContacts = async () => {
+  const response = await api.get("auth-web/user/trusted-contacts");
+  return response;
+};
+

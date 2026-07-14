@@ -43,6 +43,10 @@ export default function Soslist() {
   const [showReplyModal, setShowReplyModal] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
   const [replyMessage, setReplyMessage] = useState("");
+  const [showAudioModal, setShowAudioModal] = useState(false);
+  const [audioFiles, setAudioFiles] = useState([]);
+  const [showNotificationModal, setShowNotificationModal] = useState(false);
+  const [selectedNotifications, setSelectedNotifications] = useState([]);
 
   const statusOptions = ["active", "expired", "cancelled", "resolved"];
 
@@ -171,6 +175,51 @@ export default function Soslist() {
       .join("");
   };
 
+  const openAudioModal = (audios) => {
+    setAudioFiles(audios || []);
+    setShowAudioModal(true);
+  };
+  
+  const closeAudioModal = () => {
+    setShowAudioModal(false);
+    setAudioFiles([]);
+  };
+  
+  const handleDownloadAudio = async (url) => {
+    try {
+      dispatch(SHOW_LOADER());
+  
+      const response = await fetch(url);
+      const blob = await response.blob();
+  
+      const blobUrl = window.URL.createObjectURL(blob);
+  
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = url.split("/").pop() || "audio.mp3";
+  
+      document.body.appendChild(link);
+      link.click();
+  
+      link.remove();
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (err) {
+      toast.error("Failed to download audio.");
+    } finally {
+      dispatch(HIDE_LOADER());
+    }
+  };
+  
+  const openNotificationModal = (notifications) => {
+    setSelectedNotifications(Array.isArray(notifications) ? notifications : []);
+    setShowNotificationModal(true);
+  };
+  
+  const closeNotificationModal = () => {
+    setShowNotificationModal(false);
+    setSelectedNotifications([]);
+  };
+
 
 
   return (
@@ -264,6 +313,7 @@ export default function Soslist() {
                   <th>User</th>
                   <th>Location</th>
                   <th>Audio</th>
+                  <th>Notification</th>
                   <th>Date</th>
                   <th>Status</th>
                 </tr>
@@ -315,7 +365,7 @@ export default function Soslist() {
                       </td>
                       <td>{item?.location}</td>
                       <td>
-                        {item?.audio_records?.length > 0 ? (
+                        {/* {item?.audio_records?.length > 0 ? (
                           <div className="d-flex flex-column gap-2">
                             {item.audio_records.map((audio) => (
                               <div key={audio.id}>
@@ -333,6 +383,29 @@ export default function Soslist() {
                           </div>
                         ) : (
                           <span>No Audio</span>
+                        )} */}
+
+                        {item?.audio_records?.length > 0 ? (
+                          <button
+                            className="btn btn-link p-0"
+                            onClick={() => openAudioModal(item.audio_records)}
+                          >
+                            Audio
+                          </button>
+                        ) : (
+                          <span>No Audio</span>
+                        )}
+                      </td>
+                      <td>
+                        {item?.notifications?.length > 0 ? (
+                          <button
+                            className="btn btn-link p-0"
+                            onClick={() => openNotificationModal(item.notifications)}
+                          >
+                            Details
+                          </button>
+                        ) : (
+                          <span>--</span>
                         )}
                       </td>
                       <td>{new Date(item.created_at).toLocaleDateString()}</td>
@@ -384,6 +457,107 @@ export default function Soslist() {
             )}
           </Col>
         </Row>
+
+        <Modal
+            show={showAudioModal}
+            onHide={closeAudioModal}
+            centered
+            size="lg"
+          >
+            <div className={styles.card}>
+              <Modal.Header closeButton>
+                <Modal.Title>Audio Files</Modal.Title>
+              </Modal.Header>
+
+              <Modal.Body>
+                <Row className="g-3">
+                {audioFiles.length > 0 ? (
+                  audioFiles.map((audio, index) => (
+                    <Col lg={3} md={6} sm={12} xs={12}
+                      key={audio.id}
+                    >
+                      <Button
+                        className="btn btn-primary btn-sm w-100"
+                        onClick={() => handleDownloadAudio(audio.file_url)}
+                      >
+                        Download Audio {index + 1}
+                      </Button>
+                    </Col>
+                  ))
+                ) : (
+                  <p>No audio found.</p>
+                )}
+                </Row>
+              </Modal.Body>
+            </div>
+          </Modal>
+
+          <Modal
+            show={showNotificationModal}
+            onHide={closeNotificationModal}
+            centered
+            size="lg"
+          >
+            <div className={styles.card}>
+              <Modal.Header closeButton>
+                <Modal.Title>Notification Details</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <div className={styles.notificationHeader}>
+                  <div>
+                    <h5>{selectedNotifications.length} Notification{selectedNotifications.length !== 1 ? "s" : ""}</h5>
+                    {/* <p className={styles.notificationSubtitle}>SOS alert recipients and current response status.</p> */}
+                  </div>
+                </div>
+                <div className={styles.notificationList}>
+                  {selectedNotifications.length > 0 ? (
+                    selectedNotifications.map((notification) => (
+                      <div key={notification?.id} className={styles.notificationItem}>
+                        <div className={styles.notificationUser}>
+                          {notification?.to_user?.profile_photo ? (
+                            <Image
+                              src={notification.to_user.profile_photo}
+                              alt={notification.to_user.name}
+                              width={56}
+                              height={56}
+                              className={styles.notificationAvatar}
+                            />
+                          ) : (
+                            <div className={styles.notificationAvatarFallback}>
+                              {getInitials(notification?.to_user?.name)}
+                            </div>
+                          )}
+                          <div className={styles.notificationUserInfo}>
+                            <div className={styles.notificationName}>
+                              {notification?.to_user?.name || "Unknown User"}
+                            </div>
+                            <div className={styles.notificationPhone}>
+                              {notification?.to_user?.phone_number || "-"}
+                            </div>
+                          </div>
+                        </div>
+                        <div className={styles.notificationDetails}>
+                          <span className={styles.notificationStatus}>
+                            {notification?.response_status || "pending"}
+                          </span>
+                          <div className={styles.notificationMetaRow}>
+                            <strong>Alert</strong>
+                            <span>{notification?.alert_number ?? "-"}</span>
+                          </div>
+                          <div className={styles.notificationMetaRow}>
+                            <strong>Sent</strong>
+                            <span>{notification?.created_at ? new Date(notification.created_at).toLocaleString() : "-"}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="mb-0">No notification details found.</p>
+                  )}
+                </div>
+              </Modal.Body>
+            </div>
+          </Modal>
 
       </Container>
     </DashboardLayout>
