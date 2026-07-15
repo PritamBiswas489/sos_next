@@ -1,0 +1,214 @@
+@use "../../assets/front/styles/variable" as *;
+
+.card {
+  background: linear-gradient(180deg, $dark, $dark-2);
+  border-radius: 22px;
+  padding: 36px 28px;
+  // text-align: center;
+  color: $white;
+  // position: relative;
+  p {
+    margin-bottom: 1rem;
+  }
+}
+
+.page {
+  padding: 20px;
+  color: $white;
+}
+
+.title {
+  font-size: 24px;
+}
+
+.subtitle {
+  color: $gray;
+  margin-bottom: 20px;
+}
+
+.tableWrapper {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 12px;
+}
+
+.table {
+  color: $white;
+  margin-bottom: 0;
+}
+
+.table th,
+.table td {
+  vertical-align: middle;
+}
+
+.userCell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.userName {
+  font-weight: 600;
+}
+
+.userPhone {
+  font-size: 12px;
+  color: $gray;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  text-transform: capitalize;
+  background: rgba($primary, 0.16);
+  color: $white;
+}
+
+.actionBtn {
+  border-color: rgba($primary, 0.45);
+  color: $white;
+}
+
+.paginationWrapper {
+  margin: 12px 0 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.pagination {
+  margin-bottom: 0;
+}
+
+.pagination :global(.page-link) {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: $white;
+}
+
+.pagination :global(.page-item.active .page-link) {
+  background: $primary;
+  border-color: $primary;
+}
+
+.pagination :global(.page-item.disabled .page-link) {
+  opacity: 0.5;
+}
+
+.infoCard {
+  background: $dark;
+  border-radius: 14px;
+  padding: 20px;
+  border: 1px solid $dark-2;
+  min-height: 100%;
+}
+
+.infoTitle {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.infoText {
+  color: $gray;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modalSection {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.modalSection h6 {
+  margin: 0 0 8px;
+  color: $white;
+}
+
+.detailList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.detailList li {
+  color: $gray;
+}
+
+.detailList strong {
+  color: $white;
+}
+
+.audioList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.audioItem {
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.audioInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.audioInfo span {
+  color: $gray;
+  font-size: 12px;
+}
+
+.audioActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.audioPlayer {
+  width: min(100%, 320px);
+}
+
+.downloadLink {
+  color: $primary;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.downloadLink:hover {
+  text-decoration: underline;
+}
+
+.jsonBlock {
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 12px;
+  border-radius: 10px;
+  overflow-x: auto;
+  font-size: 12px;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.emptyState {
+  color: $gray;
+  margin: 0;
+}
