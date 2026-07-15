@@ -17,6 +17,11 @@ const Dashboard = () => {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [mySosSessions, setMySosSessions] = useState([]);
+  const [selectedSession, setSelectedSession] = useState(null);
+  const [showSessionModal, setShowSessionModal] = useState(false);
+  const [mySosSessionsPage, setMySosSessionsPage] = useState(1);
+  const [mySosSessionsTotalPages, setMySosSessionsTotalPages] = useState(1);
 
   const formatDate = (value) => {
     if (!value) return "—";
@@ -41,6 +46,16 @@ const Dashboard = () => {
   const closeDetails = () => {
     setShowDetailsModal(false);
     setSelectedNotification(null);
+  };
+
+  const openSessionDetails = (item) => {
+    setSelectedSession(item);
+    setShowSessionModal(true);
+  };
+
+  const closeSessionDetails = () => {
+    setShowSessionModal(false);
+    setSelectedSession(null);
   };
 
   const fetchIncommingSosNotification = useCallback(async (page = 1) => {
@@ -101,14 +116,76 @@ const Dashboard = () => {
     }
   }, [dispatch, pageSize]);
 
+  const fetchMySosSessions = useCallback(async (page = 1) => {
+    try {
+      dispatch(SHOW_LOADER());
+
+      const accessToken = localStorage.getItem("accessToken");
+      const refreshToken = localStorage.getItem("refreshToken");
+
+      const formData = {
+        limit: pageSize,
+        page,
+        status: "active",
+      };
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_PROFILE_BASE_URL}api-mobile/auth/sos/my-sos-sessions`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            refreshtoken: refreshToken,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response?.data?.status === 200) {
+        const sessions = response?.data?.data?.sessions || [];
+        const totalItems = response?.data?.data?.total || 0;
+        const totalPagesFromApi = response?.data?.data?.totalPages || 1;
+
+        setMySosSessions(sessions);
+        setMySosSessionsPage(page);
+        setMySosSessionsTotalPages(
+          totalPagesFromApi > 0 ? totalPagesFromApi : Math.max(1, Math.ceil(totalItems / pageSize))
+        );
+      } else {
+        toast.error(response?.data?.message || "Something went wrong");
+      }
+    } catch (error) {
+      const resData = error?.response?.data;
+
+      const errorMessage =
+        resData?.error?.message ||
+        resData?.error?.reason ||
+        error?.message ||
+        "Something went wrong";
+
+      toast.error(errorMessage);
+    } finally {
+      dispatch(HIDE_LOADER());
+    }
+  }, [dispatch, pageSize]);
+
   const handlePageChange = (page) => {
     if (page < 1 || page > totalPages || page === currentPage) return;
     fetchIncommingSosNotification(page);
   };
 
+  const handleMySosSessionsPageChange = (page) => {
+    if (page < 1 || page > mySosSessionsTotalPages || page === mySosSessionsPage) return;
+    fetchMySosSessions(page);
+  };
+
   useEffect(() => {
     fetchIncommingSosNotification(currentPage);
   }, [currentPage, fetchIncommingSosNotification]);
+
+  useEffect(() => {
+    fetchMySosSessions(mySosSessionsPage);
+  }, [mySosSessionsPage, fetchMySosSessions]);
 
   const handleDownloadAudio = async (url) => {
     try {
@@ -268,10 +345,76 @@ const Dashboard = () => {
             </Col>
 
             <Col md={12} lg={12} className="mt-4">
-              
-
-              <div className={styles.infoCard}>
-                <h3 className={styles.infoTitle}>My SOS Sessions</h3>
+              <div className={styles.tableWrapper}>
+                <div className="d-flex align-items-center justify-content-between mt-2">
+                  <h3 className={styles.title}>My SOS Sessions</h3>
+                </div>
+                <Table striped bordered hover responsive className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Status</th>
+                      <th>Location</th>
+                      <th>Created</th>
+                      <th>Responded</th>
+                      <th>Pending</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {mySosSessions.length > 0 ? (
+                      mySosSessions.map((session) => (
+                        <tr key={session.id}>
+                          <td>#{session.id}</td>
+                          <td>
+                            <span className={styles.statusBadge}>{session.status || "active"}</span>
+                          </td>
+                          <td>{truncateText(session.location, 40)}</td>
+                          <td>{formatDate(session.created_at)}</td>
+                          <td>{session.numberofResponded ?? 0}</td>
+                          <td>{session.numberPending ?? 0}</td>
+                          <td>
+                            <Button
+                              size="sm"
+                              variant="outline-light"
+                              className={styles.actionBtn}
+                              onClick={() => openSessionDetails(session)}
+                            >
+                              Show More
+                            </Button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="7" className="text-center">
+                          No Data Found
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </Table>
+                <div className={styles.paginationWrapper}>
+                  <Pagination className={styles.pagination}>
+                    <Pagination.Prev
+                      onClick={() => handleMySosSessionsPageChange(mySosSessionsPage - 1)}
+                      disabled={mySosSessionsPage === 1}
+                    />
+                    {Array.from({ length: mySosSessionsTotalPages }, (_, index) => (
+                      <Pagination.Item
+                        key={index + 1}
+                        active={index + 1 === mySosSessionsPage}
+                        onClick={() => handleMySosSessionsPageChange(index + 1)}
+                      >
+                        {index + 1}
+                      </Pagination.Item>
+                    ))}
+                    <Pagination.Next
+                      onClick={() => handleMySosSessionsPageChange(mySosSessionsPage + 1)}
+                      disabled={mySosSessionsPage === mySosSessionsTotalPages}
+                    />
+                  </Pagination>
+                </div>
               </div>
             </Col>
           </Row>
@@ -365,6 +508,128 @@ const Dashboard = () => {
                     <p className={styles.emptyState}>No audio records available.</p>
                   )}
                 </div>
+              </div>
+            ) : (
+              <p className={styles.emptyState}>No details selected.</p>
+            )}
+          </Modal.Body>
+        </div>
+      </Modal>
+
+      <Modal show={showSessionModal} onHide={closeSessionDetails} centered size="lg">
+        <div className={styles.card}>
+          <Modal.Body>
+            {selectedSession ? (
+              <div className={styles.modalContent}>
+                <div className={styles.modalSection}>
+                  <h6>Session Details</h6>
+                  <ul className={styles.detailList}>
+                    <li>
+                      <strong>ID:</strong> {selectedSession.id}
+                    </li>
+                    <li>
+                      <strong>Status:</strong> {selectedSession.status || "active"}
+                    </li>
+                    <li>
+                      <strong>Created At:</strong> {formatDate(selectedSession.created_at)}
+                    </li>
+                    <li>
+                      <strong>Location:</strong> {selectedSession.location || "—"}
+                    </li>
+                    <li>
+                      <strong>Coordinates:</strong> {selectedSession.latitude || "—"}, {selectedSession.longitude || "—"}
+                    </li>
+                  </ul>
+                </div>
+
+                <div className={styles.modalSection}>
+                  <h6>Response Summary</h6>
+                  <ul className={styles.detailList}>
+                    <li>
+                      <strong>Responded:</strong> {selectedSession.numberofResponded ?? 0}
+                    </li>
+                    <li>
+                      <strong>On The Way:</strong> {selectedSession.numberOnTheWay ?? 0}
+                    </li>
+                    <li>
+                      <strong>Reached:</strong> {selectedSession.numberReached ?? 0}
+                    </li>
+                    <li>
+                      <strong>Failed:</strong> {selectedSession.numberFailed ?? 0}
+                    </li>
+                    <li>
+                      <strong>Declined:</strong> {selectedSession.numberDeclined ?? 0}
+                    </li>
+                    <li>
+                      <strong>Pending:</strong> {selectedSession.numberPending ?? 0}
+                    </li>
+                  </ul>
+                </div>
+
+                <div className={styles.modalSection}>
+                  <h6>Notifications</h6>
+                  {selectedSession.notifications?.length ? (
+                    <div className={styles.audioList}>
+                      {selectedSession.notifications.map((notification, index) => (
+                        <div key={notification.id || `${notification.to_user_id || "notification"}-${index}`} className={styles.audioItem}>
+                          <div className={styles.audioInfo}>
+                            <strong>{notification.to_user?.name || `Recipient ${index + 1}`}</strong>
+                            <span>{notification.to_user?.phone_number || "—"}</span>
+                          </div>
+                          <ul className={styles.detailList}>
+                            <li>
+                              <strong>Status:</strong> {notification.response_status || "pending"}
+                            </li>
+                            <li>
+                              <strong>Alert Number:</strong> {notification.alert_number ?? "—"}
+                            </li>
+                            <li>
+                              <strong>Created At:</strong> {formatDate(notification.created_at)}
+                            </li>
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className={styles.emptyState}>No notifications available.</p>
+                  )}
+                </div>
+
+                <div className={styles.modalSection}>
+                  <h6>Audio Records</h6>
+                  {selectedSession.audio_records?.length ? (
+                    <div className={styles.audioList}>
+                      {selectedSession.audio_records.map((audio, index) => (
+                        <div key={audio.id || `${audio.file_name || "audio"}-${index}`} className={styles.audioItem}>
+                          <div className={styles.audioInfo}>
+                            <strong>{audio.file_name || `Audio ${index + 1}`}</strong>
+                            <span>{formatDate(audio.created_at)}</span>
+                          </div>
+                          <div className={styles.audioActions}>
+                            {audio.file_url ? (
+                              <Button
+                                size="sm"
+                                variant="primary"
+                                onClick={() => handleDownloadAudio(audio.file_url)}
+                              >
+                                Download Audio {index + 1}
+                              </Button>
+                            ) : (
+                              <span className={styles.emptyState}>No file available</span>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className={styles.emptyState}>No audio records available.</p>
+                  )}
+                </div>
+
+                {/* <div className={styles.modalSection}>
+                  <h6>Full Payload</h6>
+                  <pre className={styles.jsonBlock}>{JSON.stringify(selectedSession, null, 2)}</pre>
+                </div> */}
               </div>
             ) : (
               <p className={styles.emptyState}>No details selected.</p>
