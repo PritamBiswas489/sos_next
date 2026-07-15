@@ -46,6 +46,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     { icon: <FaCommentDots />, label: "App Feedback List", path: "/site-admin/dashboard/app-feedback-list" },
     { icon: <FaMapMarkerAlt />, label: "Emergency Services Location", path: "/site-admin/dashboard/emergency-services-location-list" },
     { icon: <MdReport />, label: "Abouse Report", path: "/site-admin/dashboard/abouse-report-list" },
+    { icon: <MdReport />, label: "Abusers With Report Stats", path: "/site-admin/dashboard/abusers-with-report-stats" },
     { icon: <FaHandsHelping />, label: "SOS List", path: "/site-admin/dashboard/all-sos-list" },
     // { icon: <FaUser />, label: "Profile", path: "/dashboard/profile" },
     // { icon: <FaUsers />, label: "Family", path: "/dashboard/family" },

@@ -270,5 +270,60 @@ export const allSOSList = async (params) => {
 };
 
 
+export const fetchabusersWithReportStats = async (params = {}) => {
+  const {
+    page = 1,
+    limit = 10,
+    abuserId,
+    abuser_id,
+    full_name,
+    alias_name,
+    gender,
+    email,
+    abuseType,
+    threatLevel,
+    history_of_violence,
+    weapon_access,
+    restraining_order,
+    incidentFromDate,
+    incidentToDate,
+    fromDate,
+    toDate,
+    userId,
+    userName,
+    mobileNumber,
+  } = params;
+
+  const queryParams = new URLSearchParams({
+    limit,
+    page,
+  });
+
+  if (abuserId) queryParams.append("abuserId", abuserId);
+  if (abuser_id) queryParams.append("abuser_id", abuser_id);
+  if (full_name) queryParams.append("full_name", full_name);
+  if (alias_name) queryParams.append("alias_name", alias_name);
+  if (gender) queryParams.append("gender", gender);
+  if (email) queryParams.append("email", email);
+  if (abuseType) queryParams.append("abuseType", abuseType);
+  if (threatLevel) queryParams.append("threatLevel", threatLevel);
+  if (history_of_violence) queryParams.append("history_of_violence", history_of_violence);
+  if (weapon_access) queryParams.append("weapon_access", weapon_access);
+  if (restraining_order) queryParams.append("restraining_order", restraining_order);
+  if (incidentFromDate) queryParams.append("incidentFromDate", incidentFromDate);
+  if (incidentToDate) queryParams.append("incidentToDate", incidentToDate);
+  if (fromDate) queryParams.append("fromDate", fromDate);
+  if (toDate) queryParams.append("toDate", toDate);
+  if (userId) queryParams.append("userId", userId);
+  if (userName) queryParams.append("userName", userName);
+  if (mobileNumber) queryParams.append("mobileNumber", mobileNumber);
+
+  const response = await api.get(
+    `auth-web/admin/abusers-with-report-stats?${queryParams.toString()}`
+  );
+  return response;
+};
+
+
 
 

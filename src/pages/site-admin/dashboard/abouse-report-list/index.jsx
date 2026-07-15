@@ -415,7 +415,7 @@ export default function AbouseReport() {
               <thead>
                 <tr>
                   <th>Report ID</th>
-                  <th>User</th>
+                  <th>Abuser name</th>
                   <th>Date</th>
                   <th>Threat</th>
                   <th>Location</th>
@@ -429,11 +429,11 @@ export default function AbouseReport() {
                       <td>#{item.id}</td>
                       <td>
                         <div className="d-flex align-items-center gap-2">
-                          {item?.user?.profile_photo ? (
+                          {item?.abuser?.photo ? (
                             <Image 
                               height={'100'} 
                               width={'100'} 
-                              src={item.user?.profile_photo} 
+                              src={item.abuser?.photo} 
                               alt={item.abuser.full_name} 
                               style={{
                                 width: "40px",
@@ -457,13 +457,13 @@ export default function AbouseReport() {
                                 fontSize: "14px",
                               }}
                             >
-                              {getInitials(item?.user?.name)}
+                              {getInitials(item?.abuser?.full_name)}
                             </div>
                           )}
                           <div>
-                            <div className="fw-semibold">{item?.user?.name || "Unknown"}</div>
-                            <div className="small">{item?.user?.phone_number || "-"}</div>
-                            <div className="small">{item?.user?.email || "-"}</div>
+                            <div className="fw-semibold">{item?.abuser?.full_name || "Unknown"}</div>
+                            <div className="small">{item?.abuser?.phone || "-"}</div>
+                            <div className="small">{item?.abuser?.email || "-"}</div>
                           </div>
                         </div>
                       </td>
@@ -534,6 +534,23 @@ export default function AbouseReport() {
                       <div className={styles.sectionTitle}>Victim & Witness Details</div>
                       <div className={styles.detailGrid}>
                         <div className={styles.detailItem}>
+
+                          {selectedReport?.user?.profile_photo ? (
+                            <Image
+                              src={selectedReport.user.profile_photo}
+                              alt={selectedReport.user?.name || "user"}
+                              width={80}
+                              height={80}
+                              style={{
+                                borderRadius: "50%",
+                                objectFit: "cover",
+                              }}
+                            />
+                          ) : (
+                            <div>
+                            </div>
+                          )}
+
                           <span className={styles.detailLabel}>Reported By</span>
                           <span className={styles.detailValue}>{selectedReport.user?.name || "-"}</span>
                         </div>
